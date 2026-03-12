@@ -1,1102 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>phoenix - Boost Library Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-weight: 700;
-        }
-        .panel {
-            background: #ffffff;
-            padding: 30px;
-            margin: 25px 0;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .panel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .panel h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #1a202c;
-            font-size: 1.6em;
-            font-weight: 600;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-        }
-        .panel h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        .chart-container {
-            margin: 25px 0;
-            height: 450px;
-            position: relative;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-        }
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-        .panel-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-        .panel-row .chart-container {
-            margin: 0;
-        }
-        .panel-row table {
-            margin: 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .sortable {
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-        .sortable:hover {
-            background-color: #e0e0e0 !important;
-        }
-        .sort-indicator {
-            margin-left: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .back-link {
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            display: inline-block;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-        .back-link a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            text-decoration: none;
-            transform: translateX(-3px);
-        }
-        .depth-1 {
-            background-color: #dbeafe;
-        }
-        .depth-2 {
-            background-color: #d1fae5;
-        }
-        .depth-3, .depth-4, .depth-5 {
-            background-color: #fef3c7;
-        }
-        @media (max-width: 1200px) {
-            .panel-row {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 20px 15px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>phoenix - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
 </head>
 <body>
-    <div class="back-link">
-        <a href="../index.html">← Back to Dashboard</a>
-    </div>
-    <h1>📚 phoenix</h1>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 phoenix</h1>
 
-    <!-- Panel 0: Overview -->
-    <div class="panel">
-        <h2>Overview</h2>
-        <div class="overview-container">
-
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                <div>
-                    
-            <div>
-                <p style="color: #666;">
-                    Define small unnamed function objects at the actual call site, and more.
-                </p>
-            </div>
-    
-                    <table style="width: 100%; margin: 0;">
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Created Version:</td>
-                                <td style="padding: 8px;">1.47.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Modified Version:</td>
-                                <td style="padding: 8px;">1.90.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Repositories:</td>
-                                <td style="padding: 8px;">215</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average New Repositories Per Year:</td>
-                                <td style="padding: 8px;">11.00</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Year Repository Count:</td>
-                                <td style="padding: 8px;">12 (2025)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Used Year:</td>
-                                <td style="padding: 8px;">2024 (28 repos)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average Stars:</td>
-                                <td style="padding: 8px;">356</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Activity Score:</td>
-                                <td style="padding: 8px;">-0.767 <span style="color: #666; font-size: 0.9em;">(low)</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Internal Consumers:</td>
-                                <td style="padding: 8px;">36</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Contributors in Most Recent Version:</td>
-                                <td style="padding: 8px;">0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Contributors:</td>
-                                <td style="padding: 8px;">24</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="headers-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="headers-search" placeholder="Filter headers..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Header</th>
-                                <th style="text-align: right; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Times Included</th>
-                            </tr>
-                        </thead>
-                        <tbody id="headers-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="headers-pagination-info">Showing 1-10 of 283</span>
-                        </div>
-                        <div>
-                            <button id="headers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="headers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                
-        const headersData = [{"name": "boost/phoenix/core.hpp", "count": 343}, {"name": "boost/phoenix/operator.hpp", "count": 306}, {"name": "boost/phoenix.hpp", "count": 150}, {"name": "boost/phoenix/phoenix.hpp", "count": 105}, {"name": "boost/phoenix/core/limits.hpp", "count": 85}, {"name": "boost/phoenix/bind.hpp", "count": 70}, {"name": "boost/phoenix/bind/bind_member_function.hpp", "count": 56}, {"name": "boost/phoenix/fusion.hpp", "count": 54}, {"name": "boost/phoenix/core/expression.hpp", "count": 54}, {"name": "boost/phoenix/bind/bind_function.hpp", "count": 48}, {"name": "boost/phoenix/stl.hpp", "count": 47}, {"name": "boost/phoenix/object.hpp", "count": 46}, {"name": "boost/phoenix/function.hpp", "count": 44}, {"name": "boost/phoenix/core/meta_grammar.hpp", "count": 44}, {"name": "boost/phoenix/support/iterate.hpp", "count": 42}, {"name": "boost/phoenix/operator/self.hpp", "count": 37}, {"name": "boost/phoenix/core/call.hpp", "count": 32}, {"name": "boost/phoenix/object/new.hpp", "count": 29}, {"name": "boost/phoenix/core/reference.hpp", "count": 28}, {"name": "boost/phoenix/statement/if.hpp", "count": 27}, {"name": "boost/phoenix/fusion/at.hpp", "count": 27}, {"name": "boost/phoenix/statement.hpp", "count": 22}, {"name": "boost/phoenix/object/dynamic_cast.hpp", "count": 22}, {"name": "boost/phoenix/object/construct.hpp", "count": 18}, {"name": "boost/phoenix/bind/bind_member_variable.hpp", "count": 17}, {"name": "boost/phoenix/core/actor.hpp", "count": 17}, {"name": "boost/phoenix/version.hpp", "count": 17}, {"name": "boost/phoenix/core/argument.hpp", "count": 16}, {"name": "boost/phoenix/scope.hpp", "count": 16}, {"name": "boost/phoenix/stl/container.hpp", "count": 15}, {"name": "boost/phoenix/core/value.hpp", "count": 15}, {"name": "boost/phoenix/operator/comparison.hpp", "count": 14}, {"name": "boost/phoenix/function/adapt_callable.hpp", "count": 14}, {"name": "boost/phoenix/scope/local_variable.hpp", "count": 14}, {"name": "boost/phoenix/object/delete.hpp", "count": 14}, {"name": "boost/phoenix/operator/logical.hpp", "count": 13}, {"name": "boost/phoenix/core/detail/function_eval.hpp", "count": 11}, {"name": "boost/phoenix/core/environment.hpp", "count": 11}, {"name": "boost/phoenix/function/adapt_function.hpp", "count": 10}, {"name": "boost/phoenix/bind/bind_function_object.hpp", "count": 10}, {"name": "boost/phoenix/stl/algorithm/transformation.hpp", "count": 10}, {"name": "boost/phoenix/operator/detail/define_operator.hpp", "count": 9}, {"name": "boost/phoenix/operator/detail/undef_operator.hpp", "count": 9}, {"name": "boost/phoenix/core/terminal.hpp", "count": 9}, {"name": "boost/phoenix/support/vector.hpp", "count": 9}, {"name": "boost/phoenix/core/is_actor.hpp", "count": 9}, {"name": "boost/phoenix/stl/algorithm/iteration.hpp", "count": 9}, {"name": "boost/phoenix/object/detail/target.hpp", "count": 8}, {"name": "boost/phoenix/statement/sequence.hpp", "count": 8}, {"name": "boost/phoenix/scope/scoped_environment.hpp", "count": 7}, {"name": "boost/phoenix/stl/algorithm.hpp", "count": 6}, {"name": "boost/phoenix/core/preprocessed/argument_no_predefined_10.hpp", "count": 6}, {"name": "boost/phoenix/core/preprocessed/argument_predefined_10.hpp", "count": 6}, {"name": "boost/phoenix/core/domain.hpp", "count": 6}, {"name": "boost/phoenix/core/is_nullary.hpp", "count": 6}, {"name": "boost/phoenix/core/terminal_fwd.hpp", "count": 6}, {"name": "boost/phoenix/function/function.hpp", "count": 6}, {"name": "boost/phoenix/scope/let.hpp", "count": 6}, {"name": "boost/phoenix/core/nothing.hpp", "count": 5}, {"name": "boost/phoenix/object/static_cast.hpp", "count": 5}, {"name": "boost/phoenix/stl/algorithm/querying.hpp", "count": 5}, {"name": "boost/phoenix/core/detail/argument.hpp", "count": 4}, {"name": "boost/phoenix/operator/arithmetic.hpp", "count": 4}, {"name": "boost/phoenix/operator/member.hpp", "count": 4}, {"name": "boost/phoenix/stl/container/container.hpp", "count": 4}, {"name": "boost/phoenix/scope/dynamic.hpp", "count": 4}, {"name": "boost/phoenix/stl/algorithm/detail/begin.hpp", "count": 3}, {"name": "boost/phoenix/stl/algorithm/detail/end.hpp", "count": 3}, {"name": "boost/phoenix/core/as_actor.hpp", "count": 3}, {"name": "boost/phoenix/core/detail/phx2_result.hpp", "count": 3}, {"name": "boost/phoenix/scope/detail/local_gen.hpp", "count": 3}, {"name": "boost/phoenix/core/function_equal.hpp", "count": 3}, {"name": "boost/phoenix/scope/lambda.hpp", "count": 3}, {"name": "boost/phoenix/statement/detail/preprocessed/catch_push_back_10.hpp", "count": 3}, {"name": "boost/phoenix/statement/detail/preprocessed/catch_push_back_20.hpp", "count": 3}, {"name": "boost/phoenix/statement/detail/preprocessed/catch_push_back_30.hpp", "count": 3}, {"name": "boost/phoenix/statement/detail/preprocessed/catch_push_back_40.hpp", "count": 3}, {"name": "boost/phoenix/statement/detail/preprocessed/catch_push_back_50.hpp", "count": 3}, {"name": "boost/phoenix/statement/try_catch.hpp", "count": 3}, {"name": "boost/phoenix/support/preprocessed/vector.hpp", "count": 3}, {"name": "boost/phoenix/support/preprocessor/round.hpp", "count": 3}, {"name": "boost/phoenix/stl/algorithm/detail/decay_array.hpp", "count": 2}, {"name": "boost/phoenix/stl/algorithm/detail/has_sort.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/member_variable.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/function_ptr.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/member_function_ptr.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/member_function_ptr_10.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/member_function_ptr_20.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/member_function_ptr_30.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/member_function_ptr_40.hpp", "count": 2}, {"name": "boost/phoenix/bind/detail/preprocessed/member_function_ptr_50.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_function_object.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_function_object_10.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_function_object_20.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_function_object_30.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_function_object_40.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_function_object_50.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_member_function_10.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_member_function_20.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_member_function_30.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_member_function_40.hpp", "count": 2}, {"name": "boost/phoenix/bind/preprocessed/bind_member_function_50.hpp", "count": 2}, {"name": "boost/phoenix/core/debug.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/call.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/expression.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/actor_result_of.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/actor_result_of_10.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/actor_result_of_20.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/actor_result_of_30.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/actor_result_of_40.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/actor_result_of_50.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/call.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/function_eval.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/phx2_result.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/phx2_result_10.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/phx2_result_20.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/phx2_result_30.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/phx2_result_40.hpp", "count": 2}, {"name": "boost/phoenix/core/detail/preprocessed/phx2_result_50.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/argument.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/expression.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/function_equal_10.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/function_equal_20.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/function_equal_30.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/function_equal_40.hpp", "count": 2}, {"name": "boost/phoenix/core/preprocessed/function_equal_50.hpp", "count": 2}, {"name": "boost/phoenix/core/v2_eval.hpp", "count": 2}, {"name": "boost/phoenix/core/visit_each.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/function_operator.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/preprocessed/function_operator.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/preprocessed/function_operator_10.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/preprocessed/function_operator_20.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/preprocessed/function_operator_30.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/preprocessed/function_operator_40.hpp", "count": 2}, {"name": "boost/phoenix/function/detail/preprocessed/function_operator_50.hpp", "count": 2}, {"name": "boost/phoenix/function/function_handling.hpp", "count": 2}, {"name": "boost/phoenix/object/const_cast.hpp", "count": 2}, {"name": "boost/phoenix/object/detail/preprocessed/new.hpp", "count": 2}, {"name": "boost/phoenix/object/detail/preprocessed/new_eval_10.hpp", "count": 2}, {"name": "boost/phoenix/object/detail/preprocessed/new_eval_20.hpp", "count": 2}, {"name": "boost/phoenix/object/detail/preprocessed/new_eval_30.hpp", "count": 2}, {"name": "boost/phoenix/object/detail/preprocessed/new_eval_40.hpp", "count": 2}, {"name": "boost/phoenix/object/detail/preprocessed/new_eval_50.hpp", "count": 2}, {"name": "boost/phoenix/object/reinterpret_cast.hpp", "count": 2}, {"name": "boost/phoenix/operator/bitwise.hpp", "count": 2}, {"name": "boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen.hpp", "count": 2}, {"name": "boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_10.hpp", "count": 2}, {"name": "boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_20.hpp", "count": 2}, {"name": "boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_30.hpp", "count": 2}, {"name": "boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_40.hpp", "count": 2}, {"name": "boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_50.hpp", "count": 2}, {"name": "boost/phoenix/operator/if_else.hpp", "count": 2}, {"name": "boost/phoenix/operator/io.hpp", "count": 2}, {"name": "boost/phoenix/scope/preprocessed/lambda.hpp", "count": 2}, {"name": "boost/phoenix/scope/preprocessed/lambda_10.hpp", "count": 2}, {"name": "boost/phoenix/scope/preprocessed/lambda_20.hpp", "count": 2}, {"name": "boost/phoenix/scope/preprocessed/lambda_30.hpp", "count": 2}, {"name": "boost/phoenix/scope/preprocessed/lambda_40.hpp", "count": 2}, {"name": "boost/phoenix/scope/preprocessed/lambda_50.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_eval.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_eval_10.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_eval_20.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_eval_30.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_eval_40.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_eval_50.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_expression.hpp", "count": 2}, {"name": "boost/phoenix/statement/detail/switch.hpp", "count": 2}, {"name": "boost/phoenix/statement/do_while.hpp", "count": 2}, {"name": "boost/phoenix/statement/for.hpp", "count": 2}, {"name": "boost/phoenix/statement/switch.hpp", "count": 2}, {"name": "boost/phoenix/statement/throw.hpp", "count": 2}, {"name": "boost/phoenix/statement/while.hpp", "count": 2}, {"name": "boost/phoenix/support/detail/iterate_define.hpp", "count": 2}, {"name": "boost/phoenix/support/preprocessed/vector_10.hpp", "count": 2}, {"name": "boost/phoenix/support/preprocessed/vector_20.hpp", "count": 2}, {"name": "boost/phoenix/support/preprocessed/vector_30.hpp", "count": 2}, {"name": "boost/phoenix/support/preprocessed/vector_40.hpp", "count": 2}, {"name": "boost/phoenix/support/preprocessed/vector_50.hpp", "count": 2}, {"name": "boost/phoenix/scope/this.hpp", "count": 2}, {"name": "boost/phoenix/stl/algorithm/detail/is_std_list.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/function_ptr.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/member_function_ptr.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/preprocessed/function_ptr_10.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/preprocessed/function_ptr_20.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/preprocessed/function_ptr_30.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/preprocessed/function_ptr_40.hpp", "count": 1}, {"name": "boost/phoenix/bind/detail/preprocessed/function_ptr_50.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_function.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_function_10.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_function_20.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_function_30.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_function_40.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_function_50.hpp", "count": 1}, {"name": "boost/phoenix/bind/preprocessed/bind_member_function.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/actor_operator.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/actor_result_of.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/actor_operator.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/actor_operator_10.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/actor_operator_20.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/actor_operator_30.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/actor_operator_40.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/actor_operator_50.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/call_10.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/call_20.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/call_30.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/call_40.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/call_50.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/function_eval_10.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/function_eval_20.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/function_eval_30.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/function_eval_40.hpp", "count": 1}, {"name": "boost/phoenix/core/detail/preprocessed/function_eval_50.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/actor.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/actor_10.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/actor_20.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/actor_30.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/actor_40.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/actor_50.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/expression_10.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/expression_20.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/expression_30.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/expression_40.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/expression_50.hpp", "count": 1}, {"name": "boost/phoenix/core/preprocessed/function_equal.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/construct.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/construct_eval.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/new.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/new_eval.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_10.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_20.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_30.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_40.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_50.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_eval.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_eval_10.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_eval_20.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_eval_30.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_eval_40.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/construct_eval_50.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/new_10.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/new_20.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/new_30.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/new_40.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/new_50.hpp", "count": 1}, {"name": "boost/phoenix/object/detail/preprocessed/new_eval.hpp", "count": 1}, {"name": "boost/phoenix/operator/detail/mem_fun_ptr_eval_result_of.hpp", "count": 1}, {"name": "boost/phoenix/operator/detail/mem_fun_ptr_gen.hpp", "count": 1}, {"name": "boost/phoenix/operator/preprocessed/member.hpp", "count": 1}, {"name": "boost/phoenix/operator/preprocessed/member_10.hpp", "count": 1}, {"name": "boost/phoenix/operator/preprocessed/member_20.hpp", "count": 1}, {"name": "boost/phoenix/operator/preprocessed/member_30.hpp", "count": 1}, {"name": "boost/phoenix/operator/preprocessed/member_40.hpp", "count": 1}, {"name": "boost/phoenix/operator/preprocessed/member_50.hpp", "count": 1}, {"name": "boost/phoenix/scope/detail/local_variable.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/catch_push_back.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/catch_push_back.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/switch.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/switch_10.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/switch_20.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/switch_30.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/switch_40.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/switch_50.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_expression_10.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_expression_20.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_expression_30.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_expression_40.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/preprocessed/try_catch_expression_50.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/try_catch_eval.hpp", "count": 1}, {"name": "boost/phoenix/statement/detail/try_catch_expression.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_equal_range.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_find.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_lower_bound.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_remove.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_remove_if.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_reverse.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_unique.hpp", "count": 1}, {"name": "boost/phoenix/stl/algorithm/detail/has_upper_bound.hpp", "count": 1}, {"name": "boost/phoenix/stl/container/detail/container.hpp", "count": 1}, {"name": "boost/phoenix/core/arity.hpp", "count": 1}, {"name": "boost/phoenix/stl/cmath.hpp", "count": 1}, {"name": "boost/phoenix/container.hpp", "count": 1}, {"name": "boost/phoenix/stl/tuple.hpp", "count": 1}];
-        let headersCurrentPage = 1;
-        const headersItemsPerPage = 10;
-        let headersFilteredData = [...headersData];
-        let headersSearchTerm = '';
-
-        function filterHeadersData(searchTerm) {
-            headersSearchTerm = searchTerm.toLowerCase();
-            headersFilteredData = headersData.filter(header => {
-                const name = (header.name || '').toLowerCase();
-                const count = (header.count || 0).toString();
-                return name.includes(headersSearchTerm) || count.includes(headersSearchTerm);
-            });
-            headersCurrentPage = 1;
-            updateHeadersTable();
-        }
-
-        function updateHeadersTable() {
-            const start = (headersCurrentPage - 1) * headersItemsPerPage;
-            const end = start + headersItemsPerPage;
-            const pageData = headersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('headers-table-tbody');
-            tbody.innerHTML = pageData.map(header => {
-                const name = header.name || 'N/A';
-                const count = (header.count || 0).toLocaleString();
-                return `
-                    <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${name}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${count}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            // Update pagination info
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            const startItem = headersFilteredData.length === 0 ? 0 : start + 1;
-            const endItem = Math.min(start + headersItemsPerPage, headersFilteredData.length);
-            document.getElementById('headers-pagination-info').textContent =
-                headersFilteredData.length === 0 ? 'No data available' : `Showing ${startItem}-${endItem} of ${headersFilteredData.length}`;
-
-            // Update button states
-            document.getElementById('headers-prev-btn').disabled = headersCurrentPage === 1;
-            document.getElementById('headers-next-btn').disabled = headersCurrentPage >= totalPages;
-        }
-
-        document.getElementById('headers-prev-btn').addEventListener('click', () => {
-            if (headersCurrentPage > 1) {
-                headersCurrentPage--;
-                updateHeadersTable();
-            }
-        });
-
-        document.getElementById('headers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            if (headersCurrentPage < totalPages) {
-                headersCurrentPage++;
-                updateHeadersTable();
-            }
-        });
-
-        // Add search input handler
-        const headersSearchInput = document.getElementById('headers-search');
-        if (headersSearchInput) {
-            headersSearchInput.addEventListener('input', (e) => {
-                filterHeadersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        updateHeadersTable();
-    
-            </script>
-    
-        </div>
-    </div>
-
-    <!-- Panel 1: Internal Consumers -->
-    <div class="panel">
-        <h2>Internal Consumers</h2>
-        <p style="color: #666; margin-top: 0; margin-bottom: 15px;">
-            Showing all consumers for the latest version.
-            Colors indicate depth: <span style="color: #3b82f6; font-weight: 600;">Blue (d1)</span> = Direct,
-            <span style="color: #10b981; font-weight: 600;">Green (d2)</span> = Second level,
-            <span style="color: #f59e0b; font-weight: 600;">Orange (d3)</span> = Third level,
-            <span style="color: #ef4444; font-weight: 600;">Red (d4+)</span> = Deeper levels.
-        </p>
-        <div class="panel-row">
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4">Consumer Libraries</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="log.html" style="color: #3b82f6; font-weight: bold;">log</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="msm.html" style="color: #3b82f6; font-weight: bold;">msm</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="spirit.html" style="color: #3b82f6; font-weight: bold;">spirit</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="convert.html" style="color: #10b981; font-weight: normal;">convert</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="graph.html" style="color: #10b981; font-weight: normal;">graph</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="serialization.html" style="color: #10b981; font-weight: normal;">serialization</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="accumulators.html" style="color: #f59e0b; font-weight: normal;">accumulators</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="geometry.html" style="color: #f59e0b; font-weight: normal;">geometry</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="graph_parallel.html" style="color: #f59e0b; font-weight: normal;">graph_parallel</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="histogram.html" style="color: #f59e0b; font-weight: normal;">histogram</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="mpi.html" style="color: #f59e0b; font-weight: normal;">mpi</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="property_tree.html" style="color: #f59e0b; font-weight: normal;">property_tree</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="python.html" style="color: #f59e0b; font-weight: normal;">python</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="wave.html" style="color: #f59e0b; font-weight: normal;">wave</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="compute.html" style="color: #ef4444; font-weight: normal;">compute</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="numeric_conversion.html" style="color: #ef4444; font-weight: normal;">numeric_conversion</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="parameter_python.html" style="color: #ef4444; font-weight: normal;">parameter_python</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="property_map_parallel.html" style="color: #ef4444; font-weight: normal;">property_map_parallel</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="date_time.html" style="color: #ef4444; font-weight: normal;">date_time</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="iostreams.html" style="color: #ef4444; font-weight: normal;">iostreams</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="test.html" style="color: #ef4444; font-weight: normal;">test</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="xpressive.html" style="color: #ef4444; font-weight: normal;">xpressive</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="asio.html" style="color: #ef4444; font-weight: normal;">asio</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="icl.html" style="color: #ef4444; font-weight: normal;">icl</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="thread.html" style="color: #ef4444; font-weight: normal;">thread</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="beast.html" style="color: #ef4444; font-weight: normal;">beast</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="cobalt.html" style="color: #ef4444; font-weight: normal;">cobalt</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="contract.html" style="color: #ef4444; font-weight: normal;">contract</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="locale.html" style="color: #ef4444; font-weight: normal;">locale</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="mqtt5.html" style="color: #ef4444; font-weight: normal;">mqtt5</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="mysql.html" style="color: #ef4444; font-weight: normal;">mysql</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="process.html" style="color: #ef4444; font-weight: normal;">process</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="redis.html" style="color: #ef4444; font-weight: normal;">redis</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="statechart.html" style="color: #ef4444; font-weight: normal;">statechart</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="type_erasure.html" style="color: #ef4444; font-weight: normal;">type_erasure</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="poly_collection.html" style="color: #ef4444; font-weight: normal;">poly_collection</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="chart-container">
-                <canvas id="dependentsChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 2: External Consumers -->
-    <div class="panel">
-        <h2>External Consumers</h2>
-        <div class="panel-row">
-            <div>
-                <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                    <label for="external-consumers-search" style="margin-right: 10px;">Search:</label>
-                    <input type="text" id="external-consumers-search" placeholder="Filter repositories..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                </div>
-                <table id="external-consumers-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="name">Repository <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="stars">Stars <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="usage_count">Header Includes <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="created_at">Created <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="updated_at">Updated <span class="sort-indicator">↕</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="external-consumers-tbody">
-                    </tbody>
-                </table>
-                <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span id="external-consumers-pagination-info">Showing 1-10 of 215</span>
-                    </div>
-                    <div>
-                        <button id="external-consumers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                        <button id="external-consumers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="usageChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 3: Contributors -->
-    <div class="panel">
-        <h2>Contribution</h2>
-        <div class="panel-row">
-            <div>
-                <div id="contributor-table-container">
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="contributor-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="contributor-search" placeholder="Filter contributors..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table id="contributor-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable" data-sort="version">Version <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="person">Contributor <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="email_address">Email <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="commit_count">Commit Count <span class="sort-indicator">↕</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="contributor-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="contributor-pagination-info">Showing 1-10 of 63</span>
-                        </div>
-                        <div>
-                            <button id="contributor-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="contributor-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="commitChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <script>
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">Define small unnamed function objects at the actual call site, and more.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.58.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.87.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>280</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>14.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>12</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2019</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>449</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-0.571</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>115</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>2</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>26</td></tr>
+        </tbody></table>
+      </div>
+      <div>
         
-        new Chart(document.getElementById('dependentsChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Primary Consumers',
-                    data: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }, {
-                    label: 'Transitive Consumers',
-                    data: [61, 61, 61, 52, 53, 52, 51, 57, 57, 58, 58, 52, 51, 48, 47, 47, 41, 41, 43, 37, 36, 36, 36, 36, 36],
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: true,
-                            maxRotation: 90,
-                            minRotation: 45,
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Consumer Count',
-                            font: {
-                                size: 12,
-                                weight: '600'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            },
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('usageChart'), {
-            type: 'bar',
-            data: {
-                labels: ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"],
-                datasets: [
-                    {
-                        label: 'Created Repositories',
-                        type: 'line',
-                        data: [2, 3, 10, 7, 9, 8, 17, 16, 14, 9, 15, 11, 8, 19, 26, 28, 12, 1],
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        fill: false,
-                        tension: 0.3,
-                        yAxisID: 'y1',
-                        order: 1
-                    },
-                    {
-                        label: 'Header Includes (New Repos)',
-                        type: 'bar',
-                        data: [6, 51, 362, 41, 62, 820, 122, 147, 61, 224, 85, 60, 32, 87, 122, 127, 64, 2],
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    },
-                    {
-                        label: 'Header Includes (Updated Repos)',
-                        type: 'bar',
-                        data: [0, 0, 16, 31, 8, 1112, 58, 22, 21, 12, 35, 203, 42, 101, 309, 203, 292, 10],
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Headers',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Repositories',
-                            font: {
-                                size: 14,
-                                weight: 'bold',
-                                color: 'rgba(255, 99, 132, 0.8)'
-                            }
-                        },
-                        grid: {
-                            drawOnChartArea: false
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Year',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('commitChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.47.0", "1.48.0", "1.49.0", "1.50.0", "1.51.0", "1.52.0", "1.53.0", "1.54.0", "1.55.0", "1.56.0", "1.57.0", "1.58.0", "1.59.0", "1.60.0", "1.61.0", "1.62.0", "1.63.0", "1.64.0", "1.65.0", "1.65.1", "1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Commit Count',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 4, 289, 4, 412, 16, 2, 27, 54, 5, 0, 16, 0, 0, 35, 0, 7, 12, 0, 13, 11, 2, 1, 11, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
         
-        const externalConsumersData = [{"name": "ceph/ceph", "stars": 16032, "usage_count": 7, "created_at": "2011-09-01", "updated_at": "2026-01-02"}, {"name": "OrcaSlicer/OrcaSlicer", "stars": 12030, "usage_count": 6, "created_at": "2022-07-16", "updated_at": "2026-01-03"}, {"name": "KDE/krita", "stars": 9121, "usage_count": 3, "created_at": "2015-10-09", "updated_at": "2025-12-11"}, {"name": "prusa3d/PrusaSlicer", "stars": 8752, "usage_count": 2, "created_at": "2016-03-01", "updated_at": "2025-11-07"}, {"name": "prusa3d/Slic3r", "stars": 8720, "usage_count": 1, "created_at": "2016-03-01", "updated_at": "2025-11-07"}, {"name": "Project-OSRM/osrm-backend", "stars": 7438, "usage_count": 12, "created_at": "2011-09-22", "updated_at": "2026-01-22"}, {"name": "wesnoth/wesnoth", "stars": 6382, "usage_count": 4, "created_at": "2013-04-14", "updated_at": "2026-01-12"}, {"name": "CGAL/cgal", "stars": 5735, "usage_count": 6, "created_at": "2014-10-01", "updated_at": "2026-01-26"}, {"name": "mapnik/mapnik", "stars": 3886, "usage_count": 4, "created_at": "2011-10-11", "updated_at": "2026-01-16"}, {"name": "bambulab/BambuStudio", "stars": 3696, "usage_count": 1, "created_at": "2022-07-08", "updated_at": "2026-01-21"}, {"name": "HKUST-Aerial-Robotics/Fast-Planner", "stars": 3079, "usage_count": 5, "created_at": "2019-02-27", "updated_at": "2024-10-24"}, {"name": "heavyai/heavydb", "stars": 3054, "usage_count": 1, "created_at": "2017-05-07", "updated_at": "2026-01-06"}, {"name": "amov-lab/Prometheus", "stars": 2992, "usage_count": 10, "created_at": "2019-12-03", "updated_at": "2025-12-18"}, {"name": "STEllAR-GROUP/hpx", "stars": 2774, "usage_count": 4, "created_at": "2012-05-26", "updated_at": "2026-01-23"}, {"name": "ZJU-FAST-Lab/Fast-Drone-250", "stars": 2202, "usage_count": 5, "created_at": "2021-09-28", "updated_at": "2022-11-09"}, {"name": "ZJU-FAST-Lab/ego-planner", "stars": 2157, "usage_count": 5, "created_at": "2020-05-10", "updated_at": "2025-03-08"}, {"name": "ZJU-FAST-Lab/ego-planner-swarm", "stars": 1792, "usage_count": 5, "created_at": "2020-10-14", "updated_at": "2025-03-08"}, {"name": "maplibre/maplibre-native", "stars": 1707, "usage_count": 4, "created_at": "2020-11-20", "updated_at": "2026-01-21"}, {"name": "TuGraph-family/tugraph-db", "stars": 1699, "usage_count": 1, "created_at": "2022-08-25", "updated_at": "2026-01-22"}, {"name": "TypesettingTools/Aegisub", "stars": 1519, "usage_count": 6, "created_at": "2018-03-29", "updated_at": "2026-01-21"}, {"name": "HKUST-Aerial-Robotics/FUEL", "stars": 1294, "usage_count": 5, "created_at": "2020-10-18", "updated_at": "2024-11-19"}, {"name": "cms-sw/cmssw", "stars": 1250, "usage_count": 2, "created_at": "2013-06-26", "updated_at": "2026-01-19"}, {"name": "KratosMultiphysics/Kratos", "stars": 1208, "usage_count": 1, "created_at": "2017-02-13", "updated_at": "2026-01-04"}, {"name": "ROCmSoftwarePlatform/MIOpen", "stars": 1185, "usage_count": 1, "created_at": "2017-06-27", "updated_at": "2025-12-16"}, {"name": "HKUST-Aerial-Robotics/Teach-Repeat-Replan", "stars": 1107, "usage_count": 5, "created_at": "2019-06-25", "updated_at": "2021-10-19"}, {"name": "mitsuba-renderer/mitsuba", "stars": 1094, "usage_count": 3, "created_at": "2015-07-17", "updated_at": "2023-09-11"}, {"name": "freeorion/freeorion", "stars": 962, "usage_count": 46, "created_at": "2015-03-29", "updated_at": "2026-01-12"}, {"name": "TJU-Aerial-Robotics/YOPO", "stars": 891, "usage_count": 5, "created_at": "2023-12-14", "updated_at": "2025-12-23"}, {"name": "GeoDaCenter/geoda", "stars": 773, "usage_count": 1, "created_at": "2015-08-06", "updated_at": "2025-10-02"}, {"name": "kahowang/sensor-fusion-for-localization-and-mapping", "stars": 767, "usage_count": 1, "created_at": "2021-08-15", "updated_at": "2022-05-20"}, {"name": "ddemidov/vexcl", "stars": 716, "usage_count": 1, "created_at": "2012-05-29", "updated_at": "2025-07-19"}, {"name": "Robotics-STAR-Lab/RACER", "stars": 686, "usage_count": 5, "created_at": "2023-02-24", "updated_at": "2024-11-19"}, {"name": "OpenSourceRisk/Engine", "stars": 658, "usage_count": 4, "created_at": "2016-10-07", "updated_at": "2026-01-21"}, {"name": "rburkholder/trade-frame", "stars": 631, "usage_count": 79, "created_at": "2016-07-24", "updated_at": "2026-01-19"}, {"name": "bumptop/BumpTop", "stars": 617, "usage_count": 2, "created_at": "2014-10-25", "updated_at": "2024-01-08"}, {"name": "ZJU-FAST-Lab/EGO-Planner-v2", "stars": 602, "usage_count": 20, "created_at": "2022-05-07", "updated_at": "2023-10-16"}, {"name": "svgpp/svgpp", "stars": 592, "usage_count": 12, "created_at": "2014-02-18", "updated_at": "2024-02-29"}, {"name": "NREL/OpenStudio", "stars": 574, "usage_count": 1, "created_at": "2013-07-03", "updated_at": "2026-01-15"}, {"name": "ZJU-FAST-Lab/Swarm-Formation", "stars": 501, "usage_count": 5, "created_at": "2021-09-14", "updated_at": "2024-01-24"}, {"name": "infinit/elle", "stars": 475, "usage_count": 1, "created_at": "2016-02-14", "updated_at": "2023-05-22"}, {"name": "CrealityOfficial/CrealityPrint", "stars": 438, "usage_count": 1, "created_at": "2023-08-03", "updated_at": "2026-01-01"}, {"name": "fuzzuf/fuzzuf", "stars": 376, "usage_count": 5, "created_at": "2021-12-27", "updated_at": "2025-01-29"}, {"name": "RosettaCommons/rosetta", "stars": 373, "usage_count": 1, "created_at": "2023-11-17", "updated_at": "2026-01-28"}, {"name": "peiyu-cui/uav_motion_planning", "stars": 352, "usage_count": 5, "created_at": "2024-06-12", "updated_at": "2025-04-16"}, {"name": "headmyshoulder/odeint-v2", "stars": 352, "usage_count": 7, "created_at": "2011-07-04", "updated_at": "2019-11-09"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 4, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "ZJU-FAST-Lab/Fast-Racing", "stars": 300, "usage_count": 5, "created_at": "2021-05-12", "updated_at": "2021-08-23"}, {"name": "mickem/nscp", "stars": 280, "usage_count": 13, "created_at": "2012-04-28", "updated_at": "2026-01-26"}, {"name": "comaps/comaps", "stars": 258, "usage_count": 13, "created_at": "2025-05-09", "updated_at": "2026-01-18"}, {"name": "ZJU-FAST-Lab/Implicit-SDF-Planner", "stars": 257, "usage_count": 5, "created_at": "2023-02-28", "updated_at": "2024-07-18"}, {"name": "myiosemail/ShowTimeVideoLive", "stars": 253, "usage_count": 5, "created_at": "2016-06-22", "updated_at": "2016-07-07"}, {"name": "ZJU-FAST-Lab/Fast-tracker", "stars": 243, "usage_count": 5, "created_at": "2020-11-05", "updated_at": "2021-06-21"}, {"name": "HKUST-Aerial-Robotics/FALCON", "stars": 242, "usage_count": 5, "created_at": "2024-11-27", "updated_at": "2025-05-16"}, {"name": "Tom94/practical-path-guiding", "stars": 242, "usage_count": 3, "created_at": "2017-09-05", "updated_at": "2024-08-29"}, {"name": "2468785842/krkr2", "stars": 229, "usage_count": 3, "created_at": "2024-12-10", "updated_at": "2026-01-11"}, {"name": "avplayer/avbot", "stars": 223, "usage_count": 1, "created_at": "2013-07-19", "updated_at": "2015-10-25"}, {"name": "sparcians/map", "stars": 215, "usage_count": 10, "created_at": "2019-12-12", "updated_at": "2026-01-13"}, {"name": "ZJU-FAST-Lab/Implicit-SVSDF-Planner", "stars": 214, "usage_count": 5, "created_at": "2024-03-23", "updated_at": "2024-07-18"}, {"name": "jizhang-cmu/autonomy_stack_mecanum_wheel_platform", "stars": 209, "usage_count": 1, "created_at": "2024-08-16", "updated_at": "2025-12-18"}, {"name": "CartoDB/mobile-sdk", "stars": 199, "usage_count": 3, "created_at": "2016-06-01", "updated_at": "2023-02-17"}, {"name": "ZJU-FAST-Lab/am_traj", "stars": 195, "usage_count": 5, "created_at": "2020-02-24", "updated_at": "2021-06-10"}, {"name": "0xd34df00d/leechcraft", "stars": 194, "usage_count": 2, "created_at": "2009-02-02", "updated_at": "2026-01-05"}, {"name": "emNavi/Fast-LIO2", "stars": 193, "usage_count": 5, "created_at": "2024-11-23", "updated_at": "2025-09-19"}, {"name": "NEU-REAL/REAL_DRONE_400", "stars": 187, "usage_count": 5, "created_at": "2024-04-25", "updated_at": "2025-11-17"}, {"name": "USE-jx/NMPC_CASADI_CPP", "stars": 178, "usage_count": 5, "created_at": "2023-07-24", "updated_at": "2023-12-12"}, {"name": "folium-app/Folium", "stars": 174, "usage_count": 5, "created_at": "2024-05-18", "updated_at": "2025-12-28"}, {"name": "mtconnect/cppagent", "stars": 162, "usage_count": 4, "created_at": "2009-09-18", "updated_at": "2026-01-10"}, {"name": "dato-code/GraphLab-Create-SDK", "stars": 148, "usage_count": 534, "created_at": "2014-11-24", "updated_at": "2017-12-19"}, {"name": "turi-code/GraphLab-Create-SDK", "stars": 148, "usage_count": 252, "created_at": "2014-11-24", "updated_at": "2017-12-19"}, {"name": "advancedtelematic/sota_client_cpp", "stars": 147, "usage_count": 1, "created_at": "2016-11-25", "updated_at": "2024-03-18"}, {"name": "yindaz/pbrs", "stars": 142, "usage_count": 3, "created_at": "2017-04-09", "updated_at": "2019-03-16"}, {"name": "ZJU-FAST-Lab/Primitive-Planner", "stars": 137, "usage_count": 5, "created_at": "2022-09-16", "updated_at": "2025-09-26"}, {"name": "yangmingustb/Local-Planner", "stars": 130, "usage_count": 5, "created_at": "2019-07-09", "updated_at": "2020-04-29"}, {"name": "nasa/HDTN", "stars": 127, "usage_count": 1, "created_at": "2020-11-17", "updated_at": "2025-09-12"}, {"name": "JMUWRobotics/3DTK", "stars": 125, "usage_count": 1, "created_at": "2018-02-06", "updated_at": "2026-01-16"}, {"name": "GrossfieldLab/loos", "stars": 125, "usage_count": 1, "created_at": "2016-01-18", "updated_at": "2025-10-20"}, {"name": "infinit/memo", "stars": 117, "usage_count": 1, "created_at": "2017-06-21", "updated_at": "2018-11-13"}, {"name": "ZJU-FAST-Lab/TGK-Planner", "stars": 114, "usage_count": 5, "created_at": "2020-08-05", "updated_at": "2021-03-18"}, {"name": "bertiniteam/b2", "stars": 110, "usage_count": 9, "created_at": "2013-10-07", "updated_at": "2025-08-14"}, {"name": "VIS4ROB-lab/fast_multi_robot_exploration", "stars": 109, "usage_count": 5, "created_at": "2023-06-29", "updated_at": "2023-07-24"}, {"name": "Robotics-STAR-Lab/STAR-Searcher", "stars": 107, "usage_count": 5, "created_at": "2023-09-19", "updated_at": "2025-05-08"}, {"name": "USE-jx/mpc_track_fastplanner", "stars": 103, "usage_count": 5, "created_at": "2023-06-16", "updated_at": "2023-12-12"}, {"name": "ZJU-FAST-Lab/EVA-planner", "stars": 103, "usage_count": 5, "created_at": "2020-10-31", "updated_at": "2023-11-24"}, {"name": "arclab-hku/FAPP", "stars": 100, "usage_count": 5, "created_at": "2025-09-03", "updated_at": "2025-09-08"}, {"name": "dynawo/dynawo", "stars": 99, "usage_count": 21, "created_at": "2019-01-29", "updated_at": "2026-01-16"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 310, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "neobrain/nihstro", "stars": 97, "usage_count": 5, "created_at": "2014-08-14", "updated_at": "2024-05-05"}, {"name": "johnson3d/titan3d", "stars": 96, "usage_count": 5, "created_at": "2019-12-30", "updated_at": "2026-01-19"}, {"name": "SiliconLabs/UnifySDK", "stars": 95, "usage_count": 4, "created_at": "2021-06-23", "updated_at": "2025-10-29"}, {"name": "worldforge/cyphesis", "stars": 94, "usage_count": 1, "created_at": "2011-03-21", "updated_at": "2023-12-03"}, {"name": "QIDITECH/QIDISlicer", "stars": 90, "usage_count": 2, "created_at": "2023-05-30", "updated_at": "2025-09-04"}, {"name": "hkroeger/insightcae", "stars": 88, "usage_count": 31, "created_at": "2017-09-12", "updated_at": "2025-12-16"}, {"name": "qqiangwu/cppship", "stars": 87, "usage_count": 4, "created_at": "2023-04-08", "updated_at": "2025-04-20"}, {"name": "QIDITECH/QIDIStudio", "stars": 86, "usage_count": 1, "created_at": "2024-08-26", "updated_at": "2026-01-24"}, {"name": "qcscine/sparrow", "stars": 86, "usage_count": 3, "created_at": "2019-06-12", "updated_at": "2025-10-09"}, {"name": "USE-jx/LMPC_OSQP_EIGEN", "stars": 85, "usage_count": 5, "created_at": "2023-07-24", "updated_at": "2023-12-12"}, {"name": "Zyhlibrary/FAEP", "stars": 85, "usage_count": 5, "created_at": "2022-07-15", "updated_at": "2023-06-23"}, {"name": "mollnn/spoly", "stars": 85, "usage_count": 3, "created_at": "2024-04-15", "updated_at": "2024-10-12"}, {"name": "LanternW/FastPlanner-Lite", "stars": 84, "usage_count": 5, "created_at": "2022-05-16", "updated_at": "2022-05-18"}, {"name": "aws-samples/aws-iot-securetunneling-localproxy", "stars": 84, "usage_count": 1, "created_at": "2019-11-20", "updated_at": "2026-01-23"}, {"name": "ELEGOO-3D/ElegooSlicer", "stars": 81, "usage_count": 6, "created_at": "2024-12-02", "updated_at": "2026-01-12"}, {"name": "utkabobr/SliceBeam", "stars": 81, "usage_count": 6, "created_at": "2024-11-01", "updated_at": "2025-04-14"}, {"name": "jizhang-cmu/autonomy_stack_diablo_setup", "stars": 81, "usage_count": 1, "created_at": "2024-06-18", "updated_at": "2025-10-04"}, {"name": "IRCAD/sight", "stars": 80, "usage_count": 11, "created_at": "2018-11-21", "updated_at": "2026-01-14"}, {"name": "GeoscienceAustralia/DynAdjust", "stars": 79, "usage_count": 2, "created_at": "2018-08-30", "updated_at": "2025-11-26"}, {"name": "pika-org/pika", "stars": 79, "usage_count": 1, "created_at": "2022-01-17", "updated_at": "2026-01-05"}, {"name": "FAST-FIRE/ColAG", "stars": 73, "usage_count": 5, "created_at": "2023-09-15", "updated_at": "2025-05-23"}, {"name": "llxyq/ackermann_ego_planner", "stars": 67, "usage_count": 5, "created_at": "2025-03-02", "updated_at": "2025-03-02"}, {"name": "fr3ak2402/GalaxySlicer", "stars": 64, "usage_count": 6, "created_at": "2023-06-28", "updated_at": "2024-02-04"}, {"name": "OpenBioSim/sire", "stars": 62, "usage_count": 10, "created_at": "2023-01-06", "updated_at": "2026-01-13"}, {"name": "ths-rwth/smtrat", "stars": 60, "usage_count": 6, "created_at": "2015-05-08", "updated_at": "2025-11-20"}, {"name": "AIDASoft/DD4hep", "stars": 60, "usage_count": 2, "created_at": "2016-06-08", "updated_at": "2026-01-27"}, {"name": "lolisa/first_order_logic_prover", "stars": 60, "usage_count": 4, "created_at": "2013-10-26", "updated_at": "2018-02-27"}, {"name": "cmu-ci-lab/MitsubaToFRenderer", "stars": 57, "usage_count": 3, "created_at": "2018-02-25", "updated_at": "2024-07-02"}, {"name": "CSS-Electronics/mdf4-converters", "stars": 56, "usage_count": 1, "created_at": "2019-10-12", "updated_at": "2024-10-15"}, {"name": "denovogear/denovogear", "stars": 55, "usage_count": 8, "created_at": "2013-12-19", "updated_at": "2020-03-30"}, {"name": "ZJU-FAST-Lab/EDG-TEAM", "stars": 53, "usage_count": 5, "created_at": "2022-05-06", "updated_at": "2022-07-04"}, {"name": "NKU-MobFly-Robotics/EDEN", "stars": 51, "usage_count": 5, "created_at": "2025-06-04", "updated_at": "2026-01-14"}, {"name": "mat007/turtle", "stars": 51, "usage_count": 4, "created_at": "2015-03-01", "updated_at": "2025-08-24"}, {"name": "symbol/symbol", "stars": 51, "usage_count": 2, "created_at": "2022-01-10", "updated_at": "2026-01-26"}, {"name": "iRath96/ears", "stars": 49, "usage_count": 3, "created_at": "2022-04-28", "updated_at": "2023-06-06"}, {"name": "a0ivanov/aimp-control-plugin", "stars": 49, "usage_count": 1, "created_at": "2014-07-26", "updated_at": "2019-06-15"}, {"name": "DomainDrivenConsulting/dogen", "stars": 48, "usage_count": 13, "created_at": "2012-09-25", "updated_at": "2025-11-26"}, {"name": "ZJU-FAST-Lab/Auto-Filmer", "stars": 47, "usage_count": 5, "created_at": "2022-12-12", "updated_at": "2023-06-30"}, {"name": "Robotics-STAR-Lab/LA-Planner", "stars": 45, "usage_count": 5, "created_at": "2025-07-21", "updated_at": "2025-07-21"}, {"name": "opencog/asmoses", "stars": 45, "usage_count": 1, "created_at": "2018-03-07", "updated_at": "2025-12-10"}, {"name": "siodb/siodb", "stars": 45, "usage_count": 2, "created_at": "2019-10-21", "updated_at": "2023-02-18"}, {"name": "nesteruk/Tlon", "stars": 45, "usage_count": 1, "created_at": "2016-09-04", "updated_at": "2022-03-08"}, {"name": "eufymake/eufyMake-PrusaSlicer-Release", "stars": 44, "usage_count": 7, "created_at": "2023-06-07", "updated_at": "2025-03-24"}, {"name": "qcscine/molassembler", "stars": 44, "usage_count": 1, "created_at": "2020-11-27", "updated_at": "2025-10-09"}, {"name": "g1257/dmrgpp", "stars": 42, "usage_count": 4, "created_at": "2010-06-02", "updated_at": "2026-01-29"}, {"name": "LibreOffice/libvisio", "stars": 42, "usage_count": 1, "created_at": "2013-10-31", "updated_at": "2025-09-23"}, {"name": "ChairImpSec/PROLEAD", "stars": 41, "usage_count": 7, "created_at": "2022-07-14", "updated_at": "2026-01-19"}, {"name": "HKUST-Aerial-Robotics/FINT", "stars": 40, "usage_count": 5, "created_at": "2024-11-18", "updated_at": "2025-06-30"}, {"name": "SmartGroupSystems/Dynamic-Planner", "stars": 40, "usage_count": 5, "created_at": "2023-11-14", "updated_at": "2025-04-17"}, {"name": "alexey-malov/oop", "stars": 40, "usage_count": 2, "created_at": "2016-02-02", "updated_at": "2025-11-20"}, {"name": "sanguinariojoe/aquagpusph", "stars": 39, "usage_count": 32, "created_at": "2013-11-26", "updated_at": "2025-12-21"}, {"name": "eos/eos", "stars": 39, "usage_count": 1, "created_at": "2015-11-21", "updated_at": "2026-01-14"}, {"name": "ccf19881030/Cplus_libs_wrapper", "stars": 38, "usage_count": 10, "created_at": "2019-03-31", "updated_at": "2024-01-23"}, {"name": "victor-smirnov/memoria", "stars": 37, "usage_count": 19, "created_at": "2020-03-05", "updated_at": "2025-07-02"}, {"name": "mlang/bmc", "stars": 37, "usage_count": 2, "created_at": "2011-06-27", "updated_at": "2020-02-27"}, {"name": "FlashForge/Orca-Flashforge", "stars": 36, "usage_count": 6, "created_at": "2024-04-17", "updated_at": "2026-01-19"}, {"name": "ANYCUBIC-3D/AnycubicSlicer_Prusa", "stars": 36, "usage_count": 6, "created_at": "2023-05-31", "updated_at": "2023-09-21"}, {"name": "netmeld/netmeld", "stars": 35, "usage_count": 1, "created_at": "2017-11-03", "updated_at": "2025-05-29"}, {"name": "sanshar/Block", "stars": 35, "usage_count": 5, "created_at": "2012-06-06", "updated_at": "2023-08-28"}, {"name": "craffael/lehrfempp", "stars": 34, "usage_count": 14, "created_at": "2018-04-06", "updated_at": "2025-08-10"}, {"name": "mollnn/bound-caustics", "stars": 34, "usage_count": 3, "created_at": "2025-04-24", "updated_at": "2025-07-11"}, {"name": "worldforge/worldforge", "stars": 34, "usage_count": 1, "created_at": "2023-10-31", "updated_at": "2025-07-01"}, {"name": "jmwang0117/HE-Nav", "stars": 33, "usage_count": 5, "created_at": "2023-12-22", "updated_at": "2025-01-29"}, {"name": "Fadis/gct", "stars": 32, "usage_count": 2, "created_at": "2021-11-19", "updated_at": "2025-12-05"}, {"name": "Radiance-nt/Swarm-Formation-Airsim", "stars": 31, "usage_count": 5, "created_at": "2024-08-26", "updated_at": "2024-08-27"}, {"name": "daedric/commonpp", "stars": 31, "usage_count": 1, "created_at": "2015-09-17", "updated_at": "2026-01-19"}, {"name": "zhongtianda/px4_gazebo_fuel", "stars": 30, "usage_count": 5, "created_at": "2024-04-27", "updated_at": "2024-11-24"}, {"name": "ZJU-FAST-Lab/GPA-Teleoperation", "stars": 30, "usage_count": 5, "created_at": "2021-09-13", "updated_at": "2023-12-07"}, {"name": "ths-rwth/carl", "stars": 30, "usage_count": 1, "created_at": "2015-05-08", "updated_at": "2025-05-19"}, {"name": "Longer95479/Fast-Drone-XI35", "stars": 28, "usage_count": 5, "created_at": "2024-07-15", "updated_at": "2026-01-13"}, {"name": "DifferentialRobotics/Aerial_Autonomy_Challenge", "stars": 27, "usage_count": 5, "created_at": "2025-07-29", "updated_at": "2025-08-12"}, {"name": "tfwu/AOGDetector", "stars": 27, "usage_count": 1, "created_at": "2015-09-27", "updated_at": "2016-05-20"}, {"name": "SYSU-HILAB/am-planner", "stars": 26, "usage_count": 5, "created_at": "2024-12-11", "updated_at": "2025-12-12"}, {"name": "s3a-spatialaudio/VISR", "stars": 26, "usage_count": 6, "created_at": "2018-12-03", "updated_at": "2025-12-30"}, {"name": "homer6/c_reading", "stars": 25, "usage_count": 16, "created_at": "2011-04-30", "updated_at": "2011-04-30"}, {"name": "dairycowp/YOPO-ROS2", "stars": 25, "usage_count": 5, "created_at": "2025-11-06", "updated_at": "2026-01-08"}, {"name": "uaf-arctic-eco-modeling/dvm-dos-tem", "stars": 25, "usage_count": 1, "created_at": "2012-06-07", "updated_at": "2026-01-21"}, {"name": "iRath96/focal-guiding", "stars": 25, "usage_count": 3, "created_at": "2023-04-21", "updated_at": "2023-08-29"}, {"name": "aekul/yotsuba", "stars": 25, "usage_count": 3, "created_at": "2017-08-16", "updated_at": "2017-08-20"}, {"name": "tdauth/wc3lib", "stars": 25, "usage_count": 1, "created_at": "2016-09-28", "updated_at": "2025-11-04"}, {"name": "KDE/rocs", "stars": 24, "usage_count": 4, "created_at": "2015-09-18", "updated_at": "2026-01-12"}, {"name": "mollnn/conditional-mixture", "stars": 24, "usage_count": 3, "created_at": "2024-04-22", "updated_at": "2024-07-25"}, {"name": "rpl-cmu/incopt", "stars": 24, "usage_count": 1, "created_at": "2022-03-08", "updated_at": "2023-02-10"}, {"name": "VIS4ROB-lab/multirotors_landing", "stars": 23, "usage_count": 5, "created_at": "2022-07-25", "updated_at": "2023-07-02"}, {"name": "jiayaozhang/NaniteTree", "stars": 23, "usage_count": 5, "created_at": "2023-12-29", "updated_at": "2024-09-17"}, {"name": "wallscavesurvey/walls", "stars": 23, "usage_count": 1, "created_at": "2017-02-18", "updated_at": "2025-09-13"}, {"name": "ZJU-FAST-Lab/Active-Relative-Localization", "stars": 22, "usage_count": 5, "created_at": "2024-03-17", "updated_at": "2024-11-18"}, {"name": "ZJU-FAST-Lab/FACT-Coordinate-Initialization", "stars": 22, "usage_count": 5, "created_at": "2024-03-02", "updated_at": "2024-12-25"}, {"name": "diegoarjz/pagoda", "stars": 22, "usage_count": 3, "created_at": "2019-01-05", "updated_at": "2025-08-04"}, {"name": "GobySoft/dccl", "stars": 22, "usage_count": 4, "created_at": "2015-10-19", "updated_at": "2026-01-26"}, {"name": "ningnawang/QMAT", "stars": 21, "usage_count": 5, "created_at": "2024-08-17", "updated_at": "2024-09-25"}, {"name": "usnistgov/ZENO", "stars": 21, "usage_count": 1, "created_at": "2016-05-19", "updated_at": "2024-09-17"}, {"name": "tgoyne/aegisub", "stars": 21, "usage_count": 3, "created_at": "2010-09-20", "updated_at": "2022-11-24"}, {"name": "TJU-Aerial-Robotics/UAV_Simulator", "stars": 20, "usage_count": 5, "created_at": "2024-10-19", "updated_at": "2024-11-20"}, {"name": "Sovol3d/Sovol-OrcaSlicer", "stars": 20, "usage_count": 6, "created_at": "2025-03-06", "updated_at": "2025-10-08"}, {"name": "tpms-lattice/ASLI", "stars": 20, "usage_count": 5, "created_at": "2022-02-01", "updated_at": "2024-06-14"}, {"name": "fire-rs-laas/fire-rs-saop", "stars": 20, "usage_count": 1, "created_at": "2017-10-04", "updated_at": "2021-07-09"}, {"name": "SKBT-lab/csf-planner", "stars": 18, "usage_count": 5, "created_at": "2025-04-18", "updated_at": "2025-04-19"}, {"name": "mkettune/ngpt", "stars": 18, "usage_count": 3, "created_at": "2019-12-21", "updated_at": "2020-01-13"}, {"name": "Flsun3d/FlsunSlicer", "stars": 18, "usage_count": 6, "created_at": "2024-05-28", "updated_at": "2025-11-13"}, {"name": "yielding/code", "stars": 17, "usage_count": 44, "created_at": "2010-10-11", "updated_at": "2026-01-24"}, {"name": "chrismile/sgl", "stars": 17, "usage_count": 5, "created_at": "2017-08-27", "updated_at": "2026-01-25"}, {"name": "LhKipp/Prolog_BFS", "stars": 16, "usage_count": 1, "created_at": "2019-07-05", "updated_at": "2023-04-02"}, {"name": "SC-ARLab/Ego-v2-realflight", "stars": 15, "usage_count": 5, "created_at": "2022-12-05", "updated_at": "2023-04-01"}, {"name": "lixun910/geoda", "stars": 14, "usage_count": 1, "created_at": "2016-04-26", "updated_at": "2025-10-01"}, {"name": "MASKOR/gologpp", "stars": 13, "usage_count": 180, "created_at": "2018-08-03", "updated_at": "2023-11-06"}, {"name": "aax1n/UAV-Navigation", "stars": 13, "usage_count": 5, "created_at": "2023-09-25", "updated_at": "2023-10-26"}, {"name": "ZhikangLai/LiteGeometry", "stars": 13, "usage_count": 5, "created_at": "2025-04-18", "updated_at": "2025-06-07"}, {"name": "tom--bo/mysqlredo", "stars": 13, "usage_count": 1, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "OddEssA/BambuStudio-SoftFever", "stars": 13, "usage_count": 1, "created_at": "2023-02-27", "updated_at": "2023-02-27"}, {"name": "Hins-H/Prometheus-mid360-egoplanner", "stars": 12, "usage_count": 10, "created_at": "2024-10-29", "updated_at": "2025-02-20"}, {"name": "XTERY11/dog", "stars": 12, "usage_count": 5, "created_at": "2024-04-04", "updated_at": "2024-04-04"}, {"name": "trep/opentrep", "stars": 12, "usage_count": 2, "created_at": "2011-10-31", "updated_at": "2026-01-13"}, {"name": "YellProgram/Yell", "stars": 12, "usage_count": 8, "created_at": "2014-01-14", "updated_at": "2025-08-04"}, {"name": "dstoeckel/causaltrail", "stars": 12, "usage_count": 1, "created_at": "2015-09-22", "updated_at": "2021-06-09"}, {"name": "OpenVZ/prl-disp-service", "stars": 11, "usage_count": 32, "created_at": "2015-06-02", "updated_at": "2024-04-29"}, {"name": "npu-ius-lab/MoNA-Bench", "stars": 11, "usage_count": 10, "created_at": "2023-07-07", "updated_at": "2024-05-31"}, {"name": "CartwrightLab/dawg", "stars": 11, "usage_count": 6, "created_at": "2015-09-08", "updated_at": "2024-07-09"}, {"name": "oozebot/preFlight", "stars": 11, "usage_count": 2, "created_at": "2026-01-22", "updated_at": "2026-01-27"}, {"name": "Minres/DBT-RISE-Core", "stars": 11, "usage_count": 1, "created_at": "2017-09-25", "updated_at": "2026-01-12"}, {"name": "QoroQuantum/maestro", "stars": 11, "usage_count": 2, "created_at": "2025-07-15", "updated_at": "2026-01-26"}, {"name": "fnalacceleratormodeling/synergia2", "stars": 11, "usage_count": 4, "created_at": "2022-02-02", "updated_at": "2026-01-14"}, {"name": "mapycz/mapnik", "stars": 11, "usage_count": 1, "created_at": "2011-10-20", "updated_at": "2021-10-04"}, {"name": "sanshar/StackBlock", "stars": 11, "usage_count": 5, "created_at": "2015-08-14", "updated_at": "2021-03-13"}, {"name": "hsnlab/escape", "stars": 10, "usage_count": 42, "created_at": "2016-09-30", "updated_at": "2018-12-14"}, {"name": "bpinaud/Porgy", "stars": 10, "usage_count": 8, "created_at": "2017-11-21", "updated_at": "2025-06-03"}, {"name": "SmartGroupSystems/flag_planner", "stars": 10, "usage_count": 5, "created_at": "2023-03-29", "updated_at": "2023-11-10"}, {"name": "SAtacker/quick-ftxui", "stars": 10, "usage_count": 1, "created_at": "2022-01-10", "updated_at": "2024-03-02"}, {"name": "mbsim-env/fmatvec", "stars": 10, "usage_count": 3, "created_at": "2015-04-14", "updated_at": "2025-12-01"}];
-        let externalConsumersCurrentPage = 1;
-        const externalConsumersItemsPerPage = 10;
-        let externalConsumersSortField = 'stars';
-        let externalConsumersSortOrder = 'asc';
-        let externalConsumersFilteredData = [...externalConsumersData];
-        let externalConsumersSearchTerm = '';
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
 
-        function sortExternalConsumersData(field) {
-            if (externalConsumersSortField === field) {
-                externalConsumersSortOrder = externalConsumersSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                externalConsumersSortField = field;
-                externalConsumersSortOrder = 'asc';
-            }
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
 
-            externalConsumersFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
-
-                // Handle numeric fields
-                if (['stars', 'usage_count'].includes(field)) {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
-
-                // Handle date fields
-                if (['created_at', 'updated_at'].includes(field)) {
-                    aVal = aVal ? new Date(aVal) : new Date(0);
-                    bVal = bVal ? new Date(bVal) : new Date(0);
-                }
-
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
-
-                if (aVal < bVal) {
-                    return externalConsumersSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return externalConsumersSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-
-            updateExternalConsumersSortIndicators();
-            externalConsumersCurrentPage = 1;
-            updateExternalConsumersTable();
-        }
-
-        function filterExternalConsumersData(searchTerm) {
-            externalConsumersSearchTerm = searchTerm.toLowerCase();
-            externalConsumersFilteredData = externalConsumersData.filter(repo => {
-                const name = ((repo.name || repo.repo_name) || '').toLowerCase();
-                const stars = (repo.stars || 0).toString();
-                const usageCount = (repo.usage_count || 0).toString();
-                const createdAt = (repo.created_at || '').toLowerCase();
-                const updatedAt = (repo.updated_at || '').toLowerCase();
-                return name.includes(externalConsumersSearchTerm) ||
-                       stars.includes(externalConsumersSearchTerm) ||
-                       usageCount.includes(externalConsumersSearchTerm) ||
-                       createdAt.includes(externalConsumersSearchTerm) ||
-                       updatedAt.includes(externalConsumersSearchTerm);
-            });
-            externalConsumersCurrentPage = 1;
-            sortExternalConsumersData(externalConsumersSortField);
-        }
-
-        function updateExternalConsumersSortIndicators() {
-            document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === externalConsumersSortField) {
-                    indicator.textContent = externalConsumersSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateExternalConsumersTable() {
-            const start = (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage;
-            const end = start + externalConsumersItemsPerPage;
-            const pageData = externalConsumersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('external-consumers-tbody');
-            if (externalConsumersFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No repositories found</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(repo => {
-                    const name = repo.name || repo.repo_name || 'N/A';
-                    const stars = (repo.stars || 0).toLocaleString();
-                    const usageCount = (repo.usage_count || 0).toLocaleString();
-                    let createdAt = repo.created_at || 'N/A';
-                    let updatedAt = repo.updated_at || 'N/A';
-                    if (createdAt !== 'N/A' && createdAt.length > 10) {
-                        createdAt = createdAt.substring(0, 10);
-                    }
-                    if (updatedAt !== 'N/A' && updatedAt.length > 10) {
-                        updatedAt = updatedAt.substring(0, 10);
-                    }
-
-                    return `
-                        <tr>
-                            <td><a href="https://github.com/${name}" target="_blank">${name}</a></td>
-                            <td>${stars}</td>
-                            <td>${usageCount}</td>
-                            <td>${createdAt}</td>
-                            <td>${updatedAt}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateExternalConsumersPaginationInfo();
-            updateExternalConsumersPaginationButtons();
-        }
-
-        function updateExternalConsumersPaginationInfo() {
-            const start = externalConsumersFilteredData.length === 0 ? 0 : (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage + 1;
-            const end = Math.min(externalConsumersCurrentPage * externalConsumersItemsPerPage, externalConsumersFilteredData.length);
-            const total = externalConsumersFilteredData.length;
-            document.getElementById('external-consumers-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateExternalConsumersPaginationButtons() {
-            const prevBtn = document.getElementById('external-consumers-prev-btn');
-            const nextBtn = document.getElementById('external-consumers-next-btn');
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-
-            prevBtn.disabled = externalConsumersCurrentPage === 1 || externalConsumersFilteredData.length === 0;
-            nextBtn.disabled = externalConsumersCurrentPage >= totalPages || externalConsumersFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortExternalConsumersData(th.dataset.sort));
-        });
-
-        document.getElementById('external-consumers-prev-btn').addEventListener('click', () => {
-            if (externalConsumersCurrentPage > 1) {
-                externalConsumersCurrentPage--;
-                updateExternalConsumersTable();
-            }
-        });
-
-        document.getElementById('external-consumers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-            if (externalConsumersCurrentPage < totalPages) {
-                externalConsumersCurrentPage++;
-                updateExternalConsumersTable();
-            }
-        });
-
-        // Add search input handler
-        const externalConsumersSearchInput = document.getElementById('external-consumers-search');
-        if (externalConsumersSearchInput) {
-            externalConsumersSearchInput.addEventListener('input', (e) => {
-                filterExternalConsumersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        sortExternalConsumersData('stars');
+  <script>
     
-        
-        const contributorData = [{"version": "1.87.0", "person": "cook-1229", "email_address": "70235336+cook-1229@users.noreply.github.com", "commit_count": 1}, {"version": "1.87.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 1}, {"version": "1.84.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 2}, {"version": "1.81.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.81.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 4}, {"version": "1.76.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 2}, {"version": "1.76.0", "person": "Sam Darwin", "email_address": "samuel.d.darwin@gmail.com", "commit_count": 2}, {"version": "1.76.0", "person": "Beojan Stanislaus", "email_address": "beojan@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 1}, {"version": "1.76.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 1}, {"version": "1.75.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.74.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.74.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 1}, {"version": "1.73.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 6}, {"version": "1.73.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 3}, {"version": "1.73.0", "person": "Mathias Gaunard", "email_address": "mathias@gaunard.com", "commit_count": 2}, {"version": "1.72.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 7}, {"version": "1.72.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 5}, {"version": "1.72.0", "person": "Giovanni Mascellani", "email_address": "gio@debian.org", "commit_count": 1}, {"version": "1.70.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 7}, {"version": "1.70.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 3}, {"version": "1.70.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 2}, {"version": "1.69.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 4}, {"version": "1.69.0", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 2}, {"version": "1.69.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 1}, {"version": "1.67.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 25}, {"version": "1.67.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 8}, {"version": "1.67.0", "person": "Daniela Engert", "email_address": "dani@ngrt.de", "commit_count": 1}, {"version": "1.67.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.65.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 14}, {"version": "1.65.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.65.0", "person": "Nicholas Devenish", "email_address": "ndevenish@gmail.com", "commit_count": 1}, {"version": "1.63.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 2}, {"version": "1.63.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.63.0", "person": "Edward Diener", "email_address": "eldiener@tropicsoft.com", "commit_count": 1}, {"version": "1.63.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 1}, {"version": "1.62.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 49}, {"version": "1.62.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 3}, {"version": "1.62.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 2}, {"version": "1.61.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 17}, {"version": "1.61.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 10}, {"version": "1.60.0", "person": "MarcelRaad", "email_address": "MarcelRaad@users.noreply.github.com", "commit_count": 1}, {"version": "1.60.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 1}, {"version": "1.59.0", "person": "John Fletcher", "email_address": "J.P.Fletcher@aston.ac.uk", "commit_count": 8}, {"version": "1.59.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 4}, {"version": "1.59.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 3}, {"version": "1.59.0", "person": "Jeff Trull", "email_address": "edaskel@att.net", "commit_count": 1}, {"version": "1.58.0", "person": "John Fletcher", "email_address": "J.P.Fletcher@aston.ac.uk", "commit_count": 389}, {"version": "1.58.0", "person": "Kohei Takahashi", "email_address": "flast@flast.jp", "commit_count": 15}, {"version": "1.58.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 7}, {"version": "1.58.0", "person": "MarcelRaad", "email_address": "MarcelRaad@users.noreply.github.com", "commit_count": 1}, {"version": "1.57.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 2}, {"version": "1.57.0", "person": "Daniel James", "email_address": "daniel@calamity.org.uk", "commit_count": 1}, {"version": "1.57.0", "person": "Thomas Bernard", "email_address": "thomas@famillebernardgouriou.fr", "commit_count": 1}, {"version": "1.56.0", "person": "John Fletcher", "email_address": "J.P.Fletcher@aston.ac.uk", "commit_count": 275}, {"version": "1.56.0", "person": "Eric Niebler", "email_address": "eric@boostpro.com", "commit_count": 6}, {"version": "1.56.0", "person": "Joel de Guzman", "email_address": "djowel@gmail.com", "commit_count": 3}, {"version": "1.56.0", "person": "Lee Clagett", "email_address": "code@leeclagett.com", "commit_count": 2}, {"version": "1.56.0", "person": "Agust\u00c3\u00adn Berg\u00c3\u00a9", "email_address": "k@fusionfenix.com", "commit_count": 2}, {"version": "1.56.0", "person": "Mathias Gaunard", "email_address": "mathias@gaunard.com", "commit_count": 1}, {"version": "1.55.0", "person": "Eric Niebler", "email_address": "eric@boostpro.com", "commit_count": 2}, {"version": "1.55.0", "person": "Stephen Kelly", "email_address": "steveire@gmail.com", "commit_count": 2}];
-        let contributorCurrentPage = 1;
-        const contributorItemsPerPage = 10;
-        let contributorSortField = 'version';
-        let contributorSortOrder = 'asc';
-        let contributorFilteredData = [...contributorData];
-        let contributorSearchTerm = '';
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-        function sortContributorData(field) {
-            if (contributorSortField === field) {
-                contributorSortOrder = contributorSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                contributorSortField = field;
-                contributorSortOrder = 'asc';
-            }
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
 
-            contributorFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
 
-                // Handle numeric fields
-                if (field === 'commit_count') {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
 
-                // Handle version strings
-                if (field === 'version') {
-                    aVal = aVal.toString();
-                    bVal = bVal.toString();
-                    // Simple version comparison (can be improved)
-                    const aParts = aVal.split('.').map(Number);
-                    const bParts = bVal.split('.').map(Number);
-                    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-                        const aPart = aParts[i] || 0;
-                        const bPart = bParts[i] || 0;
-                        if (aPart !== bPart) {
-                            return contributorSortOrder === 'asc' ? aPart - bPart : bPart - aPart;
-                        }
-                    }
-                    return 0;
-                }
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
 
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
+    const headersRows = [{"name": "include/boost/phoenix/core.hpp", "count": 387}, {"name": "include/boost/phoenix/operator.hpp", "count": 349}, {"name": "include/boost/phoenix.hpp", "count": 166}, {"name": "include/boost/phoenix/phoenix.hpp", "count": 134}, {"name": "include/boost/phoenix/bind.hpp", "count": 96}, {"name": "include/boost/phoenix/bind/bind_member_function.hpp", "count": 63}, {"name": "include/boost/phoenix/fusion.hpp", "count": 49}, {"name": "include/boost/phoenix/object.hpp", "count": 45}, {"name": "include/boost/phoenix/bind/bind_function.hpp", "count": 45}, {"name": "include/boost/phoenix/stl.hpp", "count": 45}, {"name": "include/boost/phoenix/statement/if.hpp", "count": 44}, {"name": "include/boost/phoenix/function.hpp", "count": 40}, {"name": "include/boost/phoenix/operator/self.hpp", "count": 36}, {"name": "include/boost/phoenix/object/construct.hpp", "count": 30}, {"name": "include/boost/phoenix/core/reference.hpp", "count": 29}, {"name": "include/boost/phoenix/object/new.hpp", "count": 27}, {"name": "include/boost/phoenix/bind/bind_member_variable.hpp", "count": 24}, {"name": "include/boost/phoenix/core/argument.hpp", "count": 22}, {"name": "include/boost/phoenix/core/expression.hpp", "count": 22}, {"name": "include/boost/phoenix/core/limits.hpp", "count": 21}, {"name": "include/boost/phoenix/object/dynamic_cast.hpp", "count": 21}, {"name": "include/boost/phoenix/statement.hpp", "count": 20}, {"name": "include/boost/phoenix/fusion/at.hpp", "count": 20}, {"name": "include/boost/phoenix/scope.hpp", "count": 16}, {"name": "include/boost/phoenix/stl/container.hpp", "count": 15}, {"name": "include/boost/phoenix/function/function.hpp", "count": 14}, {"name": "include/boost/phoenix/function/adapt_callable.hpp", "count": 14}, {"name": "include/boost/phoenix/operator/comparison.hpp", "count": 13}, {"name": "include/boost/phoenix/core/value.hpp", "count": 13}, {"name": "include/boost/phoenix/object/static_cast.hpp", "count": 13}, {"name": "include/boost/phoenix/operator/logical.hpp", "count": 13}, {"name": "include/boost/phoenix/support/iterate.hpp", "count": 12}, {"name": "include/boost/phoenix/object/delete.hpp", "count": 12}, {"name": "include/boost/phoenix/version.hpp", "count": 11}, {"name": "include/boost/phoenix/scope/local_variable.hpp", "count": 10}, {"name": "include/boost/phoenix/function/adapt_function.hpp", "count": 10}, {"name": "include/boost/phoenix/bind/bind_function_object.hpp", "count": 10}, {"name": "include/boost/phoenix/statement/throw.hpp", "count": 10}, {"name": "include/boost/phoenix/core/detail/function_eval.hpp", "count": 9}, {"name": "include/boost/phoenix/core/meta_grammar.hpp", "count": 8}, {"name": "include/boost/phoenix/stl/algorithm/transformation.hpp", "count": 8}, {"name": "include/boost/phoenix/stl/algorithm.hpp", "count": 7}, {"name": "include/boost/phoenix/scope/let.hpp", "count": 7}, {"name": "include/boost/phoenix/core/actor.hpp", "count": 7}, {"name": "include/boost/phoenix/stl/algorithm/iteration.hpp", "count": 7}, {"name": "include/boost/phoenix/statement/sequence.hpp", "count": 6}, {"name": "include/boost/phoenix/operator/detail/define_operator.hpp", "count": 6}, {"name": "include/boost/phoenix/operator/detail/undef_operator.hpp", "count": 6}, {"name": "include/boost/phoenix/core/call.hpp", "count": 6}, {"name": "include/boost/phoenix/scope/scoped_environment.hpp", "count": 5}, {"name": "include/boost/phoenix/core/nothing.hpp", "count": 5}, {"name": "include/boost/phoenix/operator/arithmetic.hpp", "count": 5}, {"name": "include/boost/phoenix/scope/lambda.hpp", "count": 4}, {"name": "include/boost/phoenix/bind/preprocessed/bind_function_object.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/has_find.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/begin.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/end.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/decay_array.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/has_equal_range.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/has_lower_bound.hpp", "count": 4}, {"name": "include/boost/phoenix/stl/algorithm/detail/has_upper_bound.hpp", "count": 4}, {"name": "include/boost/phoenix/statement/detail/preprocessed/try_catch_eval.hpp", "count": 4}, {"name": "include/boost/phoenix/scope/dynamic.hpp", "count": 4}, {"name": "include/boost/phoenix/core/is_nullary.hpp", "count": 4}, {"name": "include/boost/phoenix/core/is_actor.hpp", "count": 3}, {"name": "include/boost/phoenix/core/function_equal.hpp", "count": 3}, {"name": "include/boost/phoenix/bind/detail/member_function_ptr.hpp", "count": 3}, {"name": "include/boost/phoenix/bind/preprocessed/bind_member_function.hpp", "count": 3}, {"name": "include/boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_10.hpp", "count": 3}, {"name": "include/boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_20.hpp", "count": 3}, {"name": "include/boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_30.hpp", "count": 3}, {"name": "include/boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_40.hpp", "count": 3}, {"name": "include/boost/phoenix/operator/detail/preprocessed/mem_fun_ptr_gen_50.hpp", "count": 3}, {"name": "include/boost/phoenix/core/visit_each.hpp", "count": 3}, {"name": "include/boost/phoenix/statement/detail/preprocessed/catch_push_back_10.hpp", "count": 3}, {"name": "include/boost/phoenix/statement/detail/preprocessed/catch_push_back_20.hpp", "count": 3}, {"name": "include/boost/phoenix/statement/detail/preprocessed/catch_push_back_30.hpp", "count": 3}, {"name": "include/boost/phoenix/statement/detail/preprocessed/catch_push_back_40.hpp", "count": 3}, {"name": "include/boost/phoenix/statement/detail/preprocessed/catch_push_back_50.hpp", "count": 3}, {"name": "include/boost/phoenix/core/terminal.hpp", "count": 3}, {"name": "include/boost/phoenix/stl/container/container.hpp", "count": 3}, {"name": "include/boost/phoenix/core/preprocessed/function_equal_10.hpp", "count": 3}, {"name": "include/boost/phoenix/core/preprocessed/function_equal_20.hpp", "count": 3}, {"name": "include/boost/phoenix/core/preprocessed/function_equal_30.hpp", "count": 3}, {"name": "include/boost/phoenix/core/preprocessed/function_equal_40.hpp", "count": 3}, {"name": "include/boost/phoenix/core/preprocessed/function_equal_50.hpp", "count": 3}, {"name": "include/boost/phoenix/core/environment.hpp", "count": 3}, {"name": "include/boost/phoenix/stl/algorithm/querying.hpp", "count": 3}, {"name": "include/boost/phoenix/statement/for.hpp", "count": 2}, {"name": "include/boost/phoenix/core/v2_eval.hpp", "count": 2}, {"name": "include/boost/phoenix/core/preprocessed/argument.hpp", "count": 2}, {"name": "include/boost/phoenix/support/vector.hpp", "count": 2}, {"name": "include/boost/phoenix/core/detail/argument.hpp", "count": 2}, {"name": "include/boost/phoenix/statement/detail/preprocessed/try_catch_expression.hpp", "count": 2}, {"name": "include/boost/phoenix/statement/try_catch.hpp", "count": 2}, {"name": "include/boost/phoenix/operator/member.hpp", "count": 2}, {"name": "include/boost/phoenix/scope/this.hpp", "count": 2}, {"name": "include/boost/phoenix/config.hpp", "count": 1}, {"name": "include/boost/phoenix/scope/detail/local_gen.hpp", "count": 1}, {"name": "include/boost/phoenix/function/detail/function_operator.hpp", "count": 1}, {"name": "include/boost/phoenix/core/detail/preprocessed/call.hpp", "count": 1}, {"name": "include/boost/phoenix/object/detail/preprocessed/new_eval_10.hpp", "count": 1}, {"name": "include/boost/phoenix/object/detail/preprocessed/new_eval_20.hpp", "count": 1}, {"name": "include/boost/phoenix/object/detail/preprocessed/new_eval_30.hpp", "count": 1}, {"name": "include/boost/phoenix/object/detail/preprocessed/new_eval_40.hpp", "count": 1}, {"name": "include/boost/phoenix/object/detail/preprocessed/new_eval_50.hpp", "count": 1}, {"name": "include/boost/phoenix/stl/container/detail/container.hpp", "count": 1}, {"name": "include/boost/phoenix/bind/detail/member_variable.hpp", "count": 1}, {"name": "include/boost/phoenix/function/function_handling.hpp", "count": 1}, {"name": "include/boost/phoenix/object/detail/target.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/detail/preprocessed/switch.hpp", "count": 1}, {"name": "include/boost/phoenix/function/lazy_prelude.hpp", "count": 1}, {"name": "include/boost/phoenix/stl/algorithm/detail/is_std_list.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/switch.hpp", "count": 1}, {"name": "include/boost/phoenix/core/arity.hpp", "count": 1}, {"name": "include/boost/phoenix/object/const_cast.hpp", "count": 1}, {"name": "include/boost/phoenix/object/reinterpret_cast.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/do_while.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/while.hpp", "count": 1}, {"name": "include/boost/phoenix/operator/bitwise.hpp", "count": 1}, {"name": "include/boost/phoenix/operator/io.hpp", "count": 1}, {"name": "include/boost/phoenix/core/domain.hpp", "count": 1}, {"name": "include/boost/phoenix/operator/if_else.hpp", "count": 1}, {"name": "include/boost/phoenix/stl/cmath.hpp", "count": 1}, {"name": "include/boost/phoenix/core/debug.hpp", "count": 1}, {"name": "include/boost/phoenix/support/preprocessor/round.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/detail/switch.hpp", "count": 1}, {"name": "include/boost/phoenix/support/detail/iterate_define.hpp", "count": 1}, {"name": "include/boost/phoenix/bind/detail/preprocessed/function_ptr.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/detail/catch_push_back.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/detail/try_catch_eval.hpp", "count": 1}, {"name": "include/boost/phoenix/statement/detail/try_catch_expression.hpp", "count": 1}, {"name": "include/boost/phoenix/core/terminal_fwd.hpp", "count": 1}];
+    const internalRows = [{"name": "log", "depth": 1}, {"name": "msm", "depth": 1}, {"name": "spirit", "depth": 1}, {"name": "convert", "depth": 2}, {"name": "dll", "depth": 2}, {"name": "graph", "depth": 2}, {"name": "mqtt5", "depth": 2}, {"name": "property_tree", "depth": 2}, {"name": "serialization", "depth": 2}, {"name": "wave", "depth": 2}, {"name": "accumulators", "depth": 3}, {"name": "bimap", "depth": 3}, {"name": "date_time", "depth": 3}, {"name": "dynamic_bitset", "depth": 3}, {"name": "flyweight", "depth": 3}, {"name": "geometry", "depth": 3}, {"name": "graph_parallel", "depth": 3}, {"name": "histogram", "depth": 3}, {"name": "mpi", "depth": 3}, {"name": "multi_index", "depth": 3}, {"name": "property_map", "depth": 3}, {"name": "property_map_parallel", "depth": 3}, {"name": "ptr_container", "depth": 3}, {"name": "python", "depth": 3}, {"name": "sort", "depth": 3}, {"name": "uBLAS", "depth": 3}, {"name": "units", "depth": 3}, {"name": "uuid", "depth": 3}, {"name": "Odeint", "depth": 4}, {"name": "asio", "depth": 4}, {"name": "assign", "depth": 4}, {"name": "compute", "depth": 4}, {"name": "exception", "depth": 4}, {"name": "icl", "depth": 4}, {"name": "interprocess", "depth": 4}, {"name": "math", "depth": 4}, {"name": "parameter", "depth": 4}, {"name": "parameter_python", "depth": 4}, {"name": "random", "depth": 4}, {"name": "signals2", "depth": 4}, {"name": "thread", "depth": 4}, {"name": "Numeric Conversion", "depth": 5}, {"name": "algorithm", "depth": 5}, {"name": "any", "depth": 5}, {"name": "array", "depth": 5}, {"name": "atomic", "depth": 5}, {"name": "beast", "depth": 5}, {"name": "chrono", "depth": 5}, {"name": "circular_buffer", "depth": 5}, {"name": "concept_check", "depth": 5}, {"name": "context", "depth": 5}, {"name": "contract", "depth": 5}, {"name": "conversion", "depth": 5}, {"name": "coroutine", "depth": 5}, {"name": "format", "depth": 5}, {"name": "function", "depth": 5}, {"name": "heap", "depth": 5}, {"name": "iostreams", "depth": 5}, {"name": "locale", "depth": 5}, {"name": "lockfree", "depth": 5}, {"name": "multiprecision", "depth": 5}, {"name": "pool", "depth": 5}, {"name": "process", "depth": 5}, {"name": "program_options", "depth": 5}, {"name": "rational", "depth": 5}, {"name": "regex", "depth": 5}, {"name": "smart_ptr", "depth": 5}, {"name": "statechart", "depth": 5}, {"name": "test", "depth": 5}, {"name": "timer", "depth": 5}, {"name": "type_erasure", "depth": 5}, {"name": "unordered", "depth": 5}, {"name": "utility", "depth": 5}, {"name": "variant", "depth": 5}, {"name": "xpressive", "depth": 5}, {"name": "Unknown(185)", "depth": 6}, {"name": "Tribool", "depth": 6}, {"name": "bind", "depth": 6}, {"name": "container", "depth": 6}, {"name": "coroutine2", "depth": 6}, {"name": "detail", "depth": 6}, {"name": "fiber", "depth": 6}, {"name": "filesystem", "depth": 6}, {"name": "foreach", "depth": 6}, {"name": "functional", "depth": 6}, {"name": "fusion", "depth": 6}, {"name": "gil", "depth": 6}, {"name": "intrusive", "depth": 6}, {"name": "iterator", "depth": 6}, {"name": "lambda", "depth": 6}, {"name": "local_function", "depth": 6}, {"name": "move", "depth": 6}, {"name": "mpl", "depth": 6}, {"name": "multi_array", "depth": 6}, {"name": "optional", "depth": 6}, {"name": "poly_collection", "depth": 6}, {"name": "polygon", "depth": 6}, {"name": "proto", "depth": 6}, {"name": "range", "depth": 6}, {"name": "ratio", "depth": 6}, {"name": "scope_exit", "depth": 6}, {"name": "system", "depth": 6}, {"name": "tokenizer", "depth": 6}, {"name": "tuple", "depth": 6}, {"name": "type_traits", "depth": 6}, {"name": "typeof", "depth": 6}, {"name": "Interval", "depth": 7}, {"name": "config", "depth": 7}, {"name": "function_types", "depth": 7}, {"name": "lexical_cast", "depth": 7}, {"name": "tti", "depth": 7}, {"name": "crc", "depth": 8}, {"name": "integer", "depth": 8}, {"name": "io", "depth": 8}, {"name": "static_assert", "depth": 8}];
+    const externalRows = [{"name": "JMUWRobotics/3DTK", "stars": 125, "usage_count": 1, "created_at": "2018-02-06", "updated_at": "2026-02-18"}, {"name": "llxyq/ackermann_ego_planner", "stars": 75, "usage_count": 5, "created_at": "2025-03-02", "updated_at": "2025-03-02"}, {"name": "ZJU-FAST-Lab/Active-Relative-Localization", "stars": 23, "usage_count": 5, "created_at": "2024-03-17", "updated_at": "2024-11-18"}, {"name": "tgoyne/aegisub", "stars": 21, "usage_count": 3, "created_at": "2010-09-20", "updated_at": "2022-11-24"}, {"name": "TypesettingTools/Aegisub", "stars": 0, "usage_count": 6, "created_at": "", "updated_at": ""}, {"name": "DifferentialRobotics/Aerial_Autonomy_Challenge", "stars": 29, "usage_count": 5, "created_at": "2025-07-29", "updated_at": "2025-08-12"}, {"name": "a0ivanov/aimp-control-plugin", "stars": 49, "usage_count": 1, "created_at": "2014-07-26", "updated_at": "2019-06-15"}, {"name": "SYSU-HILAB/am-planner", "stars": 35, "usage_count": 5, "created_at": "2024-12-11", "updated_at": "2025-12-12"}, {"name": "ZJU-FAST-Lab/am_traj", "stars": 194, "usage_count": 5, "created_at": "2020-02-24", "updated_at": "2021-06-10"}, {"name": "ANYCUBIC-3D/AnycubicSlicer_Prusa", "stars": 35, "usage_count": 6, "created_at": "2023-05-31", "updated_at": "2023-09-21"}, {"name": "tfwu/AOGDetector", "stars": 27, "usage_count": 1, "created_at": "2015-09-27", "updated_at": "2016-05-20"}, {"name": "tpms-lattice/ASLI", "stars": 21, "usage_count": 5, "created_at": "2022-02-01", "updated_at": "2026-02-23"}, {"name": "opencog/asmoses", "stars": 46, "usage_count": 1, "created_at": "2018-03-07", "updated_at": "2025-12-10"}, {"name": "ZJU-FAST-Lab/Auto-Filmer", "stars": 48, "usage_count": 5, "created_at": "2022-12-12", "updated_at": "2023-06-30"}, {"name": "yhoazk/automo", "stars": 30, "usage_count": 1, "created_at": "2017-06-30", "updated_at": "2021-04-28"}, {"name": "jizhang-cmu/autonomy_stack_diablo_setup", "stars": 89, "usage_count": 1, "created_at": "2024-06-18", "updated_at": "2026-02-18"}, {"name": "jizhang-cmu/autonomy_stack_mecanum_wheel_platform", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "avplayer/avbot", "stars": 223, "usage_count": 1, "created_at": "2013-07-19", "updated_at": "2015-10-25"}, {"name": "aws-samples/aws-iot-securetunneling-localproxy", "stars": 85, "usage_count": 1, "created_at": "2019-11-20", "updated_at": "2026-03-10"}, {"name": "bertiniteam/b2", "stars": 110, "usage_count": 9, "created_at": "2013-10-07", "updated_at": "2025-08-14"}, {"name": "bambulab/BambuStudio", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "OddEssA/BambuStudio-SoftFever", "stars": 13, "usage_count": 1, "created_at": "2023-02-27", "updated_at": "2023-02-27"}, {"name": "dgrr/binance-futures-sdk", "stars": 24, "usage_count": 2, "created_at": "2020-09-27", "updated_at": "2021-06-03"}, {"name": "sanshar/Block", "stars": 35, "usage_count": 5, "created_at": "2012-06-06", "updated_at": "2023-08-28"}, {"name": "mlang/bmc", "stars": 37, "usage_count": 2, "created_at": "2011-06-27", "updated_at": "2020-02-27"}, {"name": "sikuner/book-code", "stars": 38, "usage_count": 15, "created_at": "2018-08-28", "updated_at": "2018-08-28"}, {"name": "boost-cmake/boost", "stars": 57, "usage_count": 2, "created_at": "2017-07-03", "updated_at": "2019-10-29"}, {"name": "kkodev/boost-ios", "stars": 23, "usage_count": 57, "created_at": "2013-01-09", "updated_at": "2013-04-19"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 6, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "mz2/boostoniphone", "stars": 44, "usage_count": 105, "created_at": "2012-02-03", "updated_at": "2015-08-26"}, {"name": "mollnn/bound-caustics", "stars": 36, "usage_count": 3, "created_at": "2025-04-24", "updated_at": "2026-02-11"}, {"name": "alalagong/Bright_Dream_SLAM_Navigation", "stars": 14, "usage_count": 5, "created_at": "2019-11-15", "updated_at": "2019-11-15"}, {"name": "bumptop/BumpTop", "stars": 621, "usage_count": 2, "created_at": "2014-10-25", "updated_at": "2024-01-08"}, {"name": "homer6/c_reading", "stars": 25, "usage_count": 16, "created_at": "2011-04-30", "updated_at": "2011-04-30"}, {"name": "ths-rwth/carl", "stars": 30, "usage_count": 1, "created_at": "2015-05-08", "updated_at": "2025-05-19"}, {"name": "dstoeckel/causaltrail", "stars": 12, "usage_count": 1, "created_at": "2015-09-22", "updated_at": "2021-06-09"}, {"name": "unisb-bioinf/causaltrail", "stars": 12, "usage_count": 1, "created_at": "2015-09-22", "updated_at": "2021-06-09"}, {"name": "ceph/ceph", "stars": 16253, "usage_count": 7, "created_at": "2011-09-01", "updated_at": "2026-02-23"}, {"name": "CGAL/cgal", "stars": 5759, "usage_count": 6, "created_at": "2014-10-01", "updated_at": "2026-02-18"}, {"name": "CERN-PH-CMG/cmg-cmssw", "stars": 19, "usage_count": 1, "created_at": "2013-09-25", "updated_at": "2019-07-03"}, {"name": "cms-sw/cmssw", "stars": 1256, "usage_count": 2, "created_at": "2013-06-26", "updated_at": "2026-02-23"}, {"name": "yielding/code", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "FAST-FIRE/ColAG", "stars": 80, "usage_count": 5, "created_at": "2023-09-15", "updated_at": "2025-05-23"}, {"name": "comaps/comaps", "stars": 325, "usage_count": 13, "created_at": "2025-05-09", "updated_at": "2026-03-10"}, {"name": "daedric/commonpp", "stars": 31, "usage_count": 1, "created_at": "2015-09-17", "updated_at": "2026-01-19"}, {"name": "mollnn/conditional-mixture", "stars": 25, "usage_count": 3, "created_at": "2024-04-22", "updated_at": "2024-07-25"}, {"name": "ccf19881030/Cplus_libs_wrapper", "stars": 38, "usage_count": 10, "created_at": "2019-03-31", "updated_at": "2024-01-23"}, {"name": "shelllet/cpp-example", "stars": 26, "usage_count": 2, "created_at": "2019-05-26", "updated_at": "2022-08-07"}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 32, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "mtconnect/cppagent", "stars": 169, "usage_count": 4, "created_at": "2009-09-18", "updated_at": "2026-02-27"}, {"name": "qqiangwu/cppship", "stars": 88, "usage_count": 4, "created_at": "2023-04-08", "updated_at": "2025-04-20"}, {"name": "CrealityOfficial/CrealityPrint", "stars": 475, "usage_count": 1, "created_at": "2023-08-03", "updated_at": "2026-01-31"}, {"name": "SKBT-lab/csf-planner", "stars": 18, "usage_count": 5, "created_at": "2025-04-18", "updated_at": "2025-04-19"}, {"name": "worldforge/cyphesis", "stars": 94, "usage_count": 1, "created_at": "2011-03-21", "updated_at": "2023-12-03"}, {"name": "CartwrightLab/dawg", "stars": 11, "usage_count": 6, "created_at": "2015-09-08", "updated_at": "2024-07-09"}, {"name": "Minres/DBT-RISE-Core", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "GobySoft/dccl", "stars": 22, "usage_count": 4, "created_at": "2015-10-19", "updated_at": "2026-03-04"}, {"name": "AIDASoft/DD4hep", "stars": 61, "usage_count": 2, "created_at": "2016-06-08", "updated_at": "2026-02-26"}, {"name": "ultimatesource/denovogear", "stars": 55, "usage_count": 8, "created_at": "2013-12-19", "updated_at": "2020-03-30"}, {"name": "DifferentialRobotics/Diff-Planner", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "g1257/dmrgpp", "stars": 0, "usage_count": 4, "created_at": "", "updated_at": ""}, {"name": "XTERY11/dog", "stars": 14, "usage_count": 5, "created_at": "2024-04-04", "updated_at": "2024-04-04"}, {"name": "MASD-Project/dogen", "stars": 0, "usage_count": 13, "created_at": "", "updated_at": ""}, {"name": "uaf-arctic-eco-modeling/dvm-dos-tem", "stars": 25, "usage_count": 1, "created_at": "2012-06-07", "updated_at": "2026-01-21"}, {"name": "GeoscienceAustralia/DynAdjust", "stars": 82, "usage_count": 2, "created_at": "2018-08-30", "updated_at": "2026-03-10"}, {"name": "SmartGroupSystems/Dynamic-Planner", "stars": 42, "usage_count": 5, "created_at": "2023-11-14", "updated_at": "2025-04-17"}, {"name": "dynawo/dynawo", "stars": 0, "usage_count": 21, "created_at": "", "updated_at": ""}, {"name": "iRath96/ears", "stars": 49, "usage_count": 3, "created_at": "2022-04-28", "updated_at": "2023-06-06"}, {"name": "NKU-MobFly-Robotics/EDEN", "stars": 62, "usage_count": 5, "created_at": "2025-06-04", "updated_at": "2026-01-14"}, {"name": "ZJU-FAST-Lab/EDG-TEAM", "stars": 53, "usage_count": 5, "created_at": "2022-05-06", "updated_at": "2022-07-04"}, {"name": "leggcg/EfficientComplexLayered", "stars": 13, "usage_count": 3, "created_at": "2020-05-28", "updated_at": "2020-05-28"}, {"name": "ZJU-FAST-Lab/ego-planner", "stars": 2301, "usage_count": 5, "created_at": "2020-05-10", "updated_at": "2025-03-08"}, {"name": "ZJU-FAST-Lab/ego-planner-swarm", "stars": 1929, "usage_count": 5, "created_at": "2020-10-14", "updated_at": "2025-03-08"}, {"name": "ZJU-FAST-Lab/EGO-Planner-v2", "stars": 649, "usage_count": 20, "created_at": "2022-05-07", "updated_at": "2023-10-16"}, {"name": "BSSNBSSN/Ego-plannerforIntelligentUAVChampionshipSimulator", "stars": 13, "usage_count": 5, "created_at": "2022-08-28", "updated_at": "2022-09-23"}, {"name": "SC-ARLab/Ego-v2-realflight", "stars": 16, "usage_count": 5, "created_at": "2022-12-05", "updated_at": "2023-04-01"}, {"name": "ELEGOO-3D/ElegooSlicer", "stars": 0, "usage_count": 6, "created_at": "", "updated_at": ""}, {"name": "infinit/elle", "stars": 475, "usage_count": 1, "created_at": "2016-02-14", "updated_at": "2023-05-22"}, {"name": "OpenSourceRisk/Engine", "stars": 672, "usage_count": 4, "created_at": "2016-10-07", "updated_at": "2026-02-04"}, {"name": "eos/eos", "stars": 39, "usage_count": 1, "created_at": "2015-11-21", "updated_at": "2026-03-05"}, {"name": "eufymake/eufyMake-PrusaSlicer-Release", "stars": 45, "usage_count": 7, "created_at": "2023-06-07", "updated_at": "2025-03-24"}, {"name": "ZJU-FAST-Lab/EVA-planner", "stars": 106, "usage_count": 5, "created_at": "2020-10-31", "updated_at": "2023-11-24"}, {"name": "ZJU-FAST-Lab/FACT-Coordinate-Initialization", "stars": 23, "usage_count": 5, "created_at": "2024-03-02", "updated_at": "2024-12-25"}, {"name": "Zyhlibrary/FAEP", "stars": 90, "usage_count": 5, "created_at": "2022-07-15", "updated_at": "2023-06-23"}, {"name": "HKUST-Aerial-Robotics/FALCON", "stars": 270, "usage_count": 5, "created_at": "2024-11-27", "updated_at": "2025-05-16"}, {"name": "arclab-hku/FAPP", "stars": 117, "usage_count": 5, "created_at": "2025-09-03", "updated_at": "2025-09-08"}, {"name": "ZJU-FAST-Lab/Fast-Drone-250", "stars": 2284, "usage_count": 5, "created_at": "2021-09-28", "updated_at": "2022-11-09"}, {"name": "Longer95479/Fast-Drone-XI35", "stars": 31, "usage_count": 5, "created_at": "2024-07-15", "updated_at": "2026-02-05"}, {"name": "emNavi/Fast-LIO2", "stars": 227, "usage_count": 5, "created_at": "2024-11-23", "updated_at": "2025-09-19"}, {"name": "HKUST-Aerial-Robotics/Fast-Planner", "stars": 3211, "usage_count": 5, "created_at": "2019-02-27", "updated_at": "2024-10-24"}, {"name": "ZJU-FAST-Lab/Fast-Racing", "stars": 310, "usage_count": 5, "created_at": "2021-05-12", "updated_at": "2021-08-23"}, {"name": "ZJU-FAST-Lab/Fast-tracker", "stars": 250, "usage_count": 5, "created_at": "2020-11-05", "updated_at": "2021-06-21"}, {"name": "VIS4ROB-lab/fast_multi_robot_exploration", "stars": 116, "usage_count": 5, "created_at": "2023-06-29", "updated_at": "2023-07-24"}, {"name": "LanternW/FastPlanner-Lite", "stars": 84, "usage_count": 5, "created_at": "2022-05-16", "updated_at": "2022-05-18"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 4, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "HKUST-Aerial-Robotics/FINT", "stars": 75, "usage_count": 5, "created_at": "2024-11-18", "updated_at": "2025-06-30"}, {"name": "laas/fire-rs-saop", "stars": 20, "usage_count": 1, "created_at": "2017-10-04", "updated_at": "2021-07-09"}, {"name": "MarisaKirisame/first_order_logic_prover", "stars": 60, "usage_count": 4, "created_at": "2013-10-26", "updated_at": "2018-02-27"}, {"name": "lolisa/first_order_logic_prover", "stars": 60, "usage_count": 4, "created_at": "2013-10-26", "updated_at": "2018-02-27"}, {"name": "Flsun3d/FlsunSlicer", "stars": 18, "usage_count": 6, "created_at": "2024-05-28", "updated_at": "2025-11-13"}, {"name": "iRath96/focal-guiding", "stars": 26, "usage_count": 3, "created_at": "2023-04-21", "updated_at": "2023-08-29"}, {"name": "folium-app/Folium", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "ReFRACtor/framework", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "yorikvanhavre/FreeCAD-old", "stars": 59, "usage_count": 6, "created_at": "2012-02-01", "updated_at": "2018-08-19"}, {"name": "freeorion/freeorion", "stars": 967, "usage_count": 46, "created_at": "2015-03-29", "updated_at": "2026-02-22"}, {"name": "HKUST-Aerial-Robotics/FUEL", "stars": 1353, "usage_count": 5, "created_at": "2020-10-18", "updated_at": "2024-11-19"}, {"name": "fuzzuf/fuzzuf", "stars": 380, "usage_count": 5, "created_at": "2021-12-27", "updated_at": "2025-01-29"}, {"name": "fr3ak2402/GalaxySlicer", "stars": 65, "usage_count": 6, "created_at": "2023-06-28", "updated_at": "2024-02-04"}, {"name": "Fadis/gct", "stars": 32, "usage_count": 2, "created_at": "2021-11-19", "updated_at": "2026-03-07"}, {"name": "GeoDaCenter/geoda", "stars": 788, "usage_count": 1, "created_at": "2015-08-06", "updated_at": "2025-10-02"}, {"name": "lixun910/geoda", "stars": 14, "usage_count": 1, "created_at": "2016-04-26", "updated_at": "2025-10-01"}, {"name": "MASKOR/gologpp", "stars": 13, "usage_count": 180, "created_at": "2018-08-03", "updated_at": "2023-11-06"}, {"name": "ZJU-FAST-Lab/GPA-Teleoperation", "stars": 30, "usage_count": 5, "created_at": "2021-09-13", "updated_at": "2023-12-07"}, {"name": "nasa/HDTN", "stars": 133, "usage_count": 1, "created_at": "2020-11-17", "updated_at": "2025-09-12"}, {"name": "jmwang0117/HE-Nav", "stars": 34, "usage_count": 5, "created_at": "2023-12-22", "updated_at": "2025-01-29"}, {"name": "heavyai/heavydb", "stars": 3060, "usage_count": 1, "created_at": "2017-05-07", "updated_at": "2026-01-06"}, {"name": "STEllAR-GROUP/hpx", "stars": 2799, "usage_count": 4, "created_at": "2012-05-26", "updated_at": "2026-03-01"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 309, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "fungosforks/icq-desktop", "stars": 54, "usage_count": 77, "created_at": "2016-03-15", "updated_at": "2016-03-15"}, {"name": "ZJU-FAST-Lab/Implicit-SDF-Planner", "stars": 262, "usage_count": 5, "created_at": "2023-02-28", "updated_at": "2024-07-18"}, {"name": "ZJU-FAST-Lab/Implicit-SVSDF-Planner", "stars": 220, "usage_count": 5, "created_at": "2024-03-23", "updated_at": "2024-07-18"}, {"name": "rpl-cmu/incopt", "stars": 24, "usage_count": 1, "created_at": "2022-03-08", "updated_at": "2023-02-10"}, {"name": "hkroeger/insightcae", "stars": 88, "usage_count": 31, "created_at": "2017-09-12", "updated_at": "2025-12-16"}, {"name": "Illumina/isaac2", "stars": 21, "usage_count": 21, "created_at": "2015-04-09", "updated_at": "2016-04-12"}, {"name": "Illumina/Isaac3", "stars": 18, "usage_count": 21, "created_at": "2016-04-27", "updated_at": "2018-02-13"}, {"name": "Illumina/Isaac4", "stars": 19, "usage_count": 21, "created_at": "2017-09-08", "updated_at": "2022-02-03"}, {"name": "robertmrk/jmespath.cpp", "stars": 23, "usage_count": 2, "created_at": "2016-01-08", "updated_at": "2019-02-26"}, {"name": "ZJU-FAST-Lab/kino_sampling_with_regional_opti", "stars": 89, "usage_count": 5, "created_at": "2021-03-17", "updated_at": "2022-03-10"}, {"name": "ZamesNg/kinodynamic_frontend", "stars": 66, "usage_count": 5, "created_at": "2022-03-15", "updated_at": "2022-04-06"}, {"name": "msesia/knockoffgwas", "stars": 16, "usage_count": 22, "created_at": "2020-07-21", "updated_at": "2022-07-07"}, {"name": "KratosMultiphysics/Kratos", "stars": 1223, "usage_count": 1, "created_at": "2017-02-13", "updated_at": "2026-02-20"}, {"name": "KDE/krita", "stars": 9379, "usage_count": 3, "created_at": "2015-10-09", "updated_at": "2026-02-24"}, {"name": "2468785842/krkr2", "stars": 261, "usage_count": 3, "created_at": "2024-12-10", "updated_at": "2026-01-11"}, {"name": "reAAAq/KrKr2-Next", "stars": 65, "usage_count": 3, "created_at": "2026-02-18", "updated_at": "2026-03-10"}, {"name": "Robotics-STAR-Lab/LA-Planner", "stars": 51, "usage_count": 5, "created_at": "2025-07-21", "updated_at": "2025-07-21"}, {"name": "jakeowner/lastbattle", "stars": 55, "usage_count": 8, "created_at": "2017-11-24", "updated_at": "2017-11-24"}, {"name": "tflsguoyu/layeredbsdf", "stars": 62, "usage_count": 3, "created_at": "2018-10-08", "updated_at": "2022-09-19"}, {"name": "rgl-epfl/learned-subsurface-scattering", "stars": 52, "usage_count": 3, "created_at": "2019-08-24", "updated_at": "2019-09-18"}, {"name": "0xd34df00d/leechcraft", "stars": 194, "usage_count": 2, "created_at": "2009-02-02", "updated_at": "2026-02-24"}, {"name": "craffael/lehrfempp", "stars": 34, "usage_count": 14, "created_at": "2018-04-06", "updated_at": "2025-08-10"}, {"name": "daminetreg/lib-tftp-server", "stars": 18, "usage_count": 1, "created_at": "2015-01-27", "updated_at": "2018-08-07"}, {"name": "LibreOffice/libvisio", "stars": 44, "usage_count": 1, "created_at": "2013-10-31", "updated_at": "2025-09-23"}, {"name": "ZhikangLai/LiteGeometry", "stars": 13, "usage_count": 5, "created_at": "2025-04-18", "updated_at": "2025-06-07"}, {"name": "USE-jx/LMPC_OSQP_EIGEN", "stars": 92, "usage_count": 5, "created_at": "2023-07-24", "updated_at": "2023-12-12"}, {"name": "yangmingustb/Local-Planner", "stars": 130, "usage_count": 5, "created_at": "2019-07-09", "updated_at": "2020-04-29"}, {"name": "GrossfieldLab/loos", "stars": 127, "usage_count": 1, "created_at": "2016-01-18", "updated_at": "2025-10-20"}, {"name": "QoroQuantum/maestro", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "sparcians/map", "stars": 221, "usage_count": 10, "created_at": "2019-12-12", "updated_at": "2026-03-10"}, {"name": "maplibre/maplibre-native", "stars": 1825, "usage_count": 4, "created_at": "2020-11-20", "updated_at": "2026-03-11"}, {"name": "mapycz/mapnik", "stars": 11, "usage_count": 1, "created_at": "2011-10-20", "updated_at": "2021-10-04"}, {"name": "mapnik/mapnik", "stars": 0, "usage_count": 4, "created_at": "", "updated_at": ""}, {"name": "wangningbei/mbglints", "stars": 13, "usage_count": 3, "created_at": "2021-03-18", "updated_at": "2021-03-18"}, {"name": "CSS-Electronics/mdf4-converters", "stars": 57, "usage_count": 1, "created_at": "2019-10-12", "updated_at": "2024-10-15"}, {"name": "infinit/memo", "stars": 117, "usage_count": 1, "created_at": "2017-06-21", "updated_at": "2018-11-13"}, {"name": "victor-smirnov/memoria", "stars": 37, "usage_count": 19, "created_at": "2020-03-05", "updated_at": "2025-07-02"}, {"name": "ICRA-2019/MH-iSAM2_lib", "stars": 23, "usage_count": 1, "created_at": "2022-02-09", "updated_at": "2022-02-09"}, {"name": "ROCmSoftwarePlatform/MIOpen", "stars": 1185, "usage_count": 1, "created_at": "2017-06-27", "updated_at": "2025-12-16"}, {"name": "mitsuba-renderer/mitsuba", "stars": 1102, "usage_count": 3, "created_at": "2015-07-17", "updated_at": "2023-09-11"}, {"name": "cmu-ci-lab/MitsubaER", "stars": 18, "usage_count": 3, "created_at": "2019-12-20", "updated_at": "2021-10-05"}, {"name": "cmu-ci-lab/MitsubaToFRenderer", "stars": 56, "usage_count": 3, "created_at": "2018-02-25", "updated_at": "2024-07-02"}, {"name": "CartoDB/mobile-sdk", "stars": 199, "usage_count": 3, "created_at": "2016-06-01", "updated_at": "2023-02-17"}, {"name": "HKUST-Aerial-Robotics/mockasimulator", "stars": 23, "usage_count": 5, "created_at": "2019-06-18", "updated_at": "2020-06-23"}, {"name": "qcscine/molassembler", "stars": 45, "usage_count": 1, "created_at": "2020-11-27", "updated_at": "2025-10-09"}, {"name": "npu-ius-lab/MoNA-Bench", "stars": 11, "usage_count": 10, "created_at": "2023-07-07", "updated_at": "2024-05-31"}, {"name": "YongzhouPan/Mono-Navigation", "stars": 17, "usage_count": 5, "created_at": "2022-07-16", "updated_at": "2022-09-26"}, {"name": "Huan0414/Motion-Planning", "stars": 76, "usage_count": 5, "created_at": "2021-08-12", "updated_at": "2021-10-10"}, {"name": "lvhualong/motion_Planning", "stars": 17, "usage_count": 5, "created_at": "2019-08-15", "updated_at": "2019-08-20"}, {"name": "Mol2017/Motion_Planning", "stars": 25, "usage_count": 5, "created_at": "2021-12-18", "updated_at": "2022-01-11"}, {"name": "USE-jx/mpc_track_fastplanner", "stars": 106, "usage_count": 5, "created_at": "2023-06-16", "updated_at": "2023-12-12"}, {"name": "Dwl2021/MRPC-2025-homework", "stars": 11, "usage_count": 5, "created_at": "2025-11-13", "updated_at": "2026-01-13"}, {"name": "VIS4ROB-lab/multirotors_landing", "stars": 24, "usage_count": 5, "created_at": "2022-07-25", "updated_at": "2023-07-02"}, {"name": "johnoneil/mupen64plus-web", "stars": 17, "usage_count": 3, "created_at": "2015-12-14", "updated_at": "2018-03-21"}, {"name": "My-Wang-FT/my_planner", "stars": 14, "usage_count": 5, "created_at": "2021-09-07", "updated_at": "2022-03-03"}, {"name": "tom--bo/mysqlredo", "stars": 14, "usage_count": 1, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "jiayaozhang/NaniteTree", "stars": 24, "usage_count": 5, "created_at": "2023-12-29", "updated_at": "2024-09-17"}, {"name": "yuwenyong/net4cxx", "stars": 11, "usage_count": 1, "created_at": "2017-09-12", "updated_at": "2019-02-10"}, {"name": "netmeld/netmeld", "stars": 35, "usage_count": 1, "created_at": "2017-11-03", "updated_at": "2025-05-29"}, {"name": "mkettune/ngpt", "stars": 18, "usage_count": 3, "created_at": "2019-12-21", "updated_at": "2020-01-13"}, {"name": "neobrain/nihstro", "stars": 100, "usage_count": 5, "created_at": "2014-08-14", "updated_at": "2024-05-05"}, {"name": "USE-jx/NMPC_CASADI_CPP", "stars": 186, "usage_count": 5, "created_at": "2023-07-24", "updated_at": "2023-12-12"}, {"name": "mickem/nscp", "stars": 280, "usage_count": 13, "created_at": "2012-04-28", "updated_at": "2026-03-04"}, {"name": "headmyshoulder/odeint-v2", "stars": 354, "usage_count": 7, "created_at": "2011-07-04", "updated_at": "2019-11-09"}, {"name": "stillbreeze/Online-Stereo-Calibration", "stars": 35, "usage_count": 1, "created_at": "2019-06-03", "updated_at": "2019-12-14"}, {"name": "alexey-malov/oop", "stars": 44, "usage_count": 2, "created_at": "2016-02-02", "updated_at": "2026-02-26"}, {"name": "NREL/OpenStudio", "stars": 574, "usage_count": 1, "created_at": "2013-07-03", "updated_at": "2026-01-15"}, {"name": "NatLabRockies/OpenStudio", "stars": 583, "usage_count": 1, "created_at": "2013-07-03", "updated_at": "2026-02-25"}, {"name": "trep/opentrep", "stars": 12, "usage_count": 2, "created_at": "2011-10-31", "updated_at": "2026-01-13"}, {"name": "ZJU-FAST-Lab/OPNet", "stars": 72, "usage_count": 5, "created_at": "2020-11-01", "updated_at": "2021-04-02"}, {"name": "FlashForge/Orca-Flashforge", "stars": 39, "usage_count": 6, "created_at": "2024-04-17", "updated_at": "2026-01-19"}, {"name": "OrcaSlicer/OrcaSlicer", "stars": 12846, "usage_count": 6, "created_at": "2022-07-16", "updated_at": "2026-03-11"}, {"name": "organicmaps/organicmaps", "stars": 13428, "usage_count": 13, "created_at": "2020-12-27", "updated_at": "2026-03-11"}, {"name": "Project-OSRM/osrm-backend", "stars": 7534, "usage_count": 12, "created_at": "2011-09-22", "updated_at": "2026-03-08"}, {"name": "diegoarjz/pagoda", "stars": 22, "usage_count": 3, "created_at": "2019-01-05", "updated_at": "2025-08-04"}, {"name": "yindaz/pbrs", "stars": 142, "usage_count": 3, "created_at": "2017-04-09", "updated_at": "2019-03-16"}, {"name": "msavva/pigraphs", "stars": 47, "usage_count": 1, "created_at": "2016-05-20", "updated_at": "2019-10-27"}, {"name": "pika-org/pika", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "dbis-ilm/pipefabric", "stars": 13, "usage_count": 1, "created_at": "2017-01-25", "updated_at": "2021-04-07"}, {"name": "Tom94/practical-path-guiding", "stars": 246, "usage_count": 3, "created_at": "2017-09-05", "updated_at": "2024-08-29"}, {"name": "oozebot/preFlight", "stars": 138, "usage_count": 2, "created_at": "2026-01-22", "updated_at": "2026-03-10"}, {"name": "ZJU-FAST-Lab/Primitive-Planner", "stars": 167, "usage_count": 5, "created_at": "2022-09-16", "updated_at": "2025-09-26"}, {"name": "OpenVZ/prl-disp-service", "stars": 11, "usage_count": 32, "created_at": "2015-06-02", "updated_at": "2024-04-29"}, {"name": "ChairImpSec/PROLEAD", "stars": 42, "usage_count": 7, "created_at": "2022-07-14", "updated_at": "2026-02-11"}, {"name": "LhKipp/Prolog_BFS", "stars": 16, "usage_count": 1, "created_at": "2019-07-05", "updated_at": "2023-04-02"}, {"name": "amov-lab/Prometheus", "stars": 3067, "usage_count": 10, "created_at": "2019-12-03", "updated_at": "2025-12-18"}, {"name": "Hins-H/Prometheus-mid360-egoplanner", "stars": 12, "usage_count": 10, "created_at": "2024-10-29", "updated_at": "2025-02-20"}, {"name": "prusa3d/PrusaSlicer", "stars": 8859, "usage_count": 2, "created_at": "2016-03-01", "updated_at": "2026-02-19"}, {"name": "zhongtianda/px4_gazebo_fuel", "stars": 30, "usage_count": 5, "created_at": "2024-04-27", "updated_at": "2024-11-24"}, {"name": "QIDITECH/QIDISlicer", "stars": 94, "usage_count": 2, "created_at": "2023-05-30", "updated_at": "2025-09-04"}, {"name": "QIDITECH/QIDIStudio", "stars": 103, "usage_count": 1, "created_at": "2024-08-26", "updated_at": "2026-02-07"}, {"name": "ningnawang/QMAT", "stars": 22, "usage_count": 5, "created_at": "2024-08-17", "updated_at": "2024-09-25"}, {"name": "Robotics-STAR-Lab/RACER", "stars": 726, "usage_count": 5, "created_at": "2023-02-24", "updated_at": "2024-11-19"}, {"name": "NEU-REAL/REAL_DRONE_400", "stars": 216, "usage_count": 5, "created_at": "2024-04-25", "updated_at": "2025-11-17"}, {"name": "Gj0705/RELOCALIZATION", "stars": 14, "usage_count": 1, "created_at": "2022-06-17", "updated_at": "2022-06-17"}, {"name": "tfwu/RGM-AOGTracker", "stars": 24, "usage_count": 1, "created_at": "2016-05-06", "updated_at": "2016-05-11"}, {"name": "siyuanwu99/RO47005-PDM-Final", "stars": 48, "usage_count": 5, "created_at": "2021-11-17", "updated_at": "2022-08-17"}, {"name": "KDE/rocs", "stars": 0, "usage_count": 4, "created_at": "", "updated_at": ""}, {"name": "RosettaCommons/rosetta", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "anadodik/sdmm-mitsuba", "stars": 18, "usage_count": 3, "created_at": "2020-07-07", "updated_at": "2022-03-26"}, {"name": "bastosmichael/semantic-web-crawler", "stars": 13, "usage_count": 5, "created_at": "2012-03-19", "updated_at": "2012-06-02"}, {"name": "kahowang/sensor-fusion-for-localization-and-mapping", "stars": 773, "usage_count": 1, "created_at": "2021-08-15", "updated_at": "2022-05-20"}, {"name": "mmycly/serverTwo", "stars": 25, "usage_count": 31, "created_at": "2019-03-21", "updated_at": "2019-03-20"}, {"name": "chrismile/sgl", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "myiosemail/ShowTimeVideoLive", "stars": 253, "usage_count": 5, "created_at": "2016-06-22", "updated_at": "2016-07-07"}, {"name": "IRCAD/sight", "stars": 0, "usage_count": 10, "created_at": "", "updated_at": ""}, {"name": "siodb/siodb", "stars": 46, "usage_count": 2, "created_at": "2019-10-21", "updated_at": "2023-02-18"}, {"name": "OpenBioSim/sire", "stars": 0, "usage_count": 10, "created_at": "", "updated_at": ""}, {"name": "prusa3d/Slic3r", "stars": 8720, "usage_count": 1, "created_at": "2016-03-01", "updated_at": "2025-11-07"}, {"name": "utkabobr/SliceBeam", "stars": 92, "usage_count": 6, "created_at": "2024-11-01", "updated_at": "2025-04-14"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 1, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "ths-rwth/smtrat", "stars": 61, "usage_count": 6, "created_at": "2015-05-08", "updated_at": "2025-11-20"}, {"name": "MicrochipTech/some-ip", "stars": 57, "usage_count": 1, "created_at": "2019-06-14", "updated_at": "2019-08-14"}, {"name": "advancedtelematic/sota_client_cpp", "stars": 147, "usage_count": 1, "created_at": "2016-11-25", "updated_at": "2024-03-18"}, {"name": "Sovol3d/Sovol-OrcaSlicer", "stars": 26, "usage_count": 6, "created_at": "2025-03-06", "updated_at": "2025-10-08"}, {"name": "b6oy/SP2-Server", "stars": 22, "usage_count": 10, "created_at": "2017-01-24", "updated_at": "2017-01-24"}, {"name": "qcscine/sparrow", "stars": 88, "usage_count": 3, "created_at": "2019-06-12", "updated_at": "2025-10-09"}, {"name": "cbeck88/spirit-po", "stars": 51, "usage_count": 4, "created_at": "2015-10-23", "updated_at": "2026-02-05"}, {"name": "mollnn/spoly", "stars": 85, "usage_count": 3, "created_at": "2024-04-15", "updated_at": "2024-10-12"}, {"name": "sanshar/StackBlock", "stars": 11, "usage_count": 5, "created_at": "2015-08-14", "updated_at": "2021-03-13"}, {"name": "Robotics-STAR-Lab/STAR-Searcher", "stars": 117, "usage_count": 5, "created_at": "2023-09-19", "updated_at": "2025-05-08"}, {"name": "ZJU-FAST-Lab/std-trees", "stars": 44, "usage_count": 5, "created_at": "2021-09-15", "updated_at": "2022-03-11"}, {"name": "moves-rwth/storm", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "ASMlover/study", "stars": 21, "usage_count": 1, "created_at": "2013-01-09", "updated_at": "2026-03-01"}, {"name": "svgpp/svgpp", "stars": 595, "usage_count": 12, "created_at": "2014-02-18", "updated_at": "2024-02-29"}, {"name": "zijunwa/swarm-control", "stars": 11, "usage_count": 5, "created_at": "2024-08-07", "updated_at": "2024-08-07"}, {"name": "ZJU-FAST-Lab/Swarm-Formation", "stars": 526, "usage_count": 5, "created_at": "2021-09-14", "updated_at": "2024-01-24"}, {"name": "Radiance-nt/Swarm-Formation-Airsim", "stars": 31, "usage_count": 5, "created_at": "2024-08-26", "updated_at": "2024-08-27"}, {"name": "symbol/symbol", "stars": 52, "usage_count": 2, "created_at": "2022-01-10", "updated_at": "2026-03-11"}, {"name": "HKUST-Aerial-Robotics/Teach-Repeat-Replan", "stars": 1131, "usage_count": 5, "created_at": "2019-06-25", "updated_at": "2021-10-19"}, {"name": "ZJU-FAST-Lab/TGK-Planner", "stars": 115, "usage_count": 5, "created_at": "2020-08-05", "updated_at": "2021-03-18"}, {"name": "BorisSchaeling/theboostcpplibraries", "stars": 99, "usage_count": 10, "created_at": "2018-01-04", "updated_at": "2022-06-29"}, {"name": "yuwenyong/tinycore", "stars": 14, "usage_count": 1, "created_at": "2017-03-06", "updated_at": "2017-09-07"}, {"name": "johnson3d/titan3d", "stars": 97, "usage_count": 5, "created_at": "2019-12-30", "updated_at": "2026-02-05"}, {"name": "nesteruk/Tlon", "stars": 46, "usage_count": 1, "created_at": "2016-09-04", "updated_at": "2022-03-08"}, {"name": "ShuoYangRobotics/toy_code", "stars": 87, "usage_count": 5, "created_at": "2015-08-04", "updated_at": "2021-04-08"}, {"name": "rburkholder/trade-frame", "stars": 0, "usage_count": 79, "created_at": "", "updated_at": ""}, {"name": "deib-polimi/TRex", "stars": 41, "usage_count": 1, "created_at": "2014-06-19", "updated_at": "2017-07-13"}, {"name": "TuGraph-family/tugraph-db", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "mat007/turtle", "stars": 51, "usage_count": 4, "created_at": "2015-03-01", "updated_at": "2025-08-24"}, {"name": "aax1n/UAV-Navigation", "stars": 16, "usage_count": 5, "created_at": "2023-09-25", "updated_at": "2023-10-26"}, {"name": "peiyu-cui/uav_motion_planning", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "TJU-Aerial-Robotics/UAV_Simulator", "stars": 21, "usage_count": 5, "created_at": "2024-10-19", "updated_at": "2024-11-20"}, {"name": "SiliconLabs/UnifySDK", "stars": 96, "usage_count": 4, "created_at": "2021-06-23", "updated_at": "2025-10-29"}, {"name": "ddemidov/vexcl", "stars": 718, "usage_count": 1, "created_at": "2012-05-29", "updated_at": "2025-07-19"}, {"name": "mcrescas/viltrum-mitsuba", "stars": 21, "usage_count": 3, "created_at": "2021-05-24", "updated_at": "2022-04-14"}, {"name": "ZJU-FAST-Lab/visPlanner", "stars": 82, "usage_count": 5, "created_at": "2021-03-05", "updated_at": "2022-05-26"}, {"name": "s3a-spatialaudio/VISR", "stars": 26, "usage_count": 6, "created_at": "2018-12-03", "updated_at": "2025-12-30"}, {"name": "wallscavesurvey/walls", "stars": 23, "usage_count": 1, "created_at": "2017-02-18", "updated_at": "2025-09-13"}, {"name": "tdauth/wc3lib", "stars": 25, "usage_count": 1, "created_at": "2016-09-28", "updated_at": "2025-11-04"}, {"name": "werckme/werckmeister", "stars": 45, "usage_count": 4, "created_at": "2019-01-14", "updated_at": "2026-03-08"}, {"name": "wesnoth/wesnoth", "stars": 6452, "usage_count": 4, "created_at": "2013-04-14", "updated_at": "2026-02-22"}, {"name": "Mrsandman327/windows-book-code-c-", "stars": 72, "usage_count": 15, "created_at": "2019-05-29", "updated_at": "2019-05-29"}, {"name": "OzzieIsaacs/winmerge-qt", "stars": 13, "usage_count": 2, "created_at": "2019-08-10", "updated_at": "2021-04-05"}, {"name": "worldforge/worldforge", "stars": 38, "usage_count": 1, "created_at": "2023-10-31", "updated_at": "2025-07-01"}, {"name": "ORNL-Fusion/xolotl", "stars": 25, "usage_count": 1, "created_at": "2018-02-05", "updated_at": "2026-03-10"}, {"name": "yandex/yamail", "stars": 13, "usage_count": 2, "created_at": "2014-02-24", "updated_at": "2015-11-23"}, {"name": "YellProgram/Yell", "stars": 13, "usage_count": 8, "created_at": "2014-01-14", "updated_at": "2025-08-04"}, {"name": "TJU-Aerial-Robotics/YOPO", "stars": 972, "usage_count": 5, "created_at": "2023-12-14", "updated_at": "2025-12-23"}, {"name": "dairycowp/YOPO-ROS2", "stars": 33, "usage_count": 5, "created_at": "2025-11-06", "updated_at": "2026-01-08"}, {"name": "aekul/yotsuba", "stars": 25, "usage_count": 3, "created_at": "2017-08-16", "updated_at": "2017-08-20"}, {"name": "usnistgov/ZENO", "stars": 21, "usage_count": 1, "created_at": "2016-05-19", "updated_at": "2024-09-17"}];
+    const contribRows = [{"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.87.0", "person": "cook-1229", "commit_count": 1}, {"version": "boost-1.84.0", "person": "Joel de Guzman", "commit_count": 2}, {"version": "boost-1.81.0", "person": "Nikita Kniazev", "commit_count": 1}, {"version": "boost-1.81.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.76.0", "person": "Joel de Guzman", "commit_count": 4}, {"version": "boost-1.76.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.76.0", "person": "sdarwin", "commit_count": 2}, {"version": "boost-1.76.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.76.0", "person": "beojan", "commit_count": 1}, {"version": "boost-1.76.0", "person": "Nikita Kniazev", "commit_count": 1}, {"version": "boost-1.75.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.74.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.74.0", "person": "Nikita Kniazev", "commit_count": 1}, {"version": "boost-1.73.0", "person": "Nikita Kniazev", "commit_count": 6}, {"version": "boost-1.73.0", "person": "Joel de Guzman", "commit_count": 3}, {"version": "boost-1.73.0", "person": "mgaunard", "commit_count": 2}, {"version": "boost-1.72.0", "person": "Nikita Kniazev", "commit_count": 7}, {"version": "boost-1.72.0", "person": "Joel de Guzman", "commit_count": 5}, {"version": "boost-1.72.0", "person": "giomasce", "commit_count": 1}, {"version": "boost-1.70.0", "person": "Kohei Takahashi", "commit_count": 7}, {"version": "boost-1.70.0", "person": "Nikita Kniazev", "commit_count": 3}, {"version": "boost-1.70.0", "person": "Joel de Guzman", "commit_count": 2}, {"version": "boost-1.69.0", "person": "Nikita Kniazev", "commit_count": 4}, {"version": "boost-1.69.0", "person": "glenfe", "commit_count": 2}, {"version": "boost-1.67.0", "person": "Kohei Takahashi", "commit_count": 25}, {"version": "boost-1.67.0", "person": "Nikita Kniazev", "commit_count": 8}, {"version": "boost-1.67.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.67.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Kohei Takahashi", "commit_count": 14}, {"version": "boost-1.65.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Nicholas Devenish", "commit_count": 1}, {"version": "boost-1.63.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.63.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.63.0", "person": "Kohei Takahashi", "commit_count": 1}, {"version": "boost-1.63.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.62.0", "person": "Kohei Takahashi", "commit_count": 49}, {"version": "boost-1.62.0", "person": "Joel de Guzman", "commit_count": 3}, {"version": "boost-1.62.0", "person": "Nikita Kniazev", "commit_count": 2}, {"version": "boost-1.61.0", "person": "Kohei Takahashi", "commit_count": 17}, {"version": "boost-1.61.0", "person": "Joel de Guzman", "commit_count": 10}, {"version": "boost-1.60.0", "person": "MarcelRaad", "commit_count": 1}, {"version": "boost-1.60.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.59.0", "person": "fletchjp", "commit_count": 8}, {"version": "boost-1.59.0", "person": "Joel de Guzman", "commit_count": 4}, {"version": "boost-1.59.0", "person": "Kohei Takahashi", "commit_count": 3}, {"version": "boost-1.59.0", "person": "Jeff Trull", "commit_count": 1}, {"version": "boost-1.58.0", "person": "fletchjp", "commit_count": 388}, {"version": "boost-1.58.0", "person": "Kohei Takahashi", "commit_count": 15}, {"version": "boost-1.58.0", "person": "Joel de Guzman", "commit_count": 7}, {"version": "boost-1.58.0", "person": "MarcelRaad", "commit_count": 1}, {"version": "boost-1.57.0", "person": "Joel de Guzman", "commit_count": 2}, {"version": "boost-1.57.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.57.0", "person": "teajay-fr", "commit_count": 1}, {"version": "boost-1.56.0", "person": "fletchjp", "commit_count": 272}, {"version": "boost-1.56.0", "person": "Eric Niebler", "commit_count": 6}, {"version": "boost-1.56.0", "person": "Joel de Guzman", "commit_count": 3}, {"version": "boost-1.56.0", "person": "K-ballo", "commit_count": 2}, {"version": "boost-1.56.0", "person": "Lee *!* Clagett", "commit_count": 2}, {"version": "boost-1.56.0", "person": "mgaunard", "commit_count": 1}, {"version": "boost-1.55.0", "person": "Stephen Kelly", "commit_count": 2}, {"version": "boost-1.55.0", "person": "Eric Niebler", "commit_count": 2}, {"version": "boost-1.52.0", "person": "Eric Niebler", "commit_count": 11}, {"version": "boost-1.52.0", "person": "hkaiser", "commit_count": 1}, {"version": "boost-1.51.0", "person": "Eric Niebler", "commit_count": 2}, {"version": "boost-1.51.0", "person": "Thomas Heller", "commit_count": 2}, {"version": "boost-1.50.0", "person": "Joel de Guzman", "commit_count": 2}, {"version": "boost-1.49.0", "person": "hkaiser", "commit_count": 2}, {"version": "boost-1.49.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.48.0", "person": "Thomas Heller", "commit_count": 9}, {"version": "boost-1.48.0", "person": "Joel de Guzman", "commit_count": 2}, {"version": "boost-1.48.0", "person": "danieljames", "commit_count": 2}, {"version": "boost-1.47.0", "person": "Thomas Heller", "commit_count": 62}, {"version": "boost-1.47.0", "person": "hkaiser", "commit_count": 4}, {"version": "boost-1.47.0", "person": "Eric Niebler", "commit_count": 2}, {"version": "boost-1.47.0", "person": "Joel de Guzman", "commit_count": 1}, {"version": "boost-1.46.0", "person": "Thomas Heller", "commit_count": 98}, {"version": "boost-1.45.0", "person": "Thomas Heller", "commit_count": 26}, {"version": "boost-1.44.0", "person": "Thomas Heller", "commit_count": 33}, {"version": "boost-1.44.0", "person": "Joel de Guzman", "commit_count": 16}, {"version": "boost-1.44.0", "person": "Eric Niebler", "commit_count": 4}, {"version": "boost-1.35.0", "person": "DougGregor", "commit_count": 1}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 86, 89, 90, 91, 92, 92, 97, 100, 100, 38, 35, 37, 39, 40, 42, 43, 43, 45, 46, 47, 48, 51, 48, 53, 52, 48, 44, 27, 27, 27, 26, 26, 26, 26, 26, 20, 20, 20, 20, 20, 20, 20, 20, 19];
+    const usageYears = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [6, 9, 361, 157, 94, 37, 154, 240, 106, 252, 162, 109, 73, 99, 117, 132, 74, 5];
+    const byUpdated = [0, 0, 16, 115, 57, 322, 47, 188, 77, 32, 86, 234, 80, 118, 279, 211, 290, 35];
+    const repoCounts = [2, 1, 9, 9, 13, 8, 21, 20, 20, 11, 26, 18, 17, 19, 23, 25, 12, 2];
+    const commitVersions = ["boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [411, 16, 2, 27, 54, 5, 0, 16, 0, 35, 0, 6, 12, 0, 13, 11, 2, 1, 11, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0];
 
-                if (aVal < bVal) {
-                    return contributorSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return contributorSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
 
-            updateContributorSortIndicators();
-            contributorCurrentPage = 1;
-            updateContributorTable();
-        }
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
 
-        function filterContributorData(searchTerm) {
-            contributorSearchTerm = searchTerm.toLowerCase();
-            contributorFilteredData = contributorData.filter(contrib => {
-                const version = (contrib.version || '').toLowerCase();
-                const person = (contrib.person || '').toLowerCase();
-                const email = (contrib.email_address || '').toLowerCase();
-                return version.includes(contributorSearchTerm) ||
-                       person.includes(contributorSearchTerm) ||
-                       email.includes(contributorSearchTerm);
-            });
-            contributorCurrentPage = 1;
-            sortContributorData(contributorSortField);
-        }
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
 
-        function updateContributorSortIndicators() {
-            document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === contributorSortField) {
-                    indicator.textContent = contributorSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateContributorTable() {
-            const start = (contributorCurrentPage - 1) * contributorItemsPerPage;
-            const end = start + contributorItemsPerPage;
-            const pageData = contributorFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('contributor-table-tbody');
-            if (contributorFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No commit data available (boost_commit table not yet populated)</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(contrib => {
-                    const version = contrib.version || 'N/A';
-                    const person = contrib.person || contrib.email_address || 'N/A';
-                    const email = contrib.email_address || 'N/A';
-                    const commitCount = (contrib.commit_count || 0).toLocaleString();
-
-                    return `
-                        <tr>
-                            <td>${version}</td>
-                            <td>${person}</td>
-                            <td>${email}</td>
-                            <td>${commitCount}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateContributorPaginationInfo();
-            updateContributorPaginationButtons();
-        }
-
-        function updateContributorPaginationInfo() {
-            const start = contributorFilteredData.length === 0 ? 0 : (contributorCurrentPage - 1) * contributorItemsPerPage + 1;
-            const end = Math.min(contributorCurrentPage * contributorItemsPerPage, contributorFilteredData.length);
-            const total = contributorFilteredData.length;
-            document.getElementById('contributor-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateContributorPaginationButtons() {
-            const prevBtn = document.getElementById('contributor-prev-btn');
-            const nextBtn = document.getElementById('contributor-next-btn');
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-
-            prevBtn.disabled = contributorCurrentPage === 1 || contributorFilteredData.length === 0;
-            nextBtn.disabled = contributorCurrentPage >= totalPages || contributorFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortContributorData(th.dataset.sort));
-        });
-
-        document.getElementById('contributor-prev-btn').addEventListener('click', () => {
-            if (contributorCurrentPage > 1) {
-                contributorCurrentPage--;
-                updateContributorTable();
-            }
-        });
-
-        document.getElementById('contributor-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-            if (contributorCurrentPage < totalPages) {
-                contributorCurrentPage++;
-                updateContributorTable();
-            }
-        });
-
-        // Add search input handler
-        const contributorSearchInput = document.getElementById('contributor-search');
-        if (contributorSearchInput) {
-            contributorSearchInput.addEventListener('input', (e) => {
-                filterContributorData(e.target.value);
-            });
-        }
-
-        // Initial display - wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                sortContributorData('version');
-            });
-        } else {
-            sortContributorData('version');
-        }
-    
-    </script>
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
 </body>
 </html>

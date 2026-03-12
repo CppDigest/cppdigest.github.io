@@ -1,1117 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mp11 - Boost Library Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-weight: 700;
-        }
-        .panel {
-            background: #ffffff;
-            padding: 30px;
-            margin: 25px 0;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .panel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .panel h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #1a202c;
-            font-size: 1.6em;
-            font-weight: 600;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-        }
-        .panel h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        .chart-container {
-            margin: 25px 0;
-            height: 450px;
-            position: relative;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-        }
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-        .panel-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-        .panel-row .chart-container {
-            margin: 0;
-        }
-        .panel-row table {
-            margin: 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .sortable {
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-        .sortable:hover {
-            background-color: #e0e0e0 !important;
-        }
-        .sort-indicator {
-            margin-left: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .back-link {
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            display: inline-block;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-        .back-link a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            text-decoration: none;
-            transform: translateX(-3px);
-        }
-        .depth-1 {
-            background-color: #dbeafe;
-        }
-        .depth-2 {
-            background-color: #d1fae5;
-        }
-        .depth-3, .depth-4, .depth-5 {
-            background-color: #fef3c7;
-        }
-        @media (max-width: 1200px) {
-            .panel-row {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 20px 15px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mp11 - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
 </head>
 <body>
-    <div class="back-link">
-        <a href="../index.html">← Back to Dashboard</a>
-    </div>
-    <h1>📚 mp11</h1>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 mp11</h1>
 
-    <!-- Panel 0: Overview -->
-    <div class="panel">
-        <h2>Overview</h2>
-        <div class="overview-container">
-
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                <div>
-                    
-            <div>
-                <p style="color: #666;">
-                    A C++11 metaprogramming library.
-                </p>
-            </div>
-    
-                    <table style="width: 100%; margin: 0;">
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Created Version:</td>
-                                <td style="padding: 8px;">1.66.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Modified Version:</td>
-                                <td style="padding: 8px;">1.90.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Repositories:</td>
-                                <td style="padding: 8px;">82</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average New Repositories Per Year:</td>
-                                <td style="padding: 8px;">4.00</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Year Repository Count:</td>
-                                <td style="padding: 8px;">1 (2025)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Used Year:</td>
-                                <td style="padding: 8px;">2017 (11 repos)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average Stars:</td>
-                                <td style="padding: 8px;">969</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Activity Score:</td>
-                                <td style="padding: 8px;">-1.131 <span style="color: #666; font-size: 0.9em;">(very low)</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Internal Consumers:</td>
-                                <td style="padding: 8px;">94</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Contributors in Most Recent Version:</td>
-                                <td style="padding: 8px;">2</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Contributors:</td>
-                                <td style="padding: 8px;">24</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="headers-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="headers-search" placeholder="Filter headers..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Header</th>
-                                <th style="text-align: right; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Times Included</th>
-                            </tr>
-                        </thead>
-                        <tbody id="headers-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="headers-pagination-info">Showing 1-10 of 33</span>
-                        </div>
-                        <div>
-                            <button id="headers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="headers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                
-        const headersData = [{"name": "boost/mp11/list.hpp", "count": 189}, {"name": "boost/mp11.hpp", "count": 118}, {"name": "boost/mp11/algorithm.hpp", "count": 117}, {"name": "boost/mp11/mpl.hpp", "count": 54}, {"name": "boost/mp11/utility.hpp", "count": 50}, {"name": "boost/mp11/detail/config.hpp", "count": 24}, {"name": "boost/mp11/integral.hpp", "count": 24}, {"name": "boost/mp11/tuple.hpp", "count": 17}, {"name": "boost/mp11/function.hpp", "count": 17}, {"name": "boost/mp11/integer_sequence.hpp", "count": 15}, {"name": "boost/mp11/set.hpp", "count": 14}, {"name": "boost/mp11/bind.hpp", "count": 13}, {"name": "boost/mp11/detail/mp_list.hpp", "count": 11}, {"name": "boost/mp11/detail/mp_append.hpp", "count": 7}, {"name": "boost/mp11/detail/mp_fold.hpp", "count": 6}, {"name": "boost/mp11/map.hpp", "count": 6}, {"name": "boost/mp11/version.hpp", "count": 5}, {"name": "boost/mp11/detail/mp_front.hpp", "count": 4}, {"name": "boost/mp11/detail/mp_rename.hpp", "count": 4}, {"name": "boost/mp11/detail/mp_is_list.hpp", "count": 4}, {"name": "boost/mp11/detail/mp_copy_if.hpp", "count": 3}, {"name": "boost/mp11/detail/mp_remove_if.hpp", "count": 3}, {"name": "boost/mp11/detail/mp_plus.hpp", "count": 3}, {"name": "boost/mp11/detail/mp_value.hpp", "count": 2}, {"name": "boost/mp11/detail/mp_count.hpp", "count": 2}, {"name": "boost/mp11/detail/mp_min_element.hpp", "count": 2}, {"name": "boost/mp11/detail/mp_map_find.hpp", "count": 2}, {"name": "boost/mp11/detail/mp_defer.hpp", "count": 1}, {"name": "boost/mp11/detail/mp_is_value_list.hpp", "count": 1}, {"name": "boost/mp11/detail/mp_list_v.hpp", "count": 1}, {"name": "boost/mp11/lambda.hpp", "count": 1}, {"name": "boost/mp11/detail/mp_void.hpp", "count": 1}, {"name": "boost/mp11/detail/mp_with_index.hpp", "count": 1}];
-        let headersCurrentPage = 1;
-        const headersItemsPerPage = 10;
-        let headersFilteredData = [...headersData];
-        let headersSearchTerm = '';
-
-        function filterHeadersData(searchTerm) {
-            headersSearchTerm = searchTerm.toLowerCase();
-            headersFilteredData = headersData.filter(header => {
-                const name = (header.name || '').toLowerCase();
-                const count = (header.count || 0).toString();
-                return name.includes(headersSearchTerm) || count.includes(headersSearchTerm);
-            });
-            headersCurrentPage = 1;
-            updateHeadersTable();
-        }
-
-        function updateHeadersTable() {
-            const start = (headersCurrentPage - 1) * headersItemsPerPage;
-            const end = start + headersItemsPerPage;
-            const pageData = headersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('headers-table-tbody');
-            tbody.innerHTML = pageData.map(header => {
-                const name = header.name || 'N/A';
-                const count = (header.count || 0).toLocaleString();
-                return `
-                    <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${name}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${count}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            // Update pagination info
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            const startItem = headersFilteredData.length === 0 ? 0 : start + 1;
-            const endItem = Math.min(start + headersItemsPerPage, headersFilteredData.length);
-            document.getElementById('headers-pagination-info').textContent =
-                headersFilteredData.length === 0 ? 'No data available' : `Showing ${startItem}-${endItem} of ${headersFilteredData.length}`;
-
-            // Update button states
-            document.getElementById('headers-prev-btn').disabled = headersCurrentPage === 1;
-            document.getElementById('headers-next-btn').disabled = headersCurrentPage >= totalPages;
-        }
-
-        document.getElementById('headers-prev-btn').addEventListener('click', () => {
-            if (headersCurrentPage > 1) {
-                headersCurrentPage--;
-                updateHeadersTable();
-            }
-        });
-
-        document.getElementById('headers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            if (headersCurrentPage < totalPages) {
-                headersCurrentPage++;
-                updateHeadersTable();
-            }
-        });
-
-        // Add search input handler
-        const headersSearchInput = document.getElementById('headers-search');
-        if (headersSearchInput) {
-            headersSearchInput.addEventListener('input', (e) => {
-                filterHeadersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        updateHeadersTable();
-    
-            </script>
-    
-        </div>
-    </div>
-
-    <!-- Panel 1: Internal Consumers -->
-    <div class="panel">
-        <h2>Internal Consumers</h2>
-        <p style="color: #666; margin-top: 0; margin-bottom: 15px;">
-            Showing all consumers for the latest version.
-            Colors indicate depth: <span style="color: #3b82f6; font-weight: 600;">Blue (d1)</span> = Direct,
-            <span style="color: #10b981; font-weight: 600;">Green (d2)</span> = Second level,
-            <span style="color: #f59e0b; font-weight: 600;">Orange (d3)</span> = Third level,
-            <span style="color: #ef4444; font-weight: 600;">Red (d4+)</span> = Deeper levels.
-        </p>
-        <div class="panel-row">
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4">Consumer Libraries</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="beast.html" style="color: #3b82f6; font-weight: bold;">beast</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="cobalt.html" style="color: #3b82f6; font-weight: bold;">cobalt</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="container_hash.html" style="color: #3b82f6; font-weight: bold;">container_hash</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="context.html" style="color: #3b82f6; font-weight: bold;">context</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="describe.html" style="color: #3b82f6; font-weight: bold;">describe</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="histogram.html" style="color: #3b82f6; font-weight: bold;">histogram</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="iterator.html" style="color: #3b82f6; font-weight: bold;">iterator</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="msm.html" style="color: #3b82f6; font-weight: bold;">msm</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="open_method.html" style="color: #3b82f6; font-weight: bold;">open_method</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="parameter.html" style="color: #3b82f6; font-weight: bold;">parameter</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="redis.html" style="color: #3b82f6; font-weight: bold;">redis</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="safe_numerics.html" style="color: #3b82f6; font-weight: bold;">safe_numerics</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="url.html" style="color: #3b82f6; font-weight: bold;">url</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="variant2.html" style="color: #3b82f6; font-weight: bold;">variant2</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="asio.html" style="color: #10b981; font-weight: normal;">asio</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="bimap.html" style="color: #10b981; font-weight: normal;">bimap</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="bloom.html" style="color: #10b981; font-weight: normal;">bloom</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="coroutine.html" style="color: #10b981; font-weight: normal;">coroutine</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="coroutine2.html" style="color: #10b981; font-weight: normal;">coroutine2</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="dynamic_bitset.html" style="color: #10b981; font-weight: normal;">dynamic_bitset</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="filesystem.html" style="color: #10b981; font-weight: normal;">filesystem</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="flyweight.html" style="color: #10b981; font-weight: normal;">flyweight</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="fusion.html" style="color: #10b981; font-weight: normal;">fusion</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="gil.html" style="color: #10b981; font-weight: normal;">gil</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="hash2.html" style="color: #10b981; font-weight: normal;">hash2</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="heap.html" style="color: #10b981; font-weight: normal;">heap</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="json.html" style="color: #10b981; font-weight: normal;">json</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="lambda.html" style="color: #10b981; font-weight: normal;">lambda</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="lockfree.html" style="color: #10b981; font-weight: normal;">lockfree</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="mqtt5.html" style="color: #10b981; font-weight: normal;">mqtt5</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="multi_array.html" style="color: #10b981; font-weight: normal;">multi_array</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="multi_index.html" style="color: #10b981; font-weight: normal;">multi_index</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="mysql.html" style="color: #10b981; font-weight: normal;">mysql</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="poly_collection.html" style="color: #10b981; font-weight: normal;">poly_collection</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="program_options.html" style="color: #10b981; font-weight: normal;">program_options</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="range.html" style="color: #10b981; font-weight: normal;">range</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="serialization.html" style="color: #10b981; font-weight: normal;">serialization</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="stacktrace.html" style="color: #10b981; font-weight: normal;">stacktrace</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="static_string.html" style="color: #10b981; font-weight: normal;">static_string</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="system.html" style="color: #10b981; font-weight: normal;">system</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="thread.html" style="color: #10b981; font-weight: normal;">thread</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="tokenizer.html" style="color: #10b981; font-weight: normal;">tokenizer</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="type_erasure.html" style="color: #10b981; font-weight: normal;">type_erasure</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="type_index.html" style="color: #10b981; font-weight: normal;">type_index</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="unordered.html" style="color: #10b981; font-weight: normal;">unordered</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="accumulators.html" style="color: #f59e0b; font-weight: normal;">accumulators</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="algorithm.html" style="color: #f59e0b; font-weight: normal;">algorithm</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="any.html" style="color: #f59e0b; font-weight: normal;">any</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="assign.html" style="color: #f59e0b; font-weight: normal;">assign</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="chrono.html" style="color: #f59e0b; font-weight: normal;">chrono</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="compute.html" style="color: #f59e0b; font-weight: normal;">compute</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="container.html" style="color: #f59e0b; font-weight: normal;">container</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="contract.html" style="color: #f59e0b; font-weight: normal;">contract</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="convert.html" style="color: #f59e0b; font-weight: normal;">convert</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="dll.html" style="color: #f59e0b; font-weight: normal;">dll</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="fiber.html" style="color: #f59e0b; font-weight: normal;">fiber</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="foreach.html" style="color: #f59e0b; font-weight: normal;">foreach</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="geometry.html" style="color: #f59e0b; font-weight: normal;">geometry</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="graph.html" style="color: #f59e0b; font-weight: normal;">graph</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="graph_parallel.html" style="color: #f59e0b; font-weight: normal;">graph_parallel</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="hana.html" style="color: #f59e0b; font-weight: normal;">hana</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="icl.html" style="color: #f59e0b; font-weight: normal;">icl</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="iostreams.html" style="color: #f59e0b; font-weight: normal;">iostreams</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="locale.html" style="color: #f59e0b; font-weight: normal;">locale</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="log.html" style="color: #f59e0b; font-weight: normal;">log</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="mpi.html" style="color: #f59e0b; font-weight: normal;">mpi</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="nowide.html" style="color: #f59e0b; font-weight: normal;">nowide</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="numeric_conversion.html" style="color: #f59e0b; font-weight: normal;">numeric_conversion</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="outcome.html" style="color: #f59e0b; font-weight: normal;">outcome</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="parameter_python.html" style="color: #f59e0b; font-weight: normal;">parameter_python</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="phoenix.html" style="color: #f59e0b; font-weight: normal;">phoenix</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="process.html" style="color: #f59e0b; font-weight: normal;">process</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="property_map.html" style="color: #f59e0b; font-weight: normal;">property_map</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="property_map_parallel.html" style="color: #f59e0b; font-weight: normal;">property_map_parallel</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="property_tree.html" style="color: #f59e0b; font-weight: normal;">property_tree</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="proto.html" style="color: #f59e0b; font-weight: normal;">proto</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="python.html" style="color: #f59e0b; font-weight: normal;">python</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="random.html" style="color: #f59e0b; font-weight: normal;">random</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="signals2.html" style="color: #f59e0b; font-weight: normal;">signals2</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="sort.html" style="color: #f59e0b; font-weight: normal;">sort</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="spirit.html" style="color: #f59e0b; font-weight: normal;">spirit</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="statechart.html" style="color: #f59e0b; font-weight: normal;">statechart</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="test.html" style="color: #f59e0b; font-weight: normal;">test</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="units.html" style="color: #f59e0b; font-weight: normal;">units</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="variant.html" style="color: #f59e0b; font-weight: normal;">variant</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="wave.html" style="color: #f59e0b; font-weight: normal;">wave</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="xpressive.html" style="color: #f59e0b; font-weight: normal;">xpressive</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="date_time.html" style="color: #ef4444; font-weight: normal;">date_time</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="interprocess.html" style="color: #ef4444; font-weight: normal;">interprocess</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="lexical_cast.html" style="color: #ef4444; font-weight: normal;">lexical_cast</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="math.html" style="color: #ef4444; font-weight: normal;">math</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="parser.html" style="color: #ef4444; font-weight: normal;">parser</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="yap.html" style="color: #ef4444; font-weight: normal;">yap</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="multiprecision.html" style="color: #ef4444; font-weight: normal;">multiprecision</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td></td><td></td></tr>
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="chart-container">
-                <canvas id="dependentsChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 2: External Consumers -->
-    <div class="panel">
-        <h2>External Consumers</h2>
-        <div class="panel-row">
-            <div>
-                <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                    <label for="external-consumers-search" style="margin-right: 10px;">Search:</label>
-                    <input type="text" id="external-consumers-search" placeholder="Filter repositories..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                </div>
-                <table id="external-consumers-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="name">Repository <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="stars">Stars <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="usage_count">Header Includes <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="created_at">Created <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="updated_at">Updated <span class="sort-indicator">↕</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="external-consumers-tbody">
-                    </tbody>
-                </table>
-                <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span id="external-consumers-pagination-info">Showing 1-10 of 82</span>
-                    </div>
-                    <div>
-                        <button id="external-consumers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                        <button id="external-consumers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="usageChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 3: Contributors -->
-    <div class="panel">
-        <h2>Contribution</h2>
-        <div class="panel-row">
-            <div>
-                <div id="contributor-table-container">
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="contributor-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="contributor-search" placeholder="Filter contributors..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table id="contributor-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable" data-sort="version">Version <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="person">Contributor <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="email_address">Email <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="commit_count">Commit Count <span class="sort-indicator">↕</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="contributor-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="contributor-pagination-info">Showing 1-10 of 62</span>
-                        </div>
-                        <div>
-                            <button id="contributor-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="contributor-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="commitChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <script>
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">A C++11 metaprogramming library.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.66.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.90.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>97</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>5.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>1</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2017</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>1,039</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-1.076</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>104</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>2</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>22</td></tr>
+        </tbody></table>
+      </div>
+      <div>
         
-        new Chart(document.getElementById('dependentsChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Primary Consumers',
-                    data: [0, 1, 2, 3, 5, 8, 9, 9, 9, 9, 8, 11, 11, 11, 12, 11, 12, 11, 14, 14, 14, 14, 12, 12, 14],
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }, {
-                    label: 'Transitive Consumers',
-                    data: [0, 2, 2, 3, 5, 61, 60, 64, 64, 65, 65, 61, 68, 66, 68, 94, 91, 90, 92, 91, 90, 91, 93, 93, 94],
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: true,
-                            maxRotation: 90,
-                            minRotation: 45,
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Consumer Count',
-                            font: {
-                                size: 12,
-                                weight: '600'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            },
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('usageChart'), {
-            type: 'bar',
-            data: {
-                labels: ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"],
-                datasets: [
-                    {
-                        label: 'Created Repositories',
-                        type: 'line',
-                        data: [0, 2, 1, 7, 8, 4, 3, 11, 6, 6, 3, 9, 7, 7, 7, 1, 0],
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        fill: false,
-                        tension: 0.3,
-                        yAxisID: 'y1',
-                        order: 1
-                    },
-                    {
-                        label: 'Header Includes (New Repos)',
-                        type: 'bar',
-                        data: [0, 14, 12, 171, 82, 17, 76, 25, 123, 24, 4, 40, 35, 57, 41, 1, 0],
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    },
-                    {
-                        label: 'Header Includes (Updated Repos)',
-                        type: 'bar',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 5, 3, 12, 95, 106, 58, 101, 305, 37],
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Headers',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Repositories',
-                            font: {
-                                size: 14,
-                                weight: 'bold',
-                                color: 'rgba(255, 99, 132, 0.8)'
-                            }
-                        },
-                        grid: {
-                            drawOnChartArea: false
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Year',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('commitChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Commit Count',
-                    data: [0, 24, 24, 24, 63, 12, 24, 52, 33, 20, 37, 10, 35, 8, 4, 6, 7, 48, 11, 17, 11, 18, 14, 4, 12],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
         
-        const externalConsumersData = [{"name": "microsoft/onnxruntime", "stars": 18634, "usage_count": 10, "created_at": "2018-11-10", "updated_at": "2025-12-11"}, {"name": "ceph/ceph", "stars": 16032, "usage_count": 1, "created_at": "2011-09-01", "updated_at": "2026-01-02"}, {"name": "scylladb/scylladb", "stars": 15187, "usage_count": 2, "created_at": "2014-12-24", "updated_at": "2025-12-29"}, {"name": "scylladb/scylla", "stars": 15146, "usage_count": 1, "created_at": "2014-12-24", "updated_at": "2025-12-19"}, {"name": "EOSIO/eos", "stars": 11243, "usage_count": 1, "created_at": "2017-04-05", "updated_at": "2022-07-27"}, {"name": "cocos/cocos-engine", "stars": 9373, "usage_count": 1, "created_at": "2015-12-05", "updated_at": "2026-01-24"}, {"name": "ModOrganizer2/modorganizer", "stars": 2727, "usage_count": 1, "created_at": "2016-11-13", "updated_at": "2026-01-11"}, {"name": "facebook/fbthrift", "stars": 2669, "usage_count": 6, "created_at": "2013-07-02", "updated_at": "2025-12-11"}, {"name": "FISCO-BCOS/FISCO-BCOS", "stars": 2546, "usage_count": 1, "created_at": "2017-12-12", "updated_at": "2026-01-14"}, {"name": "kismetwireless/kismet", "stars": 2024, "usage_count": 74, "created_at": "2016-09-20", "updated_at": "2026-01-19"}, {"name": "ossia/score", "stars": 1943, "usage_count": 2, "created_at": "2013-10-15", "updated_at": "2026-01-14"}, {"name": "AdaptiveCpp/AdaptiveCpp", "stars": 1765, "usage_count": 102, "created_at": "2018-07-15", "updated_at": "2025-12-19"}, {"name": "cocos/cocos4", "stars": 977, "usage_count": 1, "created_at": "2025-12-18", "updated_at": "2026-01-13"}, {"name": "stan-dev/math", "stars": 807, "usage_count": 13, "created_at": "2015-07-01", "updated_at": "2026-01-26"}, {"name": "ComputationalRadiationPhysics/picongpu", "stars": 773, "usage_count": 2, "created_at": "2013-07-30", "updated_at": "2026-01-22"}, {"name": "NVIDIA/nvvl", "stars": 694, "usage_count": 1, "created_at": "2018-03-27", "updated_at": "2019-04-29"}, {"name": "intel/compile-time-init-build", "stars": 617, "usage_count": 9, "created_at": "2022-04-01", "updated_at": "2026-01-23"}, {"name": "Return-To-The-Roots/s25client", "stars": 553, "usage_count": 2, "created_at": "2013-07-07", "updated_at": "2026-01-24"}, {"name": "beached/daw_json_link", "stars": 499, "usage_count": 1, "created_at": "2017-07-03", "updated_at": "2025-12-24"}, {"name": "Desbordante/desbordante-core", "stars": 463, "usage_count": 1, "created_at": "2020-04-09", "updated_at": "2026-01-21"}, {"name": "celtera/avendish", "stars": 461, "usage_count": 17, "created_at": "2021-10-23", "updated_at": "2026-01-16"}, {"name": "think-cell/think-cell-library", "stars": 450, "usage_count": 4, "created_at": "2014-03-03", "updated_at": "2024-04-26"}, {"name": "mikage-emu/mikage-dev", "stars": 405, "usage_count": 6, "created_at": "2024-03-06", "updated_at": "2025-09-01"}, {"name": "jll63/yomm2", "stars": 380, "usage_count": 5, "created_at": "2017-09-10", "updated_at": "2025-07-30"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 12, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "GUDHI/gudhi-devel", "stars": 303, "usage_count": 3, "created_at": "2019-03-07", "updated_at": "2026-01-22"}, {"name": "nelhage/rules_boost", "stars": 301, "usage_count": 1, "created_at": "2016-08-14", "updated_at": "2025-12-18"}, {"name": "intel/cpp-baremetal-senders-and-receivers", "stars": 284, "usage_count": 28, "created_at": "2023-08-31", "updated_at": "2026-01-23"}, {"name": "mbrucher/AudioTK", "stars": 253, "usage_count": 2, "created_at": "2013-12-13", "updated_at": "2021-01-16"}, {"name": "ossia/libossia", "stars": 225, "usage_count": 5, "created_at": "2014-02-04", "updated_at": "2026-01-26"}, {"name": "ChainSQL/chainsqld", "stars": 215, "usage_count": 1, "created_at": "2017-11-14", "updated_at": "2023-01-12"}, {"name": "NuiCpp/Nui", "stars": 210, "usage_count": 2, "created_at": "2022-07-17", "updated_at": "2026-01-13"}, {"name": "erikzenker/hsm", "stars": 203, "usage_count": 3, "created_at": "2019-03-18", "updated_at": "2022-12-23"}, {"name": "named-data/NFD", "stars": 187, "usage_count": 26, "created_at": "2014-01-27", "updated_at": "2025-12-21"}, {"name": "named-data/ndn-cxx", "stars": 144, "usage_count": 31, "created_at": "2014-01-30", "updated_at": "2025-12-21"}, {"name": "ARM-software/gator", "stars": 142, "usage_count": 5, "created_at": "2014-11-17", "updated_at": "2025-12-16"}, {"name": "learnforpractice/pyeos", "stars": 132, "usage_count": 1, "created_at": "2017-10-11", "updated_at": "2022-11-18"}, {"name": "ufz/ogs", "stars": 121, "usage_count": 13, "created_at": "2011-05-04", "updated_at": "2026-01-16"}, {"name": "acts-project/acts", "stars": 121, "usage_count": 4, "created_at": "2019-03-13", "updated_at": "2026-01-18"}, {"name": "ebu/ear-production-suite", "stars": 119, "usage_count": 2, "created_at": "2020-06-30", "updated_at": "2026-01-16"}, {"name": "AliceO2Group/AliceO2", "stars": 115, "usage_count": 8, "created_at": "2014-10-07", "updated_at": "2026-01-12"}, {"name": "mason0510/eosDapps", "stars": 112, "usage_count": 1, "created_at": "2023-02-20", "updated_at": "2025-06-30"}, {"name": "intel/cpp-std-extensions", "stars": 108, "usage_count": 7, "created_at": "2023-08-31", "updated_at": "2026-01-23"}, {"name": "intel/safe-arithmetic", "stars": 98, "usage_count": 5, "created_at": "2022-11-29", "updated_at": "2026-01-23"}, {"name": "alpaka-group/llama", "stars": 92, "usage_count": 1, "created_at": "2018-02-08", "updated_at": "2024-02-29"}, {"name": "nooploop/piejam", "stars": 80, "usage_count": 11, "created_at": "2019-11-06", "updated_at": "2026-01-07"}, {"name": "Ferrster/Snowrunner-Manual-Gearbox-Mod", "stars": 80, "usage_count": 1, "created_at": "2023-04-08", "updated_at": "2025-03-10"}, {"name": "revbayes/revbayes", "stars": 78, "usage_count": 2, "created_at": "2019-12-02", "updated_at": "2026-01-26"}, {"name": "profitviews/heisenberg", "stars": 70, "usage_count": 1, "created_at": "2021-01-16", "updated_at": "2023-12-02"}, {"name": "cbritopacheco/rodin", "stars": 51, "usage_count": 1, "created_at": "2021-10-28", "updated_at": "2026-01-26"}, {"name": "cmannett85/arg_router", "stars": 51, "usage_count": 10, "created_at": "2021-08-22", "updated_at": "2024-07-16"}, {"name": "AudioTK/AudioTK", "stars": 50, "usage_count": 2, "created_at": "2021-01-20", "updated_at": "2023-05-13"}, {"name": "rhalbersma/bit_set", "stars": 46, "usage_count": 8, "created_at": "2018-05-21", "updated_at": "2026-01-04"}, {"name": "intel/generic-register-operation-optimizer", "stars": 46, "usage_count": 16, "created_at": "2023-08-31", "updated_at": "2026-01-27"}, {"name": "ricejasonf/nbdl", "stars": 44, "usage_count": 2, "created_at": "2015-08-28", "updated_at": "2025-12-24"}, {"name": "RafaGago/artv-audio", "stars": 43, "usage_count": 1, "created_at": "2021-06-21", "updated_at": "2023-09-13"}, {"name": "sanguinariojoe/aquagpusph", "stars": 39, "usage_count": 9, "created_at": "2013-11-26", "updated_at": "2025-12-21"}, {"name": "gearoenix/gearoenix", "stars": 38, "usage_count": 5, "created_at": "2017-09-11", "updated_at": "2026-01-04"}, {"name": "victor-smirnov/memoria", "stars": 37, "usage_count": 1, "created_at": "2020-03-05", "updated_at": "2025-07-02"}, {"name": "steinwurf/boost", "stars": 36, "usage_count": 148, "created_at": "2013-05-06", "updated_at": "2023-08-23"}, {"name": "AlexBAV/corsl", "stars": 36, "usage_count": 2, "created_at": "2017-05-22", "updated_at": "2024-08-11"}, {"name": "KasperskyLab/knp", "stars": 35, "usage_count": 14, "created_at": "2024-11-05", "updated_at": "2026-01-19"}, {"name": "greg7mdp/gdbf", "stars": 34, "usage_count": 1, "created_at": "2024-08-17", "updated_at": "2025-12-07"}, {"name": "gofractally/psibase", "stars": 32, "usage_count": 4, "created_at": "2022-02-12", "updated_at": "2026-01-22"}, {"name": "ComputationalRadiationPhysics/redGrapes", "stars": 26, "usage_count": 3, "created_at": "2017-02-16", "updated_at": "2024-10-28"}, {"name": "AntelopeIO/spring", "stars": 24, "usage_count": 2, "created_at": "2024-04-05", "updated_at": "2025-11-12"}, {"name": "hermes-org/lib_cpp", "stars": 23, "usage_count": 1, "created_at": "2017-12-07", "updated_at": "2025-02-27"}, {"name": "AlexBAV/AsyncCppRpc", "stars": 23, "usage_count": 1, "created_at": "2022-08-05", "updated_at": "2024-08-11"}, {"name": "SnaxFoundation/snax", "stars": 20, "usage_count": 1, "created_at": "2018-11-23", "updated_at": "2022-12-09"}, {"name": "tobias-loew/hop", "stars": 18, "usage_count": 1, "created_at": "2019-09-13", "updated_at": "2024-02-20"}, {"name": "acts-project/covfie", "stars": 17, "usage_count": 3, "created_at": "2021-11-06", "updated_at": "2025-11-19"}, {"name": "kpierczy/ethercat-lib", "stars": 16, "usage_count": 7, "created_at": "2022-07-11", "updated_at": "2025-06-25"}, {"name": "Percona-Lab/percona-binlog-server", "stars": 16, "usage_count": 3, "created_at": "2023-03-10", "updated_at": "2026-01-21"}, {"name": "Ostoic/distant", "stars": 13, "usage_count": 4, "created_at": "2017-07-03", "updated_at": "2019-06-03"}, {"name": "boostorg/openmethod", "stars": 13, "usage_count": 1, "created_at": "2024-10-06", "updated_at": "2026-01-26"}, {"name": "BlueQuartzSoftware/simplnx", "stars": 13, "usage_count": 3, "created_at": "2021-06-08", "updated_at": "2026-01-22"}, {"name": "tom--bo/mysqlredo", "stars": 13, "usage_count": 2, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "EOSIO/taurus-node", "stars": 13, "usage_count": 1, "created_at": "2023-06-16", "updated_at": "2024-03-29"}, {"name": "sergiud/hogpp", "stars": 12, "usage_count": 2, "created_at": "2021-08-14", "updated_at": "2026-01-13"}, {"name": "named-data/name-based-access-control", "stars": 12, "usage_count": 1, "created_at": "2015-05-13", "updated_at": "2026-01-24"}, {"name": "viamrobotics/viam-cpp-sdk", "stars": 11, "usage_count": 7, "created_at": "2022-10-17", "updated_at": "2026-01-16"}, {"name": "Jannik2099/pms-utils", "stars": 10, "usage_count": 15, "created_at": "2024-01-06", "updated_at": "2025-10-29"}];
-        let externalConsumersCurrentPage = 1;
-        const externalConsumersItemsPerPage = 10;
-        let externalConsumersSortField = 'stars';
-        let externalConsumersSortOrder = 'asc';
-        let externalConsumersFilteredData = [...externalConsumersData];
-        let externalConsumersSearchTerm = '';
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
 
-        function sortExternalConsumersData(field) {
-            if (externalConsumersSortField === field) {
-                externalConsumersSortOrder = externalConsumersSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                externalConsumersSortField = field;
-                externalConsumersSortOrder = 'asc';
-            }
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
 
-            externalConsumersFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
-
-                // Handle numeric fields
-                if (['stars', 'usage_count'].includes(field)) {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
-
-                // Handle date fields
-                if (['created_at', 'updated_at'].includes(field)) {
-                    aVal = aVal ? new Date(aVal) : new Date(0);
-                    bVal = bVal ? new Date(bVal) : new Date(0);
-                }
-
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
-
-                if (aVal < bVal) {
-                    return externalConsumersSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return externalConsumersSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-
-            updateExternalConsumersSortIndicators();
-            externalConsumersCurrentPage = 1;
-            updateExternalConsumersTable();
-        }
-
-        function filterExternalConsumersData(searchTerm) {
-            externalConsumersSearchTerm = searchTerm.toLowerCase();
-            externalConsumersFilteredData = externalConsumersData.filter(repo => {
-                const name = ((repo.name || repo.repo_name) || '').toLowerCase();
-                const stars = (repo.stars || 0).toString();
-                const usageCount = (repo.usage_count || 0).toString();
-                const createdAt = (repo.created_at || '').toLowerCase();
-                const updatedAt = (repo.updated_at || '').toLowerCase();
-                return name.includes(externalConsumersSearchTerm) ||
-                       stars.includes(externalConsumersSearchTerm) ||
-                       usageCount.includes(externalConsumersSearchTerm) ||
-                       createdAt.includes(externalConsumersSearchTerm) ||
-                       updatedAt.includes(externalConsumersSearchTerm);
-            });
-            externalConsumersCurrentPage = 1;
-            sortExternalConsumersData(externalConsumersSortField);
-        }
-
-        function updateExternalConsumersSortIndicators() {
-            document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === externalConsumersSortField) {
-                    indicator.textContent = externalConsumersSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateExternalConsumersTable() {
-            const start = (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage;
-            const end = start + externalConsumersItemsPerPage;
-            const pageData = externalConsumersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('external-consumers-tbody');
-            if (externalConsumersFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No repositories found</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(repo => {
-                    const name = repo.name || repo.repo_name || 'N/A';
-                    const stars = (repo.stars || 0).toLocaleString();
-                    const usageCount = (repo.usage_count || 0).toLocaleString();
-                    let createdAt = repo.created_at || 'N/A';
-                    let updatedAt = repo.updated_at || 'N/A';
-                    if (createdAt !== 'N/A' && createdAt.length > 10) {
-                        createdAt = createdAt.substring(0, 10);
-                    }
-                    if (updatedAt !== 'N/A' && updatedAt.length > 10) {
-                        updatedAt = updatedAt.substring(0, 10);
-                    }
-
-                    return `
-                        <tr>
-                            <td><a href="https://github.com/${name}" target="_blank">${name}</a></td>
-                            <td>${stars}</td>
-                            <td>${usageCount}</td>
-                            <td>${createdAt}</td>
-                            <td>${updatedAt}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateExternalConsumersPaginationInfo();
-            updateExternalConsumersPaginationButtons();
-        }
-
-        function updateExternalConsumersPaginationInfo() {
-            const start = externalConsumersFilteredData.length === 0 ? 0 : (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage + 1;
-            const end = Math.min(externalConsumersCurrentPage * externalConsumersItemsPerPage, externalConsumersFilteredData.length);
-            const total = externalConsumersFilteredData.length;
-            document.getElementById('external-consumers-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateExternalConsumersPaginationButtons() {
-            const prevBtn = document.getElementById('external-consumers-prev-btn');
-            const nextBtn = document.getElementById('external-consumers-next-btn');
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-
-            prevBtn.disabled = externalConsumersCurrentPage === 1 || externalConsumersFilteredData.length === 0;
-            nextBtn.disabled = externalConsumersCurrentPage >= totalPages || externalConsumersFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortExternalConsumersData(th.dataset.sort));
-        });
-
-        document.getElementById('external-consumers-prev-btn').addEventListener('click', () => {
-            if (externalConsumersCurrentPage > 1) {
-                externalConsumersCurrentPage--;
-                updateExternalConsumersTable();
-            }
-        });
-
-        document.getElementById('external-consumers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-            if (externalConsumersCurrentPage < totalPages) {
-                externalConsumersCurrentPage++;
-                updateExternalConsumersTable();
-            }
-        });
-
-        // Add search input handler
-        const externalConsumersSearchInput = document.getElementById('external-consumers-search');
-        if (externalConsumersSearchInput) {
-            externalConsumersSearchInput.addEventListener('input', (e) => {
-                filterExternalConsumersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        sortExternalConsumersData('stars');
+  <script>
     
-        
-        const contributorData = [{"version": "1.90.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 10}, {"version": "1.90.0", "person": "joaquintides", "email_address": "joaquin.lopezmunoz@gmail.com", "commit_count": 2}, {"version": "1.89.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 4}, {"version": "1.88.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 14}, {"version": "1.87.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 11}, {"version": "1.87.0", "person": "Joaqu\u00edn M L\u00f3pez Mu\u00f1oz", "email_address": "joaquin@tid.es", "commit_count": 4}, {"version": "1.87.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 1}, {"version": "1.87.0", "person": "joaquintides", "email_address": "joaquin.lopezmunoz@gmail.com", "commit_count": 1}, {"version": "1.87.0", "person": "Chris Ward", "email_address": "tjcw@uk.ibm.com", "commit_count": 1}, {"version": "1.86.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 6}, {"version": "1.86.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 5}, {"version": "1.85.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 16}, {"version": "1.85.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 1}, {"version": "1.84.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 8}, {"version": "1.84.0", "person": "Braden Ganetsky", "email_address": "braden.ganetsky@gmail.com", "commit_count": 3}, {"version": "1.83.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 44}, {"version": "1.83.0", "person": "Braden Ganetsky", "email_address": "braden.ganetsky@gmail.com", "commit_count": 3}, {"version": "1.83.0", "person": "Ilya Popov", "email_address": "ilia.b.popov@gmail.com", "commit_count": 1}, {"version": "1.82.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 7}, {"version": "1.81.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 5}, {"version": "1.81.0", "person": "Jody Hagins", "email_address": "coachhagins@gmail.com", "commit_count": 1}, {"version": "1.80.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 4}, {"version": "1.79.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 7}, {"version": "1.79.0", "person": "Dmitry Arkhipov", "email_address": "grisumbras@gmail.com", "commit_count": 1}, {"version": "1.78.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 34}, {"version": "1.78.0", "person": "Bernhard Manfred Gruber", "email_address": "bernhardmgruber@gmail.com", "commit_count": 1}, {"version": "1.77.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 7}, {"version": "1.77.0", "person": "Dmitry Arkhipov", "email_address": "grisumbras@gmail.com", "commit_count": 3}, {"version": "1.76.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 35}, {"version": "1.76.0", "person": "Bernhard Manfred Gruber", "email_address": "bernhardmgruber@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 1}, {"version": "1.75.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 19}, {"version": "1.75.0", "person": "Yurii Nakonechnyi", "email_address": "inobelar@gmail.com", "commit_count": 1}, {"version": "1.74.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 31}, {"version": "1.74.0", "person": "slymz", "email_address": "slymz@users.noreply.github.com", "commit_count": 2}, {"version": "1.73.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 50}, {"version": "1.73.0", "person": "D-Barber", "email_address": "12411743+D-Barber@users.noreply.github.com", "commit_count": 1}, {"version": "1.73.0", "person": "vahtis", "email_address": "vpvahtis@gmail.com", "commit_count": 1}, {"version": "1.72.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 23}, {"version": "1.72.0", "person": "Kris Jusiak", "email_address": "kris@jusiak.net", "commit_count": 1}, {"version": "1.71.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 11}, {"version": "1.71.0", "person": "Jonathan M\u00fcller", "email_address": "git@foonathan.net", "commit_count": 1}, {"version": "1.70.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 63}, {"version": "1.69.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 22}, {"version": "1.69.0", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 2}, {"version": "1.68.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 22}, {"version": "1.68.0", "person": "Alexander Matthes", "email_address": "ziz@mailbox.org", "commit_count": 2}, {"version": "1.67.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 20}, {"version": "1.67.0", "person": "zerotypos-found", "email_address": "zero.typos.found@gmail.com", "commit_count": 2}, {"version": "1.67.0", "person": "Axel Huebl", "email_address": "axel.huebl@plasma.ninja", "commit_count": 1}, {"version": "1.67.0", "person": "Alexander Matthes", "email_address": "ziz@mailbox.org", "commit_count": 1}, {"version": "1.65.1", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 35}, {"version": "1.65.1", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 2}, {"version": "1.65.1", "person": "Daniela Engert", "email_address": "dani@ngrt.de", "commit_count": 1}, {"version": "1.65.1", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 1}, {"version": "1.65.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 161}, {"version": "1.65.0", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 3}, {"version": "1.65.0", "person": "Bjorn Reese", "email_address": "breese@users.sourceforge.net", "commit_count": 2}, {"version": "1.64.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 72}, {"version": "1.63.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 32}, {"version": "1.60.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 1}, {"version": "1.59.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 41}];
-        let contributorCurrentPage = 1;
-        const contributorItemsPerPage = 10;
-        let contributorSortField = 'version';
-        let contributorSortOrder = 'asc';
-        let contributorFilteredData = [...contributorData];
-        let contributorSearchTerm = '';
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-        function sortContributorData(field) {
-            if (contributorSortField === field) {
-                contributorSortOrder = contributorSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                contributorSortField = field;
-                contributorSortOrder = 'asc';
-            }
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
 
-            contributorFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
 
-                // Handle numeric fields
-                if (field === 'commit_count') {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
 
-                // Handle version strings
-                if (field === 'version') {
-                    aVal = aVal.toString();
-                    bVal = bVal.toString();
-                    // Simple version comparison (can be improved)
-                    const aParts = aVal.split('.').map(Number);
-                    const bParts = bVal.split('.').map(Number);
-                    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-                        const aPart = aParts[i] || 0;
-                        const bPart = bParts[i] || 0;
-                        if (aPart !== bPart) {
-                            return contributorSortOrder === 'asc' ? aPart - bPart : bPart - aPart;
-                        }
-                    }
-                    return 0;
-                }
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
 
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
+    const headersRows = [{"name": "include/boost/mp11/list.hpp", "count": 170}, {"name": "include/boost/mp11.hpp", "count": 129}, {"name": "include/boost/mp11/algorithm.hpp", "count": 108}, {"name": "include/boost/mp11/mpl.hpp", "count": 55}, {"name": "include/boost/mp11/tuple.hpp", "count": 19}, {"name": "include/boost/mp11/utility.hpp", "count": 15}, {"name": "include/boost/mp11/bind.hpp", "count": 14}, {"name": "include/boost/mp11/set.hpp", "count": 9}, {"name": "include/boost/mp11/function.hpp", "count": 7}, {"name": "include/boost/mp11/integral.hpp", "count": 7}, {"name": "include/boost/mp11/map.hpp", "count": 5}, {"name": "include/boost/mp11/integer_sequence.hpp", "count": 4}];
+    const internalRows = [{"name": "beast", "depth": 1}, {"name": "cobalt", "depth": 1}, {"name": "container_hash", "depth": 1}, {"name": "context", "depth": 1}, {"name": "describe", "depth": 1}, {"name": "gil", "depth": 1}, {"name": "hash2", "depth": 1}, {"name": "histogram", "depth": 1}, {"name": "iterator", "depth": 1}, {"name": "json", "depth": 1}, {"name": "math", "depth": 1}, {"name": "msm", "depth": 1}, {"name": "mysql", "depth": 1}, {"name": "openmethod", "depth": 1}, {"name": "parameter", "depth": 1}, {"name": "poly_collection", "depth": 1}, {"name": "redis", "depth": 1}, {"name": "safe_numerics", "depth": 1}, {"name": "serialization", "depth": 1}, {"name": "type_erasure", "depth": 1}, {"name": "unordered", "depth": 1}, {"name": "url", "depth": 1}, {"name": "variant2", "depth": 1}, {"name": "Odeint", "depth": 2}, {"name": "accumulators", "depth": 2}, {"name": "algorithm", "depth": 2}, {"name": "asio", "depth": 2}, {"name": "bimap", "depth": 2}, {"name": "bloom", "depth": 2}, {"name": "compute", "depth": 2}, {"name": "convert", "depth": 2}, {"name": "coroutine", "depth": 2}, {"name": "coroutine2", "depth": 2}, {"name": "dynamic_bitset", "depth": 2}, {"name": "fiber", "depth": 2}, {"name": "filesystem", "depth": 2}, {"name": "flyweight", "depth": 2}, {"name": "foreach", "depth": 2}, {"name": "fusion", "depth": 2}, {"name": "geometry", "depth": 2}, {"name": "graph", "depth": 2}, {"name": "graph_parallel", "depth": 2}, {"name": "heap", "depth": 2}, {"name": "icl", "depth": 2}, {"name": "interprocess", "depth": 2}, {"name": "intrusive", "depth": 2}, {"name": "iostreams", "depth": 2}, {"name": "lambda", "depth": 2}, {"name": "lexical_cast", "depth": 2}, {"name": "locale", "depth": 2}, {"name": "lockfree", "depth": 2}, {"name": "log", "depth": 2}, {"name": "mpi", "depth": 2}, {"name": "mqtt5", "depth": 2}, {"name": "multi_array", "depth": 2}, {"name": "multi_index", "depth": 2}, {"name": "multiprecision", "depth": 2}, {"name": "parameter_python", "depth": 2}, {"name": "process", "depth": 2}, {"name": "program_options", "depth": 2}, {"name": "property_map", "depth": 2}, {"name": "property_map_parallel", "depth": 2}, {"name": "property_tree", "depth": 2}, {"name": "ptr_container", "depth": 2}, {"name": "python", "depth": 2}, {"name": "random", "depth": 2}, {"name": "range", "depth": 2}, {"name": "regex", "depth": 2}, {"name": "signals2", "depth": 2}, {"name": "spirit", "depth": 2}, {"name": "stacktrace", "depth": 2}, {"name": "static_string", "depth": 2}, {"name": "system", "depth": 2}, {"name": "test", "depth": 2}, {"name": "thread", "depth": 2}, {"name": "tokenizer", "depth": 2}, {"name": "type_index", "depth": 2}, {"name": "uBLAS", "depth": 2}, {"name": "units", "depth": 2}, {"name": "uuid", "depth": 2}, {"name": "variant", "depth": 2}, {"name": "wave", "depth": 2}, {"name": "xpressive", "depth": 2}, {"name": "any", "depth": 3}, {"name": "assign", "depth": 3}, {"name": "chrono", "depth": 3}, {"name": "container", "depth": 3}, {"name": "contract", "depth": 3}, {"name": "date_time", "depth": 3}, {"name": "dll", "depth": 3}, {"name": "function", "depth": 3}, {"name": "hana", "depth": 3}, {"name": "nowide", "depth": 3}, {"name": "outcome", "depth": 3}, {"name": "parser", "depth": 3}, {"name": "phoenix", "depth": 3}, {"name": "proto", "depth": 3}, {"name": "sort", "depth": 3}, {"name": "statechart", "depth": 3}, {"name": "timer", "depth": 3}, {"name": "yap", "depth": 3}, {"name": "functional", "depth": 4}, {"name": "scope_exit", "depth": 4}, {"name": "local_function", "depth": 5}];
+    const externalRows = [{"name": "odinthenerd/abcd", "stars": 50, "usage_count": 11, "created_at": "2017-07-20", "updated_at": "2020-05-18"}, {"name": "acts-project/acts", "stars": 120, "usage_count": 5, "created_at": "2019-03-13", "updated_at": "2026-03-11"}, {"name": "AdaptiveCpp/AdaptiveCpp", "stars": 1797, "usage_count": 102, "created_at": "2018-07-15", "updated_at": "2026-03-11"}, {"name": "celtera/ahsohtoa", "stars": 81, "usage_count": 2, "created_at": "2021-11-03", "updated_at": "2022-05-27"}, {"name": "AliceO2Group/AliceO2", "stars": 117, "usage_count": 8, "created_at": "2014-10-07", "updated_at": "2026-02-20"}, {"name": "cmannett85/arg_router", "stars": 51, "usage_count": 10, "created_at": "2021-08-22", "updated_at": "2024-07-16"}, {"name": "RafaGago/artv-audio", "stars": 45, "usage_count": 1, "created_at": "2021-06-21", "updated_at": "2023-09-13"}, {"name": "AlexBAV/AsyncCppRpc", "stars": 23, "usage_count": 1, "created_at": "2022-08-05", "updated_at": "2024-08-11"}, {"name": "mbrucher/AudioTK", "stars": 253, "usage_count": 2, "created_at": "2013-12-13", "updated_at": "2021-01-16"}, {"name": "AudioTK/AudioTK", "stars": 51, "usage_count": 2, "created_at": "2021-01-20", "updated_at": "2023-05-13"}, {"name": "pulver/autodiff", "stars": 58, "usage_count": 6, "created_at": "2018-12-16", "updated_at": "2020-11-12"}, {"name": "celtera/avendish", "stars": 470, "usage_count": 17, "created_at": "2021-10-23", "updated_at": "2026-03-10"}, {"name": "rhalbersma/bit_set", "stars": 46, "usage_count": 8, "created_at": "2018-05-21", "updated_at": "2026-01-04"}, {"name": "madmongo1/boost_channels", "stars": 24, "usage_count": 1, "created_at": "2021-05-28", "updated_at": "2021-06-03"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 7, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "ceph/ceph", "stars": 16253, "usage_count": 1, "created_at": "2011-09-01", "updated_at": "2026-02-23"}, {"name": "ChainSQL/chainsqld", "stars": 214, "usage_count": 1, "created_at": "2017-11-14", "updated_at": "2023-01-12"}, {"name": "cocos/cocos-engine", "stars": 9416, "usage_count": 1, "created_at": "2015-12-05", "updated_at": "2026-02-11"}, {"name": "cocos/cocos4", "stars": 1106, "usage_count": 1, "created_at": "2025-12-18", "updated_at": "2026-03-11"}, {"name": "intel/compile-time-init-build", "stars": 626, "usage_count": 10, "created_at": "2022-04-01", "updated_at": "2026-03-10"}, {"name": "coschain/contentos", "stars": 14, "usage_count": 1, "created_at": "2018-06-05", "updated_at": "2018-12-27"}, {"name": "AlexBAV/corsl", "stars": 36, "usage_count": 2, "created_at": "2017-05-22", "updated_at": "2024-08-11"}, {"name": "acts-project/covfie", "stars": 17, "usage_count": 3, "created_at": "2021-11-06", "updated_at": "2026-02-25"}, {"name": "intel/cpp-baremetal-senders-and-receivers", "stars": 0, "usage_count": 28, "created_at": "", "updated_at": ""}, {"name": "intel/cpp-std-extensions", "stars": 0, "usage_count": 8, "created_at": "", "updated_at": ""}, {"name": "beached/daw_json_link", "stars": 502, "usage_count": 1, "created_at": "2017-07-03", "updated_at": "2026-02-16"}, {"name": "infinitex-tech/default-template", "stars": 25, "usage_count": 1, "created_at": "2018-05-21", "updated_at": "2018-08-02"}, {"name": "Desbordante/desbordante-core", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "dimensionofficial/DimensionChain", "stars": 21, "usage_count": 1, "created_at": "2019-11-03", "updated_at": "2020-07-17"}, {"name": "Ostoic/distant", "stars": 13, "usage_count": 4, "created_at": "2017-07-03", "updated_at": "2019-06-03"}, {"name": "ebu/ear-production-suite", "stars": 120, "usage_count": 2, "created_at": "2020-06-30", "updated_at": "2026-02-03"}, {"name": "EOSIO/eos", "stars": 11229, "usage_count": 1, "created_at": "2017-04-05", "updated_at": "2022-07-27"}, {"name": "mason0510/eosDapps", "stars": 80, "usage_count": 1, "created_at": "2023-02-20", "updated_at": "2025-06-30"}, {"name": "yinchengtsinghua/EOSIOChineseCPP", "stars": 16, "usage_count": 1, "created_at": "2019-01-23", "updated_at": "2019-01-23"}, {"name": "kpierczy/ethercat-lib", "stars": 17, "usage_count": 7, "created_at": "2022-07-11", "updated_at": "2025-06-25"}, {"name": "facebook/fbthrift", "stars": 2677, "usage_count": 6, "created_at": "2013-07-02", "updated_at": "2026-02-22"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 12, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "FISCO-BCOS/FISCO-BCOS", "stars": 2553, "usage_count": 1, "created_at": "2017-12-12", "updated_at": "2026-01-14"}, {"name": "SulfurNitride/Fluorine-Manager", "stars": 164, "usage_count": 1, "created_at": "2026-02-08", "updated_at": "2026-03-11"}, {"name": "cmazakas/foxy", "stars": 67, "usage_count": 1, "created_at": "2018-08-09", "updated_at": "2020-12-22"}, {"name": "ARM-software/gator", "stars": 145, "usage_count": 5, "created_at": "2014-11-17", "updated_at": "2025-12-16"}, {"name": "greg7mdp/gdbf", "stars": 36, "usage_count": 1, "created_at": "2024-08-17", "updated_at": "2025-12-07"}, {"name": "gearoenix/gearoenix", "stars": 38, "usage_count": 5, "created_at": "2017-09-11", "updated_at": "2026-01-04"}, {"name": "intel/generic-register-operation-optimizer", "stars": 0, "usage_count": 18, "created_at": "", "updated_at": ""}, {"name": "GUDHI/gudhi-devel", "stars": 307, "usage_count": 3, "created_at": "2019-03-07", "updated_at": "2026-02-25"}, {"name": "profitviews/heisenberg", "stars": 70, "usage_count": 1, "created_at": "2021-01-16", "updated_at": "2023-12-02"}, {"name": "sergiud/hogpp", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "tobias-loew/hop", "stars": 18, "usage_count": 1, "created_at": "2019-09-13", "updated_at": "2024-02-20"}, {"name": "erikzenker/hsm", "stars": 202, "usage_count": 3, "created_at": "2019-03-18", "updated_at": "2022-12-23"}, {"name": "blinktrade/iofiber", "stars": 15, "usage_count": 1, "created_at": "2018-12-13", "updated_at": "2020-07-08"}, {"name": "KasperskyLab/knp", "stars": 42, "usage_count": 13, "created_at": "2024-11-05", "updated_at": "2026-03-11"}, {"name": "hermes-org/lib_cpp", "stars": 24, "usage_count": 1, "created_at": "2017-12-07", "updated_at": "2025-02-27"}, {"name": "ossia/libossia", "stars": 226, "usage_count": 5, "created_at": "2014-02-04", "updated_at": "2026-03-02"}, {"name": "alpaka-group/llama", "stars": 93, "usage_count": 1, "created_at": "2018-02-08", "updated_at": "2024-02-29"}, {"name": "stan-dev/math", "stars": 0, "usage_count": 13, "created_at": "", "updated_at": ""}, {"name": "victor-smirnov/memoria", "stars": 37, "usage_count": 1, "created_at": "2020-03-05", "updated_at": "2025-07-02"}, {"name": "mikage-emu/mikage-dev", "stars": 410, "usage_count": 6, "created_at": "2024-03-06", "updated_at": "2025-09-01"}, {"name": "ModOrganizer2/modorganizer", "stars": 2798, "usage_count": 1, "created_at": "2016-11-13", "updated_at": "2026-02-18"}, {"name": "cppalliance/mrdocs", "stars": 151, "usage_count": 2, "created_at": "2023-03-26", "updated_at": "2026-03-09"}, {"name": "PingchuanMa/MTSVRC", "stars": 27, "usage_count": 1, "created_at": "2018-11-26", "updated_at": "2018-12-03"}, {"name": "tom--bo/mysqlredo", "stars": 14, "usage_count": 2, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "named-data/name-based-access-control", "stars": 12, "usage_count": 1, "created_at": "2015-05-13", "updated_at": "2026-01-24"}, {"name": "ricejasonf/nbdl", "stars": 44, "usage_count": 2, "created_at": "2015-08-28", "updated_at": "2025-12-24"}, {"name": "named-data/ndn-cxx", "stars": 145, "usage_count": 31, "created_at": "2014-01-30", "updated_at": "2026-02-12"}, {"name": "named-data/NFD", "stars": 188, "usage_count": 26, "created_at": "2014-01-27", "updated_at": "2025-12-21"}, {"name": "NuiCpp/Nui", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "NVIDIA/nvvl", "stars": 694, "usage_count": 1, "created_at": "2018-03-27", "updated_at": "2019-04-29"}, {"name": "infinitex-tech/Oasis", "stars": 39, "usage_count": 1, "created_at": "2018-05-03", "updated_at": "2018-08-02"}, {"name": "ufz/ogs", "stars": 120, "usage_count": 14, "created_at": "2011-05-04", "updated_at": "2026-02-23"}, {"name": "microsoft/onnxruntime", "stars": 0, "usage_count": 10, "created_at": "", "updated_at": ""}, {"name": "tipi-build/openapipp", "stars": 21, "usage_count": 1, "created_at": "2021-10-29", "updated_at": "2022-03-24"}, {"name": "Percona-Lab/percona-binlog-server", "stars": 21, "usage_count": 3, "created_at": "2023-03-10", "updated_at": "2026-03-11"}, {"name": "ComputationalRadiationPhysics/picongpu", "stars": 775, "usage_count": 2, "created_at": "2013-07-30", "updated_at": "2026-02-20"}, {"name": "nooploop/piejam", "stars": 82, "usage_count": 11, "created_at": "2019-11-06", "updated_at": "2026-02-23"}, {"name": "gofractally/psibase", "stars": 32, "usage_count": 4, "created_at": "2022-02-12", "updated_at": "2026-03-11"}, {"name": "learnforpractice/pyeos", "stars": 131, "usage_count": 1, "created_at": "2017-10-11", "updated_at": "2022-11-18"}, {"name": "ramizouari/QIPAT", "stars": 11, "usage_count": 16, "created_at": "2022-05-06", "updated_at": "2022-06-18"}, {"name": "QMCPACK/qmcpack", "stars": 379, "usage_count": 1, "created_at": "2017-01-11", "updated_at": "2026-02-22"}, {"name": "ComputationalRadiationPhysics/redGrapes", "stars": 26, "usage_count": 3, "created_at": "2017-02-16", "updated_at": "2024-10-28"}, {"name": "revbayes/revbayes", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "cbritopacheco/rodin", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "nelhage/rules_boost", "stars": 298, "usage_count": 1, "created_at": "2016-08-14", "updated_at": "2026-02-19"}, {"name": "Return-To-The-Roots/s25client", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "intel/safe-arithmetic", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "ossia/score", "stars": 1968, "usage_count": 3, "created_at": "2013-10-15", "updated_at": "2026-03-02"}, {"name": "scylladb/scylla", "stars": 15146, "usage_count": 1, "created_at": "2014-12-24", "updated_at": "2025-12-19"}, {"name": "scylladb/scylladb", "stars": 15358, "usage_count": 2, "created_at": "2014-12-24", "updated_at": "2026-02-20"}, {"name": "BlueQuartzSoftware/simplnx", "stars": 13, "usage_count": 3, "created_at": "2021-06-08", "updated_at": "2026-03-11"}, {"name": "cmazakas/sleip", "stars": 23, "usage_count": 3, "created_at": "2019-12-01", "updated_at": "2020-01-19"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 2, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "SnaxFoundation/snax", "stars": 20, "usage_count": 1, "created_at": "2018-11-23", "updated_at": "2022-12-09"}, {"name": "Ferrster/Snowrunner-Manual-Gearbox-Mod", "stars": 80, "usage_count": 1, "created_at": "2023-04-08", "updated_at": "2025-03-10"}, {"name": "AntelopeIO/spring", "stars": 24, "usage_count": 2, "created_at": "2024-04-05", "updated_at": "2025-11-12"}, {"name": "EOSIO/taurus-node", "stars": 13, "usage_count": 1, "created_at": "2023-06-16", "updated_at": "2024-03-29"}, {"name": "think-cell/think-cell-library", "stars": 455, "usage_count": 4, "created_at": "2014-03-03", "updated_at": "2024-04-26"}, {"name": "viamrobotics/viam-cpp-sdk", "stars": 12, "usage_count": 7, "created_at": "2022-10-17", "updated_at": "2026-03-11"}, {"name": "jll63/yomm2", "stars": 381, "usage_count": 5, "created_at": "2017-09-10", "updated_at": "2026-02-02"}];
+    const contribRows = [{"version": "boost-1.90.0", "person": "Peter Dimov", "commit_count": 10}, {"version": "boost-1.90.0", "person": "joaquintides", "commit_count": 2}, {"version": "boost-1.89.0", "person": "Peter Dimov", "commit_count": 4}, {"version": "boost-1.88.0", "person": "Peter Dimov", "commit_count": 14}, {"version": "boost-1.87.0", "person": "Peter Dimov", "commit_count": 11}, {"version": "boost-1.87.0", "person": "joaquintides", "commit_count": 5}, {"version": "boost-1.87.0", "person": "tjcw", "commit_count": 1}, {"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.86.0", "person": "grafikrobot", "commit_count": 6}, {"version": "boost-1.86.0", "person": "Peter Dimov", "commit_count": 5}, {"version": "boost-1.85.0", "person": "Peter Dimov", "commit_count": 16}, {"version": "boost-1.85.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.84.0", "person": "Peter Dimov", "commit_count": 8}, {"version": "boost-1.84.0", "person": "Braden Ganetsky", "commit_count": 3}, {"version": "boost-1.83.0", "person": "Peter Dimov", "commit_count": 44}, {"version": "boost-1.83.0", "person": "Braden Ganetsky", "commit_count": 3}, {"version": "boost-1.83.0", "person": "ilyapopov", "commit_count": 1}, {"version": "boost-1.82.0", "person": "Peter Dimov", "commit_count": 7}, {"version": "boost-1.81.0", "person": "Peter Dimov", "commit_count": 5}, {"version": "boost-1.81.0", "person": "Jody Hagins", "commit_count": 1}, {"version": "boost-1.80.0", "person": "Peter Dimov", "commit_count": 4}, {"version": "boost-1.79.0", "person": "Peter Dimov", "commit_count": 7}, {"version": "boost-1.79.0", "person": "Dmitry Arkhipov", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Peter Dimov", "commit_count": 34}, {"version": "boost-1.78.0", "person": "bernhardmgruber", "commit_count": 1}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 7}, {"version": "boost-1.77.0", "person": "Dmitry Arkhipov", "commit_count": 3}, {"version": "boost-1.76.0", "person": "Peter Dimov", "commit_count": 35}, {"version": "boost-1.76.0", "person": "bernhardmgruber", "commit_count": 1}, {"version": "boost-1.76.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.75.0", "person": "Peter Dimov", "commit_count": 19}, {"version": "boost-1.75.0", "person": "Yurii Nakonechnyi", "commit_count": 1}, {"version": "boost-1.74.0", "person": "Peter Dimov", "commit_count": 31}, {"version": "boost-1.74.0", "person": "Levent", "commit_count": 2}, {"version": "boost-1.73.0", "person": "Peter Dimov", "commit_count": 50}, {"version": "boost-1.73.0", "person": "D-Barber", "commit_count": 1}, {"version": "boost-1.73.0", "person": "vahtis", "commit_count": 1}, {"version": "boost-1.72.0", "person": "Peter Dimov", "commit_count": 23}, {"version": "boost-1.72.0", "person": "Kris Jusiak", "commit_count": 1}, {"version": "boost-1.71.0", "person": "Peter Dimov", "commit_count": 11}, {"version": "boost-1.71.0", "person": "Jonathan Müller", "commit_count": 1}, {"version": "boost-1.70.0", "person": "Peter Dimov", "commit_count": 63}, {"version": "boost-1.69.0", "person": "Peter Dimov", "commit_count": 22}, {"version": "boost-1.69.0", "person": "glenfe", "commit_count": 2}, {"version": "boost-1.68.0", "person": "Peter Dimov", "commit_count": 22}, {"version": "boost-1.68.0", "person": "theZiz", "commit_count": 2}, {"version": "boost-1.67.0", "person": "Peter Dimov", "commit_count": 20}, {"version": "boost-1.67.0", "person": "zerotypos-found", "commit_count": 2}, {"version": "boost-1.67.0", "person": "theZiz", "commit_count": 1}, {"version": "boost-1.67.0", "person": "Axel Huebl", "commit_count": 1}, {"version": "boost-1.66.0", "person": "Peter Dimov", "commit_count": 35}, {"version": "boost-1.66.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.66.0", "person": "glenfe", "commit_count": 1}, {"version": "boost-1.66.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Peter Dimov", "commit_count": 159}, {"version": "boost-1.65.0", "person": "glenfe", "commit_count": 3}, {"version": "boost-1.65.0", "person": "Bjørn Reese", "commit_count": 2}, {"version": "boost-1.64.0", "person": "Peter Dimov", "commit_count": 72}, {"version": "boost-1.63.0", "person": "Peter Dimov", "commit_count": 32}, {"version": "boost-1.60.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.59.0", "person": "Peter Dimov", "commit_count": 41}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 5, 8, 9, 9, 9, 9, 8, 11, 11, 11, 12, 14, 15, 15, 18, 18, 18, 18, 20, 20, 22];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 5, 58, 59, 58, 57, 57, 24, 32, 59, 59, 65, 96, 93, 92, 94, 90, 89, 90, 92, 92, 93];
+    const usageYears = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [15, 12, 15, 82, 17, 2, 44, 135, 30, 6, 44, 52, 62, 24, 1, 1];
+    const byUpdated = [0, 0, 0, 0, 0, 0, 0, 16, 21, 12, 16, 52, 52, 97, 194, 82];
+    const repoCounts = [2, 1, 4, 8, 3, 2, 14, 12, 8, 3, 10, 6, 5, 5, 1, 1];
+    const commitVersions = ["boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [39, 24, 24, 24, 63, 12, 24, 52, 33, 20, 37, 10, 35, 8, 4, 6, 7, 48, 11, 17, 11, 18, 14, 4, 12];
 
-                if (aVal < bVal) {
-                    return contributorSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return contributorSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
 
-            updateContributorSortIndicators();
-            contributorCurrentPage = 1;
-            updateContributorTable();
-        }
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
 
-        function filterContributorData(searchTerm) {
-            contributorSearchTerm = searchTerm.toLowerCase();
-            contributorFilteredData = contributorData.filter(contrib => {
-                const version = (contrib.version || '').toLowerCase();
-                const person = (contrib.person || '').toLowerCase();
-                const email = (contrib.email_address || '').toLowerCase();
-                return version.includes(contributorSearchTerm) ||
-                       person.includes(contributorSearchTerm) ||
-                       email.includes(contributorSearchTerm);
-            });
-            contributorCurrentPage = 1;
-            sortContributorData(contributorSortField);
-        }
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
 
-        function updateContributorSortIndicators() {
-            document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === contributorSortField) {
-                    indicator.textContent = contributorSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateContributorTable() {
-            const start = (contributorCurrentPage - 1) * contributorItemsPerPage;
-            const end = start + contributorItemsPerPage;
-            const pageData = contributorFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('contributor-table-tbody');
-            if (contributorFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No commit data available (boost_commit table not yet populated)</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(contrib => {
-                    const version = contrib.version || 'N/A';
-                    const person = contrib.person || contrib.email_address || 'N/A';
-                    const email = contrib.email_address || 'N/A';
-                    const commitCount = (contrib.commit_count || 0).toLocaleString();
-
-                    return `
-                        <tr>
-                            <td>${version}</td>
-                            <td>${person}</td>
-                            <td>${email}</td>
-                            <td>${commitCount}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateContributorPaginationInfo();
-            updateContributorPaginationButtons();
-        }
-
-        function updateContributorPaginationInfo() {
-            const start = contributorFilteredData.length === 0 ? 0 : (contributorCurrentPage - 1) * contributorItemsPerPage + 1;
-            const end = Math.min(contributorCurrentPage * contributorItemsPerPage, contributorFilteredData.length);
-            const total = contributorFilteredData.length;
-            document.getElementById('contributor-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateContributorPaginationButtons() {
-            const prevBtn = document.getElementById('contributor-prev-btn');
-            const nextBtn = document.getElementById('contributor-next-btn');
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-
-            prevBtn.disabled = contributorCurrentPage === 1 || contributorFilteredData.length === 0;
-            nextBtn.disabled = contributorCurrentPage >= totalPages || contributorFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortContributorData(th.dataset.sort));
-        });
-
-        document.getElementById('contributor-prev-btn').addEventListener('click', () => {
-            if (contributorCurrentPage > 1) {
-                contributorCurrentPage--;
-                updateContributorTable();
-            }
-        });
-
-        document.getElementById('contributor-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-            if (contributorCurrentPage < totalPages) {
-                contributorCurrentPage++;
-                updateContributorTable();
-            }
-        });
-
-        // Add search input handler
-        const contributorSearchInput = document.getElementById('contributor-search');
-        if (contributorSearchInput) {
-            contributorSearchInput.addEventListener('input', (e) => {
-                filterContributorData(e.target.value);
-            });
-        }
-
-        // Initial display - wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                sortContributorData('version');
-            });
-        } else {
-            sortContributorData('version');
-        }
-    
-    </script>
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
 </body>
 </html>

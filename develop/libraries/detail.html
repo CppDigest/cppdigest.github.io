@@ -1,1113 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>detail - Boost Library Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-weight: 700;
-        }
-        .panel {
-            background: #ffffff;
-            padding: 30px;
-            margin: 25px 0;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .panel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .panel h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #1a202c;
-            font-size: 1.6em;
-            font-weight: 600;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-        }
-        .panel h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        .chart-container {
-            margin: 25px 0;
-            height: 450px;
-            position: relative;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-        }
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-        .panel-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-        .panel-row .chart-container {
-            margin: 0;
-        }
-        .panel-row table {
-            margin: 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .sortable {
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-        .sortable:hover {
-            background-color: #e0e0e0 !important;
-        }
-        .sort-indicator {
-            margin-left: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .back-link {
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            display: inline-block;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-        .back-link a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            text-decoration: none;
-            transform: translateX(-3px);
-        }
-        .depth-1 {
-            background-color: #dbeafe;
-        }
-        .depth-2 {
-            background-color: #d1fae5;
-        }
-        .depth-3, .depth-4, .depth-5 {
-            background-color: #fef3c7;
-        }
-        @media (max-width: 1200px) {
-            .panel-row {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 20px 15px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>detail - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
 </head>
 <body>
-    <div class="back-link">
-        <a href="../index.html">← Back to Dashboard</a>
-    </div>
-    <h1>📚 detail</h1>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 detail</h1>
 
-    <!-- Panel 0: Overview -->
-    <div class="panel">
-        <h2>Overview</h2>
-        <div class="overview-container">
-
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                <div>
-                    
-            <div>
-                <p style="color: #666;">
-                    This library contains a set of header only utilities used internally by Boost C++ Libraries to facilitate their implementation.
-                </p>
-            </div>
-    
-                    <table style="width: 100%; margin: 0;">
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Created Version:</td>
-                                <td style="padding: 8px;">1.18.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Modified Version:</td>
-                                <td style="padding: 8px;">1.90.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Repositories:</td>
-                                <td style="padding: 8px;">197</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average New Repositories Per Year:</td>
-                                <td style="padding: 8px;">9.00</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Year Repository Count:</td>
-                                <td style="padding: 8px;">3 (2025)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Used Year:</td>
-                                <td style="padding: 8px;">2014 (30 repos)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average Stars:</td>
-                                <td style="padding: 8px;">542</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Activity Score:</td>
-                                <td style="padding: 8px;">-1.015 <span style="color: #666; font-size: 0.9em;">(very low)</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Internal Consumers:</td>
-                                <td style="padding: 8px;">77</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Contributors in Most Recent Version:</td>
-                                <td style="padding: 8px;">0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Contributors:</td>
-                                <td style="padding: 8px;">22</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="headers-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="headers-search" placeholder="Filter headers..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Header</th>
-                                <th style="text-align: right; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Times Included</th>
-                            </tr>
-                        </thead>
-                        <tbody id="headers-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="headers-pagination-info">Showing 1-10 of 54</span>
-                        </div>
-                        <div>
-                            <button id="headers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="headers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                
-        const headersData = [{"name": "boost/detail/endian.hpp", "count": 150}, {"name": "boost/detail/lightweight_main.hpp", "count": 76}, {"name": "boost/cstdlib.hpp", "count": 66}, {"name": "boost/blank.hpp", "count": 54}, {"name": "boost/detail/container_fwd.hpp", "count": 30}, {"name": "boost/detail/utf8_codecvt_facet.ipp", "count": 25}, {"name": "boost/http/detail/except.hpp", "count": 16}, {"name": "boost/detail/select_type.hpp", "count": 14}, {"name": "boost/detail/utf8_codecvt_facet.hpp", "count": 14}, {"name": "boost/http/detail/config.hpp", "count": 14}, {"name": "boost/detail/allocator_utilities.hpp", "count": 13}, {"name": "boost/detail/win/basic_types.hpp", "count": 11}, {"name": "boost/detail/bitmask.hpp", "count": 8}, {"name": "boost/sync/detail/config.hpp", "count": 8}, {"name": "boost/detail/binary_search.hpp", "count": 7}, {"name": "boost/detail/reference_content.hpp", "count": 6}, {"name": "boost/detail/shared_count.hpp", "count": 5}, {"name": "boost/detail/templated_streams.hpp", "count": 5}, {"name": "boost/blank_fwd.hpp", "count": 5}, {"name": "boost/detail/fenv.hpp", "count": 5}, {"name": "boost/http/detail/header.hpp", "count": 5}, {"name": "boost/detail/shared_ptr_nmt.hpp", "count": 4}, {"name": "boost/detail/win/security.hpp", "count": 4}, {"name": "boost/detail/identifier.hpp", "count": 4}, {"name": "boost/http/detail/workspace.hpp", "count": 4}, {"name": "boost/detail/is_incrementable.hpp", "count": 3}, {"name": "boost/detail/is_xxx.hpp", "count": 3}, {"name": "boost/sync/detail/footer.hpp", "count": 3}, {"name": "boost/sync/detail/header.hpp", "count": 3}, {"name": "boost/sync/detail/tss.hpp", "count": 3}, {"name": "boost/detail/is_sorted.hpp", "count": 3}, {"name": "boost/http/server/detail/router_base.hpp", "count": 3}, {"name": "boost/detail/numeric_traits.hpp", "count": 2}, {"name": "boost/decimal/detail/u256.hpp", "count": 2}, {"name": "boost/decimal/detail/config.hpp", "count": 2}, {"name": "boost/decimal/detail/fast_float/compute_float80_128.hpp", "count": 2}, {"name": "boost/http/detail/file_posix.hpp", "count": 2}, {"name": "boost/http/detail/file_stdio.hpp", "count": 2}, {"name": "boost/http/detail/file_win32.hpp", "count": 2}, {"name": "boost/http/detail/sv.hpp", "count": 2}, {"name": "boost/http/rfc/detail/ws.hpp", "count": 2}, {"name": "boost/detail/ob_call_traits.hpp", "count": 2}, {"name": "boost/archive/detail/polymorphic_iarchive_dispatch.hpp", "count": 1}, {"name": "boost/archive/detail/polymorphic_iarchive_impl.hpp", "count": 1}, {"name": "boost/archive/detail/polymorphic_oarchive_dispatch.hpp", "count": 1}, {"name": "boost/archive/detail/polymorphic_oarchive_impl.hpp", "count": 1}, {"name": "boost/sync/detail/interlocked.hpp", "count": 1}, {"name": "boost/tr1/detail/config.hpp", "count": 1}, {"name": "boost/decimal/detail/locale_conversion.hpp", "count": 1}, {"name": "boost/decimal/detail/promotion.hpp", "count": 1}, {"name": "boost/decimal/detail/integer_search_trees.hpp", "count": 1}, {"name": "boost/detail/none.hpp", "count": 1}, {"name": "boost/detail/dynamic_bitset.hpp", "count": 1}, {"name": "boost/openmethod/detail/static_list.hpp", "count": 1}];
-        let headersCurrentPage = 1;
-        const headersItemsPerPage = 10;
-        let headersFilteredData = [...headersData];
-        let headersSearchTerm = '';
-
-        function filterHeadersData(searchTerm) {
-            headersSearchTerm = searchTerm.toLowerCase();
-            headersFilteredData = headersData.filter(header => {
-                const name = (header.name || '').toLowerCase();
-                const count = (header.count || 0).toString();
-                return name.includes(headersSearchTerm) || count.includes(headersSearchTerm);
-            });
-            headersCurrentPage = 1;
-            updateHeadersTable();
-        }
-
-        function updateHeadersTable() {
-            const start = (headersCurrentPage - 1) * headersItemsPerPage;
-            const end = start + headersItemsPerPage;
-            const pageData = headersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('headers-table-tbody');
-            tbody.innerHTML = pageData.map(header => {
-                const name = header.name || 'N/A';
-                const count = (header.count || 0).toLocaleString();
-                return `
-                    <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${name}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${count}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            // Update pagination info
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            const startItem = headersFilteredData.length === 0 ? 0 : start + 1;
-            const endItem = Math.min(start + headersItemsPerPage, headersFilteredData.length);
-            document.getElementById('headers-pagination-info').textContent =
-                headersFilteredData.length === 0 ? 'No data available' : `Showing ${startItem}-${endItem} of ${headersFilteredData.length}`;
-
-            // Update button states
-            document.getElementById('headers-prev-btn').disabled = headersCurrentPage === 1;
-            document.getElementById('headers-next-btn').disabled = headersCurrentPage >= totalPages;
-        }
-
-        document.getElementById('headers-prev-btn').addEventListener('click', () => {
-            if (headersCurrentPage > 1) {
-                headersCurrentPage--;
-                updateHeadersTable();
-            }
-        });
-
-        document.getElementById('headers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            if (headersCurrentPage < totalPages) {
-                headersCurrentPage++;
-                updateHeadersTable();
-            }
-        });
-
-        // Add search input handler
-        const headersSearchInput = document.getElementById('headers-search');
-        if (headersSearchInput) {
-            headersSearchInput.addEventListener('input', (e) => {
-                filterHeadersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        updateHeadersTable();
-    
-            </script>
-    
-        </div>
-    </div>
-
-    <!-- Panel 1: Internal Consumers -->
-    <div class="panel">
-        <h2>Internal Consumers</h2>
-        <p style="color: #666; margin-top: 0; margin-bottom: 15px;">
-            Showing all consumers for the latest version.
-            Colors indicate depth: <span style="color: #3b82f6; font-weight: 600;">Blue (d1)</span> = Direct,
-            <span style="color: #10b981; font-weight: 600;">Green (d2)</span> = Second level,
-            <span style="color: #f59e0b; font-weight: 600;">Orange (d3)</span> = Third level,
-            <span style="color: #ef4444; font-weight: 600;">Red (d4+)</span> = Deeper levels.
-        </p>
-        <div class="panel-row">
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4">Consumer Libraries</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="filesystem.html" style="color: #3b82f6; font-weight: bold;">filesystem</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="flyweight.html" style="color: #3b82f6; font-weight: bold;">flyweight</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="function_types.html" style="color: #3b82f6; font-weight: bold;">function_types</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="graph.html" style="color: #3b82f6; font-weight: bold;">graph</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="icl.html" style="color: #3b82f6; font-weight: bold;">icl</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="interval.html" style="color: #3b82f6; font-weight: bold;">interval</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="iostreams.html" style="color: #3b82f6; font-weight: bold;">iostreams</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="iterator.html" style="color: #3b82f6; font-weight: bold;">iterator</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="statechart.html" style="color: #3b82f6; font-weight: bold;">statechart</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="variant.html" style="color: #3b82f6; font-weight: bold;">variant</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="algorithm.html" style="color: #10b981; font-weight: normal;">algorithm</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="bimap.html" style="color: #10b981; font-weight: normal;">bimap</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="compute.html" style="color: #10b981; font-weight: normal;">compute</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="container.html" style="color: #10b981; font-weight: normal;">container</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="contract.html" style="color: #10b981; font-weight: normal;">contract</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="convert.html" style="color: #10b981; font-weight: normal;">convert</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="dll.html" style="color: #10b981; font-weight: normal;">dll</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="fiber.html" style="color: #10b981; font-weight: normal;">fiber</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="foreach.html" style="color: #10b981; font-weight: normal;">foreach</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="functional.html" style="color: #10b981; font-weight: normal;">functional</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="gil.html" style="color: #10b981; font-weight: normal;">gil</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="graph_parallel.html" style="color: #10b981; font-weight: normal;">graph_parallel</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="heap.html" style="color: #10b981; font-weight: normal;">heap</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="lambda.html" style="color: #10b981; font-weight: normal;">lambda</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="locale.html" style="color: #10b981; font-weight: normal;">locale</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="log.html" style="color: #10b981; font-weight: normal;">log</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="mpi.html" style="color: #10b981; font-weight: normal;">mpi</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="multi_index.html" style="color: #10b981; font-weight: normal;">multi_index</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="nowide.html" style="color: #10b981; font-weight: normal;">nowide</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="poly_collection.html" style="color: #10b981; font-weight: normal;">poly_collection</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="process.html" style="color: #10b981; font-weight: normal;">process</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="program_options.html" style="color: #10b981; font-weight: normal;">program_options</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="property_map.html" style="color: #10b981; font-weight: normal;">property_map</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="python.html" style="color: #10b981; font-weight: normal;">python</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="range.html" style="color: #10b981; font-weight: normal;">range</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="serialization.html" style="color: #10b981; font-weight: normal;">serialization</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="signals2.html" style="color: #10b981; font-weight: normal;">signals2</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="test.html" style="color: #10b981; font-weight: normal;">test</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="tokenizer.html" style="color: #10b981; font-weight: normal;">tokenizer</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="tti.html" style="color: #10b981; font-weight: normal;">tti</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #10b98120; border-left: 3px solid #10b981;"><a href="wave.html" style="color: #10b981; font-weight: normal;">wave</a> <span style="color: #10b981; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="accumulators.html" style="color: #f59e0b; font-weight: normal;">accumulators</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="assign.html" style="color: #f59e0b; font-weight: normal;">assign</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="beast.html" style="color: #f59e0b; font-weight: normal;">beast</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="cobalt.html" style="color: #f59e0b; font-weight: normal;">cobalt</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="date_time.html" style="color: #f59e0b; font-weight: normal;">date_time</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="fusion.html" style="color: #f59e0b; font-weight: normal;">fusion</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="geometry.html" style="color: #f59e0b; font-weight: normal;">geometry</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="histogram.html" style="color: #f59e0b; font-weight: normal;">histogram</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="interprocess.html" style="color: #f59e0b; font-weight: normal;">interprocess</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="json.html" style="color: #f59e0b; font-weight: normal;">json</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="lexical_cast.html" style="color: #f59e0b; font-weight: normal;">lexical_cast</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="mqtt5.html" style="color: #f59e0b; font-weight: normal;">mqtt5</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="msm.html" style="color: #f59e0b; font-weight: normal;">msm</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="multi_array.html" style="color: #f59e0b; font-weight: normal;">multi_array</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="mysql.html" style="color: #f59e0b; font-weight: normal;">mysql</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="numeric_conversion.html" style="color: #f59e0b; font-weight: normal;">numeric_conversion</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="parameter_python.html" style="color: #f59e0b; font-weight: normal;">parameter_python</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="phoenix.html" style="color: #f59e0b; font-weight: normal;">phoenix</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="property_map_parallel.html" style="color: #f59e0b; font-weight: normal;">property_map_parallel</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="property_tree.html" style="color: #f59e0b; font-weight: normal;">property_tree</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="proto.html" style="color: #f59e0b; font-weight: normal;">proto</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="sort.html" style="color: #f59e0b; font-weight: normal;">sort</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="spirit.html" style="color: #f59e0b; font-weight: normal;">spirit</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="type_erasure.html" style="color: #f59e0b; font-weight: normal;">type_erasure</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="units.html" style="color: #f59e0b; font-weight: normal;">units</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #f59e0b20; border-left: 3px solid #f59e0b;"><a href="xpressive.html" style="color: #f59e0b; font-weight: normal;">xpressive</a> <span style="color: #f59e0b; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="asio.html" style="color: #ef4444; font-weight: normal;">asio</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="hana.html" style="color: #ef4444; font-weight: normal;">hana</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="math.html" style="color: #ef4444; font-weight: normal;">math</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="parameter.html" style="color: #ef4444; font-weight: normal;">parameter</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="thread.html" style="color: #ef4444; font-weight: normal;">thread</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="lockfree.html" style="color: #ef4444; font-weight: normal;">lockfree</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="multiprecision.html" style="color: #ef4444; font-weight: normal;">multiprecision</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="parser.html" style="color: #ef4444; font-weight: normal;">parser</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="redis.html" style="color: #ef4444; font-weight: normal;">redis</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td></tr>
-<tr><td style="background-color: #ef444420; border-left: 3px solid #ef4444;"><a href="yap.html" style="color: #ef4444; font-weight: normal;">yap</a> <span style="color: #ef4444; font-size: 0.85em; opacity: 0.7;"></span></td><td></td><td></td><td></td></tr>
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="chart-container">
-                <canvas id="dependentsChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 2: External Consumers -->
-    <div class="panel">
-        <h2>External Consumers</h2>
-        <div class="panel-row">
-            <div>
-                <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                    <label for="external-consumers-search" style="margin-right: 10px;">Search:</label>
-                    <input type="text" id="external-consumers-search" placeholder="Filter repositories..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                </div>
-                <table id="external-consumers-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="name">Repository <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="stars">Stars <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="usage_count">Header Includes <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="created_at">Created <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="updated_at">Updated <span class="sort-indicator">↕</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="external-consumers-tbody">
-                    </tbody>
-                </table>
-                <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span id="external-consumers-pagination-info">Showing 1-10 of 197</span>
-                    </div>
-                    <div>
-                        <button id="external-consumers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                        <button id="external-consumers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="usageChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 3: Contributors -->
-    <div class="panel">
-        <h2>Contribution</h2>
-        <div class="panel-row">
-            <div>
-                <div id="contributor-table-container">
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="contributor-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="contributor-search" placeholder="Filter contributors..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table id="contributor-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable" data-sort="version">Version <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="person">Contributor <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="email_address">Email <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="commit_count">Commit Count <span class="sort-indicator">↕</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="contributor-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="contributor-pagination-info">Showing 1-10 of 67</span>
-                        </div>
-                        <div>
-                            <button id="contributor-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="contributor-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="commitChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <script>
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">This library contains a set of header only utilities used internally by Boost C++ Libraries to facilitate their implementation.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.62.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.89.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>308</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>13.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>5</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2014</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>206</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-1.092</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>133</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>1</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>47</td></tr>
+        </tbody></table>
+      </div>
+      <div>
         
-        new Chart(document.getElementById('dependentsChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Primary Consumers',
-                    data: [8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 10, 10, 10, 10, 10, 10, 9, 10, 10, 10],
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }, {
-                    label: 'Transitive Consumers',
-                    data: [95, 87, 88, 92, 92, 91, 91, 96, 96, 104, 97, 89, 88, 88, 88, 77, 78, 78, 80, 80, 79, 77, 77, 77, 77],
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: true,
-                            maxRotation: 90,
-                            minRotation: 45,
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Consumer Count',
-                            font: {
-                                size: 12,
-                                weight: '600'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            },
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('usageChart'), {
-            type: 'bar',
-            data: {
-                labels: ["2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"],
-                datasets: [
-                    {
-                        label: 'Created Repositories',
-                        type: 'line',
-                        data: [0, 2, 3, 14, 16, 16, 23, 30, 24, 18, 15, 2, 6, 4, 6, 7, 5, 3, 3, 0],
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        fill: false,
-                        tension: 0.3,
-                        yAxisID: 'y1',
-                        order: 1
-                    },
-                    {
-                        label: 'Header Includes (New Repos)',
-                        type: 'bar',
-                        data: [0, 2, 6, 58, 120, 45, 46, 95, 41, 45, 39, 3, 7, 6, 60, 13, 14, 3, 3, 0],
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    },
-                    {
-                        label: 'Header Includes (Updated Repos)',
-                        type: 'bar',
-                        data: [1, 1, 11, 12, 13, 24, 61, 192, 22, 38, 19, 25, 14, 7, 23, 23, 14, 10, 39, 57],
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Headers',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Repositories',
-                            font: {
-                                size: 14,
-                                weight: 'bold',
-                                color: 'rgba(255, 99, 132, 0.8)'
-                            }
-                        },
-                        grid: {
-                            drawOnChartArea: false
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Year',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('commitChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.18.0", "1.18.2", "1.18.3", "1.19.0", "1.20.0", "1.20.1", "1.20.2", "1.21.0", "1.21.1", "1.21.2", "1.22.0", "1.23.0", "1.24.0", "1.25.0", "1.25.1", "1.26.0", "1.27.0", "1.28.0", "1.29.0", "1.30.0", "1.30.1", "1.30.2", "1.31.0", "1.32.0", "1.33.0", "1.33.1", "1.34.0", "1.34.1", "1.35.0", "1.36.0", "1.37.0", "1.38.0", "1.39.0", "1.40.0", "1.41.0", "1.42.0", "1.43.0", "1.44.0", "1.45.0", "1.46.0", "1.46.1", "1.47.0", "1.48.0", "1.49.0", "1.50.0", "1.51.0", "1.52.0", "1.53.0", "1.54.0", "1.55.0", "1.56.0", "1.57.0", "1.58.0", "1.59.0", "1.60.0", "1.61.0", "1.62.0", "1.63.0", "1.64.0", "1.65.0", "1.65.1", "1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Commit Count',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 40, 41, 2, 9, 0, 2, 7, 8, 2, 0, 2, 11, 0, 11, 2, 2, 9, 1, 2, 1, 15, 0, 2, 1, 11, 1, 0, 7, 0, 1, 1, 3, 3, 1, 0, 9, 0],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
         
-        const externalConsumersData = [{"name": "ClickHouse/ClickHouse", "stars": 44900, "usage_count": 2, "created_at": "2016-06-02", "updated_at": "2025-12-30"}, {"name": "osquery/osquery", "stars": 23029, "usage_count": 1, "created_at": "2014-07-29", "updated_at": "2026-01-15"}, {"name": "yahoo/pulsar", "stars": 15014, "usage_count": 1, "created_at": "2016-06-28", "updated_at": "2025-12-19"}, {"name": "sonic-pi-net/sonic-pi", "stars": 11601, "usage_count": 1, "created_at": "2013-04-29", "updated_at": "2025-12-20"}, {"name": "monero-project/monero", "stars": 10247, "usage_count": 1, "created_at": "2014-04-30", "updated_at": "2026-01-17"}, {"name": "deepseek-ai/3FS", "stars": 9670, "usage_count": 1, "created_at": "2025-02-27", "updated_at": "2026-01-24"}, {"name": "cocos/cocos-engine", "stars": 9373, "usage_count": 1, "created_at": "2015-12-05", "updated_at": "2026-01-24"}, {"name": "ethz-asl/kalibr", "stars": 5161, "usage_count": 1, "created_at": "2014-05-29", "updated_at": "2024-03-30"}, {"name": "Ardour/ardour", "stars": 4607, "usage_count": 2, "created_at": "2013-03-13", "updated_at": "2025-12-20"}, {"name": "mapsme/omim", "stars": 4602, "usage_count": 1, "created_at": "2015-09-20", "updated_at": "2022-10-05"}, {"name": "LUX-Core/lux", "stars": 3772, "usage_count": 2, "created_at": "2018-07-27", "updated_at": "2021-07-14"}, {"name": "alicevision/AliceVision", "stars": 3355, "usage_count": 2, "created_at": "2014-12-30", "updated_at": "2026-01-29"}, {"name": "poparteu/openMVG", "stars": 3318, "usage_count": 1, "created_at": "2014-12-30", "updated_at": "2025-12-19"}, {"name": "rdkit/rdkit", "stars": 3213, "usage_count": 1, "created_at": "2013-05-12", "updated_at": "2025-12-15"}, {"name": "apache/avro", "stars": 3192, "usage_count": 1, "created_at": "2009-05-21", "updated_at": "2025-12-14"}, {"name": "STEllAR-GROUP/hpx", "stars": 2774, "usage_count": 1, "created_at": "2012-05-26", "updated_at": "2026-01-23"}, {"name": "chdb-io/chdb", "stars": 2593, "usage_count": 2, "created_at": "2023-02-25", "updated_at": "2026-01-15"}, {"name": "ByConity/ByConity", "stars": 2223, "usage_count": 1, "created_at": "2022-12-22", "updated_at": "2025-03-24"}, {"name": "timeplus-io/proton", "stars": 2128, "usage_count": 1, "created_at": "2023-08-14", "updated_at": "2026-01-23"}, {"name": "kismetwireless/kismet", "stars": 2024, "usage_count": 6, "created_at": "2016-09-20", "updated_at": "2026-01-19"}, {"name": "steemit/steem", "stars": 1957, "usage_count": 1, "created_at": "2016-03-23", "updated_at": "2026-01-15"}, {"name": "LuxCoreRender/LuxCore", "stars": 1283, "usage_count": 6, "created_at": "2017-11-22", "updated_at": "2026-01-15"}, {"name": "cms-sw/cmssw", "stars": 1250, "usage_count": 4, "created_at": "2013-06-26", "updated_at": "2026-01-19"}, {"name": "wisk/medusa", "stars": 1080, "usage_count": 1, "created_at": "2011-12-01", "updated_at": "2019-09-16"}, {"name": "TrunkRecorder/trunk-recorder", "stars": 1039, "usage_count": 1, "created_at": "2015-01-26", "updated_at": "2026-01-22"}, {"name": "cocos/cocos4", "stars": 977, "usage_count": 1, "created_at": "2025-12-18", "updated_at": "2026-01-13"}, {"name": "hyrise/hyrise", "stars": 859, "usage_count": 2, "created_at": "2017-04-06", "updated_at": "2026-01-24"}, {"name": "Tokutek/mongo", "stars": 704, "usage_count": 1, "created_at": "2013-03-12", "updated_at": "2017-10-11"}, {"name": "bumptop/BumpTop", "stars": 617, "usage_count": 12, "created_at": "2014-10-25", "updated_at": "2024-01-08"}, {"name": "svgpp/svgpp", "stars": 592, "usage_count": 1, "created_at": "2014-02-18", "updated_at": "2024-02-29"}, {"name": "OpenMS/OpenMS", "stars": 551, "usage_count": 1, "created_at": "2014-01-09", "updated_at": "2025-12-29"}, {"name": "LiveStockShapeAnalysis/Point-Cloud-Processing-example", "stars": 518, "usage_count": 1, "created_at": "2019-02-25", "updated_at": "2021-09-04"}, {"name": "supercollider/sc3-plugins", "stars": 516, "usage_count": 18, "created_at": "2012-12-01", "updated_at": "2026-01-01"}, {"name": "AllenDang/cimgui-go", "stars": 484, "usage_count": 4, "created_at": "2022-08-09", "updated_at": "2025-12-30"}, {"name": "deweylab/RSEM", "stars": 455, "usage_count": 7, "created_at": "2011-02-09", "updated_at": "2024-03-13"}, {"name": "apolukhin/Boost-Cookbook", "stars": 424, "usage_count": 1, "created_at": "2014-03-01", "updated_at": "2025-01-14"}, {"name": "mozy/mordor", "stars": 352, "usage_count": 1, "created_at": "2010-05-21", "updated_at": "2018-02-06"}, {"name": "OSVR/OSVR-Core", "stars": 338, "usage_count": 1, "created_at": "2014-10-21", "updated_at": "2019-06-06"}, {"name": "thelink2012/modloader", "stars": 333, "usage_count": 1, "created_at": "2013-11-17", "updated_at": "2021-02-27"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 5, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "osmocom/gr-osmosdr", "stars": 321, "usage_count": 4, "created_at": "2014-09-23", "updated_at": "2025-09-23"}, {"name": "mvs-org/metaverse", "stars": 306, "usage_count": 1, "created_at": "2016-10-30", "updated_at": "2023-02-25"}, {"name": "the-metaverse/metaverse", "stars": 306, "usage_count": 1, "created_at": "2016-10-30", "updated_at": "2023-02-25"}, {"name": "mvs-live/metaverse", "stars": 306, "usage_count": 1, "created_at": "2016-10-30", "updated_at": "2023-02-25"}, {"name": "kosenko/ui", "stars": 280, "usage_count": 12, "created_at": "2017-09-26", "updated_at": "2022-08-16"}, {"name": "mickem/nscp", "stars": 280, "usage_count": 1, "created_at": "2012-04-28", "updated_at": "2026-01-26"}, {"name": "HiraokaTakuya/apery", "stars": 276, "usage_count": 1, "created_at": "2015-03-16", "updated_at": "2022-06-02"}, {"name": "ethz-asl/ethzasl_icp_mapping", "stars": 274, "usage_count": 1, "created_at": "2011-01-18", "updated_at": "2021-07-13"}, {"name": "hypertable/hypertable", "stars": 268, "usage_count": 1, "created_at": "2011-04-07", "updated_at": "2018-12-21"}, {"name": "myiosemail/ShowTimeVideoLive", "stars": 253, "usage_count": 16, "created_at": "2016-06-22", "updated_at": "2016-07-07"}, {"name": "binspector/binspector", "stars": 244, "usage_count": 1, "created_at": "2014-10-15", "updated_at": "2021-05-10"}, {"name": "sccn/lsl_archived", "stars": 244, "usage_count": 2, "created_at": "2015-04-04", "updated_at": "2018-11-23"}, {"name": "alamaison/swish", "stars": 236, "usage_count": 1, "created_at": "2011-07-13", "updated_at": "2021-02-09"}, {"name": "TadaoYamaoka/DeepLearningShogi", "stars": 227, "usage_count": 1, "created_at": "2017-04-10", "updated_at": "2026-01-17"}, {"name": "goldeneye-source/ges-code", "stars": 207, "usage_count": 1, "created_at": "2014-01-24", "updated_at": "2018-09-27"}, {"name": "OriginHubAI/MyScaleDB", "stars": 204, "usage_count": 1, "created_at": "2025-07-16", "updated_at": "2026-01-05"}, {"name": "dblock/dotnetinstaller", "stars": 203, "usage_count": 2, "created_at": "2012-04-04", "updated_at": "2025-06-21"}, {"name": "dotnetinstaller/dotnetinstaller", "stars": 203, "usage_count": 2, "created_at": "2012-04-04", "updated_at": "2025-06-21"}, {"name": "hlrs-vis/covise", "stars": 198, "usage_count": 1, "created_at": "2015-01-27", "updated_at": "2026-01-26"}, {"name": "nmaier/mkvtoolnix", "stars": 194, "usage_count": 1, "created_at": "2011-11-29", "updated_at": "2015-10-07"}, {"name": "linClubs/Calibration-Is-All-You-Need", "stars": 192, "usage_count": 1, "created_at": "2023-03-27", "updated_at": "2024-05-14"}, {"name": "inetic/club", "stars": 189, "usage_count": 1, "created_at": "2016-06-02", "updated_at": "2016-10-11"}, {"name": "inetic/libclub", "stars": 189, "usage_count": 1, "created_at": "2016-06-02", "updated_at": "2016-10-11"}, {"name": "sdhash/sdhash", "stars": 177, "usage_count": 17, "created_at": "2013-10-10", "updated_at": "2020-10-16"}, {"name": "nsimplex/ktools", "stars": 173, "usage_count": 1, "created_at": "2014-04-21", "updated_at": "2021-09-15"}, {"name": "zhixy/multical", "stars": 170, "usage_count": 2, "created_at": "2021-01-28", "updated_at": "2022-11-23"}, {"name": "bbc/turingcodec", "stars": 156, "usage_count": 1, "created_at": "2016-07-04", "updated_at": "2017-11-13"}, {"name": "gavofyork/ethereum", "stars": 156, "usage_count": 1, "created_at": "2013-12-23", "updated_at": "2018-01-27"}, {"name": "dato-code/GraphLab-Create-SDK", "stars": 148, "usage_count": 30, "created_at": "2014-11-24", "updated_at": "2017-12-19"}, {"name": "turi-code/GraphLab-Create-SDK", "stars": 148, "usage_count": 14, "created_at": "2014-11-24", "updated_at": "2017-12-19"}, {"name": "TadaoYamaoka/cshogi", "stars": 147, "usage_count": 1, "created_at": "2019-02-10", "updated_at": "2025-12-20"}, {"name": "Organic-Code/Breep", "stars": 146, "usage_count": 1, "created_at": "2017-04-07", "updated_at": "2018-12-07"}, {"name": "noxrepo/nox", "stars": 144, "usage_count": 3, "created_at": "2012-04-16", "updated_at": "2014-02-14"}, {"name": "ZephyrProtocol/zephyr", "stars": 143, "usage_count": 1, "created_at": "2023-05-25", "updated_at": "2025-06-11"}, {"name": "LiMinggang/madedit-mod", "stars": 131, "usage_count": 1, "created_at": "2013-06-27", "updated_at": "2025-11-10"}, {"name": "nousxiong/gce", "stars": 128, "usage_count": 1, "created_at": "2014-01-25", "updated_at": "2017-07-25"}, {"name": "demonsaw/Code", "stars": 124, "usage_count": 3, "created_at": "2017-07-25", "updated_at": "2021-10-26"}, {"name": "GanAHE/TianqueROS", "stars": 123, "usage_count": 2, "created_at": "2021-04-05", "updated_at": "2022-01-06"}, {"name": "vicaya/hypertable", "stars": 115, "usage_count": 1, "created_at": "2008-05-22", "updated_at": "2009-10-02"}, {"name": "leggedrobotics/perfectlyconstrained", "stars": 112, "usage_count": 1, "created_at": "2024-07-08", "updated_at": "2025-05-14"}, {"name": "RogerSanders/Exodus", "stars": 105, "usage_count": 1, "created_at": "2020-07-01", "updated_at": "2024-02-16"}, {"name": "pdeitel/CPlusPlusHowToProgram11e", "stars": 104, "usage_count": 2, "created_at": "2022-04-13", "updated_at": "2024-04-27"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 94, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "scalan/scalan", "stars": 96, "usage_count": 1, "created_at": "2014-08-27", "updated_at": "2017-12-09"}, {"name": "wdkk/iSuperColliderKit", "stars": 95, "usage_count": 1, "created_at": "2015-02-02", "updated_at": "2025-02-11"}, {"name": "Judecoin/judecoin", "stars": 91, "usage_count": 1, "created_at": "2021-03-03", "updated_at": "2026-01-25"}, {"name": "OSVR/OSVR-Unreal", "stars": 89, "usage_count": 1, "created_at": "2015-01-25", "updated_at": "2017-12-01"}, {"name": "hkroeger/insightcae", "stars": 88, "usage_count": 1, "created_at": "2017-09-12", "updated_at": "2025-12-16"}, {"name": "larroy/mycelium", "stars": 87, "usage_count": 1, "created_at": "2011-11-21", "updated_at": "2023-06-22"}, {"name": "LORD-MicroStrain/MSCL", "stars": 86, "usage_count": 4, "created_at": "2015-08-26", "updated_at": "2026-01-19"}, {"name": "ErdemOzgen/Cpp-Learning-Archive", "stars": 86, "usage_count": 1, "created_at": "2019-04-08", "updated_at": "2022-12-27"}, {"name": "puppetlabs/cpp-hocon", "stars": 85, "usage_count": 1, "created_at": "2015-07-28", "updated_at": "2025-01-14"}, {"name": "salilab/imp", "stars": 81, "usage_count": 3, "created_at": "2012-06-21", "updated_at": "2026-01-17"}, {"name": "strk/gnash", "stars": 79, "usage_count": 3, "created_at": "2010-11-30", "updated_at": "2017-07-05"}, {"name": "pika-org/pika", "stars": 79, "usage_count": 1, "created_at": "2022-01-17", "updated_at": "2026-01-05"}, {"name": "KevinStern/index-cpp", "stars": 78, "usage_count": 1, "created_at": "2013-10-02", "updated_at": "2020-11-28"}, {"name": "graydon/monotone", "stars": 78, "usage_count": 1, "created_at": "2014-01-28", "updated_at": "2014-01-29"}, {"name": "v-dimension/vds-core", "stars": 75, "usage_count": 2, "created_at": "2019-04-25", "updated_at": "2021-08-02"}, {"name": "kit-cel/gr-drm", "stars": 75, "usage_count": 1, "created_at": "2012-09-14", "updated_at": "2019-11-16"}, {"name": "danieljoos/libkafka-asio", "stars": 74, "usage_count": 1, "created_at": "2015-02-20", "updated_at": "2017-11-06"}, {"name": "Beman/btree", "stars": 72, "usage_count": 27, "created_at": "2010-09-06", "updated_at": "2014-03-20"}, {"name": "otherlab/pcl", "stars": 71, "usage_count": 2, "created_at": "2012-09-01", "updated_at": "2012-09-01"}, {"name": "AMDmi3/openstrike", "stars": 71, "usage_count": 1, "created_at": "2014-02-05", "updated_at": "2024-08-12"}, {"name": "aldebaran/libqi", "stars": 70, "usage_count": 2, "created_at": "2011-12-13", "updated_at": "2024-06-17"}, {"name": "wojdyr/xylib", "stars": 69, "usage_count": 1, "created_at": "2013-04-22", "updated_at": "2022-12-20"}, {"name": "Barryrowe/mongo-arm", "stars": 64, "usage_count": 1, "created_at": "2013-12-21", "updated_at": "2016-08-24"}, {"name": "cppalliance/decimal", "stars": 57, "usage_count": 9, "created_at": "2023-06-30", "updated_at": "2026-01-16"}, {"name": "pavel-pimenov/flylinkdc-r5xx", "stars": 57, "usage_count": 1, "created_at": "2013-10-05", "updated_at": "2022-09-24"}, {"name": "amanzi/ats-dev", "stars": 55, "usage_count": 1, "created_at": "2016-07-25", "updated_at": "2025-12-13"}, {"name": "teknogods/TeknoMW3", "stars": 53, "usage_count": 1, "created_at": "2012-09-23", "updated_at": "2012-09-27"}, {"name": "SingularInversions/FaceGenBaseLibrary", "stars": 51, "usage_count": 3, "created_at": "2015-09-22", "updated_at": "2025-04-01"}, {"name": "mat007/turtle", "stars": 51, "usage_count": 1, "created_at": "2015-03-01", "updated_at": "2025-08-24"}, {"name": "alucard-dracula/yggdrasil", "stars": 50, "usage_count": 1, "created_at": "2014-08-24", "updated_at": "2026-01-16"}, {"name": "tklab-tud/umundo", "stars": 46, "usage_count": 1, "created_at": "2011-08-13", "updated_at": "2017-01-06"}, {"name": "izenecloud/izenelib", "stars": 43, "usage_count": 3, "created_at": "2014-09-11", "updated_at": "2015-04-21"}, {"name": "sanguinariojoe/aquagpusph", "stars": 39, "usage_count": 2, "created_at": "2013-11-26", "updated_at": "2025-12-21"}, {"name": "bigdawg-istc/bigdawg", "stars": 39, "usage_count": 1, "created_at": "2017-03-21", "updated_at": "2022-10-04"}, {"name": "torc-isi/torc", "stars": 39, "usage_count": 1, "created_at": "2015-07-29", "updated_at": "2017-04-12"}, {"name": "svalaskevicius/qtjs-generator", "stars": 38, "usage_count": 1, "created_at": "2013-01-27", "updated_at": "2024-06-18"}, {"name": "radekp/qt", "stars": 38, "usage_count": 3, "created_at": "2009-12-02", "updated_at": "2012-12-23"}, {"name": "HoerTech-gGmbH/tascar", "stars": 37, "usage_count": 1, "created_at": "2019-02-13", "updated_at": "2025-12-11"}, {"name": "antoche/openvibe", "stars": 37, "usage_count": 1, "created_at": "2012-06-16", "updated_at": "2012-06-16"}, {"name": "jpenalbae/gr-osmosdr_hackrftcp", "stars": 36, "usage_count": 5, "created_at": "2014-09-04", "updated_at": "2014-09-05"}, {"name": "Sigil-Ebook/flightcrew", "stars": 36, "usage_count": 4, "created_at": "2015-03-13", "updated_at": "2019-07-21"}, {"name": "LutzGross/esys-escript.github.io", "stars": 35, "usage_count": 3, "created_at": "2020-08-10", "updated_at": "2026-01-14"}, {"name": "nihospr01/OpenSpeechPlatform-UCSD", "stars": 35, "usage_count": 1, "created_at": "2017-08-07", "updated_at": "2021-09-01"}, {"name": "mirror/freedownload", "stars": 35, "usage_count": 1, "created_at": "2013-08-04", "updated_at": "2024-09-28"}, {"name": "srh/refound", "stars": 33, "usage_count": 2, "created_at": "2022-09-06", "updated_at": "2025-08-07"}, {"name": "datablade-io/daisy", "stars": 33, "usage_count": 1, "created_at": "2021-02-18", "updated_at": "2022-02-22"}, {"name": "wwylab/MuSE", "stars": 33, "usage_count": 1, "created_at": "2017-10-02", "updated_at": "2026-01-07"}, {"name": "jpmorganchase/swblocks-baselib", "stars": 33, "usage_count": 1, "created_at": "2017-01-26", "updated_at": "2021-09-08"}, {"name": "wwoods/job_stream", "stars": 33, "usage_count": 1, "created_at": "2014-01-11", "updated_at": "2018-07-30"}, {"name": "mstump/libcql", "stars": 32, "usage_count": 1, "created_at": "2012-12-21", "updated_at": "2013-11-18"}, {"name": "paps/Open-Trading", "stars": 31, "usage_count": 2, "created_at": "2011-12-19", "updated_at": "2017-02-23"}, {"name": "cppalliance/http", "stars": 30, "usage_count": 52, "created_at": "2021-07-18", "updated_at": "2026-01-24"}, {"name": "tu-rbo/omip", "stars": 29, "usage_count": 1, "created_at": "2016-11-03", "updated_at": "2020-01-16"}, {"name": "beiko-lab/gengis", "stars": 29, "usage_count": 1, "created_at": "2013-03-18", "updated_at": "2017-11-09"}, {"name": "guangzhuwu/p2engine", "stars": 28, "usage_count": 2, "created_at": "2013-09-11", "updated_at": "2023-12-06"}, {"name": "emuell/AFEC", "stars": 27, "usage_count": 2, "created_at": "2021-05-18", "updated_at": "2026-01-16"}, {"name": "vice87/gam-ngs", "stars": 26, "usage_count": 2, "created_at": "2011-10-21", "updated_at": "2023-11-10"}, {"name": "trondeau/gnuradio-old", "stars": 26, "usage_count": 2, "created_at": "2010-09-17", "updated_at": "2019-11-29"}, {"name": "BlackEdder/realtimeplot", "stars": 26, "usage_count": 1, "created_at": "2015-02-16", "updated_at": "2015-02-16"}, {"name": "homer6/c_reading", "stars": 25, "usage_count": 2, "created_at": "2011-04-30", "updated_at": "2011-04-30"}, {"name": "csete/gr-osmosdr-gqrx", "stars": 24, "usage_count": 4, "created_at": "2016-09-20", "updated_at": "2018-09-05"}, {"name": "PointCloudLibrary/mobile", "stars": 24, "usage_count": 1, "created_at": "2013-09-01", "updated_at": "2014-07-31"}, {"name": "lvv/lvvlib", "stars": 24, "usage_count": 1, "created_at": "2008-11-29", "updated_at": "2014-01-03"}, {"name": "wallscavesurvey/walls", "stars": 23, "usage_count": 6, "created_at": "2017-02-18", "updated_at": "2025-09-13"}, {"name": "snakeleon/YouCompleteMe-x86", "stars": 23, "usage_count": 3, "created_at": "2015-01-29", "updated_at": "2022-11-26"}, {"name": "rdkit/rdkit-orig", "stars": 23, "usage_count": 2, "created_at": "2012-08-17", "updated_at": "2018-07-24"}, {"name": "niumuguang/CTPTrader", "stars": 22, "usage_count": 1, "created_at": "2014-06-26", "updated_at": "2014-07-01"}, {"name": "deskvox/deskvox", "stars": 21, "usage_count": 1, "created_at": "2011-10-20", "updated_at": "2026-01-22"}, {"name": "marsermd/DeepestScatter", "stars": 21, "usage_count": 1, "created_at": "2018-03-27", "updated_at": "2022-12-08"}, {"name": "ccutrer/mordor", "stars": 21, "usage_count": 1, "created_at": "2010-10-20", "updated_at": "2017-09-09"}, {"name": "alanxz/libamqp-cpp", "stars": 20, "usage_count": 2, "created_at": "2011-09-30", "updated_at": "2011-10-21"}, {"name": "mloskot/workshop", "stars": 20, "usage_count": 2, "created_at": "2009-05-04", "updated_at": "2018-03-29"}, {"name": "ngeiswei/ardour", "stars": 19, "usage_count": 2, "created_at": "2015-09-16", "updated_at": "2025-12-11"}, {"name": "4x7y/FakeImageKiller", "stars": 19, "usage_count": 2, "created_at": "2015-05-15", "updated_at": "2015-06-06"}, {"name": "motocoin-dev/motocoin", "stars": 19, "usage_count": 1, "created_at": "2014-04-10", "updated_at": "2017-08-19"}, {"name": "Sciss/supercollider", "stars": 19, "usage_count": 1, "created_at": "2014-02-21", "updated_at": "2023-07-10"}, {"name": "RufaelDev/pcc-mp3dg", "stars": 19, "usage_count": 2, "created_at": "2015-04-02", "updated_at": "2017-11-20"}, {"name": "erikogan/passenger", "stars": 19, "usage_count": 1, "created_at": "2010-11-25", "updated_at": "2014-09-01"}, {"name": "rikigigi/analisi", "stars": 18, "usage_count": 1, "created_at": "2019-09-20", "updated_at": "2024-11-13"}, {"name": "bootphon/wordseg", "stars": 18, "usage_count": 1, "created_at": "2017-05-06", "updated_at": "2021-01-27"}, {"name": "isis-group/isis", "stars": 18, "usage_count": 1, "created_at": "2010-11-12", "updated_at": "2022-08-24"}, {"name": "yielding/code", "stars": 17, "usage_count": 5, "created_at": "2010-10-11", "updated_at": "2026-01-24"}, {"name": "pothosware/SoapyOsmo", "stars": 17, "usage_count": 4, "created_at": "2015-04-07", "updated_at": "2025-10-09"}, {"name": "gmist/frl", "stars": 17, "usage_count": 1, "created_at": "2010-08-18", "updated_at": "2010-08-18"}, {"name": "computationalgeography/lue", "stars": 16, "usage_count": 1, "created_at": "2016-06-22", "updated_at": "2026-01-07"}, {"name": "xcore/tool_axe", "stars": 16, "usage_count": 1, "created_at": "2011-07-17", "updated_at": "2018-05-30"}, {"name": "ivanpustogarov/bcclient", "stars": 15, "usage_count": 3, "created_at": "2016-11-23", "updated_at": "2018-03-23"}, {"name": "ANYbotics/pointmatcher-ros", "stars": 15, "usage_count": 1, "created_at": "2015-02-13", "updated_at": "2026-01-13"}, {"name": "sensestage/supercollider", "stars": 15, "usage_count": 1, "created_at": "2013-02-20", "updated_at": "2025-10-25"}, {"name": "steeve/libtorrent", "stars": 14, "usage_count": 1, "created_at": "2013-11-25", "updated_at": "2014-11-21"}, {"name": "devsarr/ONLYOFFICE-OnlineEditors", "stars": 14, "usage_count": 1, "created_at": "2014-12-17", "updated_at": "2014-12-17"}, {"name": "aws/thinkbox-magma", "stars": 13, "usage_count": 2, "created_at": "2022-11-14", "updated_at": "2022-12-16"}, {"name": "Wolframe/Wolframe", "stars": 13, "usage_count": 4, "created_at": "2010-02-11", "updated_at": "2014-11-15"}, {"name": "firebreath/firebreath-boost", "stars": 13, "usage_count": 9, "created_at": "2010-11-27", "updated_at": "2017-04-17"}, {"name": "boostorg/openmethod", "stars": 13, "usage_count": 1, "created_at": "2024-10-06", "updated_at": "2026-01-26"}, {"name": "jackson-nestelroad/aether-proxy", "stars": 13, "usage_count": 1, "created_at": "2020-05-30", "updated_at": "2024-04-07"}, {"name": "BlockLink/HX-core", "stars": 13, "usage_count": 1, "created_at": "2017-09-11", "updated_at": "2018-07-24"}, {"name": "kumagi/lfmalloc", "stars": 13, "usage_count": 1, "created_at": "2010-12-13", "updated_at": "2010-12-13"}, {"name": "kikairoya/modern-git", "stars": 13, "usage_count": 1, "created_at": "2010-05-17", "updated_at": "2010-08-27"}, {"name": "NeuropsyOL/RECORDA", "stars": 12, "usage_count": 1, "created_at": "2020-05-08", "updated_at": "2025-04-16"}, {"name": "Devronium/ConceptApplicationServer", "stars": 12, "usage_count": 1, "created_at": "2016-01-21", "updated_at": "2025-11-07"}, {"name": "adamhooper/refinery", "stars": 12, "usage_count": 1, "created_at": "2010-12-13", "updated_at": "2013-09-05"}, {"name": "viamrobotics/viam-cpp-sdk", "stars": 11, "usage_count": 1, "created_at": "2022-10-17", "updated_at": "2026-01-16"}, {"name": "TritonNetworking/themis_tritonsort", "stars": 11, "usage_count": 1, "created_at": "2015-08-08", "updated_at": "2017-11-02"}, {"name": "krig/koi", "stars": 11, "usage_count": 1, "created_at": "2012-11-04", "updated_at": "2024-01-11"}, {"name": "ETHZ-RobotX/open3d_slam_advanced_rss_2024_public", "stars": 10, "usage_count": 1, "created_at": "2024-06-17", "updated_at": "2024-07-01"}, {"name": "R-Lum/rxylib", "stars": 10, "usage_count": 1, "created_at": "2017-06-27", "updated_at": "2024-08-27"}, {"name": "privet56/qDesktopSearch", "stars": 10, "usage_count": 2, "created_at": "2016-04-15", "updated_at": "2016-05-03"}, {"name": "apik/mr", "stars": 10, "usage_count": 3, "created_at": "2014-04-28", "updated_at": "2024-10-31"}, {"name": "zeronullity/SDRwatchdog", "stars": 10, "usage_count": 1, "created_at": "2015-03-27", "updated_at": "2015-03-27"}, {"name": "spreadcoin-project/spreadcoin", "stars": 10, "usage_count": 1, "created_at": "2014-07-28", "updated_at": "2015-02-11"}, {"name": "balint256/gnuradio", "stars": 10, "usage_count": 2, "created_at": "2013-01-17", "updated_at": "2019-01-23"}, {"name": "romeric/FEAPB", "stars": 10, "usage_count": 1, "created_at": "2013-12-10", "updated_at": "2016-02-27"}, {"name": "alanw/configcpp", "stars": 10, "usage_count": 1, "created_at": "2012-07-22", "updated_at": "2012-12-17"}];
-        let externalConsumersCurrentPage = 1;
-        const externalConsumersItemsPerPage = 10;
-        let externalConsumersSortField = 'stars';
-        let externalConsumersSortOrder = 'asc';
-        let externalConsumersFilteredData = [...externalConsumersData];
-        let externalConsumersSearchTerm = '';
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
 
-        function sortExternalConsumersData(field) {
-            if (externalConsumersSortField === field) {
-                externalConsumersSortOrder = externalConsumersSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                externalConsumersSortField = field;
-                externalConsumersSortOrder = 'asc';
-            }
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
 
-            externalConsumersFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
-
-                // Handle numeric fields
-                if (['stars', 'usage_count'].includes(field)) {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
-
-                // Handle date fields
-                if (['created_at', 'updated_at'].includes(field)) {
-                    aVal = aVal ? new Date(aVal) : new Date(0);
-                    bVal = bVal ? new Date(bVal) : new Date(0);
-                }
-
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
-
-                if (aVal < bVal) {
-                    return externalConsumersSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return externalConsumersSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-
-            updateExternalConsumersSortIndicators();
-            externalConsumersCurrentPage = 1;
-            updateExternalConsumersTable();
-        }
-
-        function filterExternalConsumersData(searchTerm) {
-            externalConsumersSearchTerm = searchTerm.toLowerCase();
-            externalConsumersFilteredData = externalConsumersData.filter(repo => {
-                const name = ((repo.name || repo.repo_name) || '').toLowerCase();
-                const stars = (repo.stars || 0).toString();
-                const usageCount = (repo.usage_count || 0).toString();
-                const createdAt = (repo.created_at || '').toLowerCase();
-                const updatedAt = (repo.updated_at || '').toLowerCase();
-                return name.includes(externalConsumersSearchTerm) ||
-                       stars.includes(externalConsumersSearchTerm) ||
-                       usageCount.includes(externalConsumersSearchTerm) ||
-                       createdAt.includes(externalConsumersSearchTerm) ||
-                       updatedAt.includes(externalConsumersSearchTerm);
-            });
-            externalConsumersCurrentPage = 1;
-            sortExternalConsumersData(externalConsumersSortField);
-        }
-
-        function updateExternalConsumersSortIndicators() {
-            document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === externalConsumersSortField) {
-                    indicator.textContent = externalConsumersSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateExternalConsumersTable() {
-            const start = (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage;
-            const end = start + externalConsumersItemsPerPage;
-            const pageData = externalConsumersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('external-consumers-tbody');
-            if (externalConsumersFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No repositories found</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(repo => {
-                    const name = repo.name || repo.repo_name || 'N/A';
-                    const stars = (repo.stars || 0).toLocaleString();
-                    const usageCount = (repo.usage_count || 0).toLocaleString();
-                    let createdAt = repo.created_at || 'N/A';
-                    let updatedAt = repo.updated_at || 'N/A';
-                    if (createdAt !== 'N/A' && createdAt.length > 10) {
-                        createdAt = createdAt.substring(0, 10);
-                    }
-                    if (updatedAt !== 'N/A' && updatedAt.length > 10) {
-                        updatedAt = updatedAt.substring(0, 10);
-                    }
-
-                    return `
-                        <tr>
-                            <td><a href="https://github.com/${name}" target="_blank">${name}</a></td>
-                            <td>${stars}</td>
-                            <td>${usageCount}</td>
-                            <td>${createdAt}</td>
-                            <td>${updatedAt}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateExternalConsumersPaginationInfo();
-            updateExternalConsumersPaginationButtons();
-        }
-
-        function updateExternalConsumersPaginationInfo() {
-            const start = externalConsumersFilteredData.length === 0 ? 0 : (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage + 1;
-            const end = Math.min(externalConsumersCurrentPage * externalConsumersItemsPerPage, externalConsumersFilteredData.length);
-            const total = externalConsumersFilteredData.length;
-            document.getElementById('external-consumers-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateExternalConsumersPaginationButtons() {
-            const prevBtn = document.getElementById('external-consumers-prev-btn');
-            const nextBtn = document.getElementById('external-consumers-next-btn');
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-
-            prevBtn.disabled = externalConsumersCurrentPage === 1 || externalConsumersFilteredData.length === 0;
-            nextBtn.disabled = externalConsumersCurrentPage >= totalPages || externalConsumersFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortExternalConsumersData(th.dataset.sort));
-        });
-
-        document.getElementById('external-consumers-prev-btn').addEventListener('click', () => {
-            if (externalConsumersCurrentPage > 1) {
-                externalConsumersCurrentPage--;
-                updateExternalConsumersTable();
-            }
-        });
-
-        document.getElementById('external-consumers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-            if (externalConsumersCurrentPage < totalPages) {
-                externalConsumersCurrentPage++;
-                updateExternalConsumersTable();
-            }
-        });
-
-        // Add search input handler
-        const externalConsumersSearchInput = document.getElementById('external-consumers-search');
-        if (externalConsumersSearchInput) {
-            externalConsumersSearchInput.addEventListener('input', (e) => {
-                filterExternalConsumersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        sortExternalConsumersData('stars');
+  <script>
     
-        
-        const contributorData = [{"version": "1.89.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 9}, {"version": "1.87.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 1}, {"version": "1.86.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 3}, {"version": "1.85.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 3}, {"version": "1.84.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.83.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.81.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 7}, {"version": "1.79.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.78.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 9}, {"version": "1.78.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 2}, {"version": "1.77.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 1}, {"version": "1.74.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 11}, {"version": "1.74.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 3}, {"version": "1.74.0", "person": "Lastique", "email_address": "Lastique@users.noreply.github.com", "commit_count": 1}, {"version": "1.73.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 1}, {"version": "1.72.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 2}, {"version": "1.71.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.70.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 7}, {"version": "1.70.0", "person": "Lastique", "email_address": "Lastique@users.noreply.github.com", "commit_count": 1}, {"version": "1.70.0", "person": "Marcel Raad", "email_address": "Marcel.Raad@teamviewer.com", "commit_count": 1}, {"version": "1.69.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.69.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 1}, {"version": "1.68.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 2}, {"version": "1.67.0", "person": "Daniel James", "email_address": "daniel@calamity.org.uk", "commit_count": 8}, {"version": "1.67.0", "person": "Lastique", "email_address": "Lastique@users.noreply.github.com", "commit_count": 1}, {"version": "1.67.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.67.0", "person": "Daniela Engert", "email_address": "dani@ngrt.de", "commit_count": 1}, {"version": "1.65.1", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 7}, {"version": "1.65.1", "person": "Beman Dawes", "email_address": "bdawes@acm.org", "commit_count": 2}, {"version": "1.65.1", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 1}, {"version": "1.65.1", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 1}, {"version": "1.65.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 1}, {"version": "1.65.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 1}, {"version": "1.63.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 2}, {"version": "1.62.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 3}, {"version": "1.62.0", "person": "Daniel James", "email_address": "daniel@calamity.org.uk", "commit_count": 2}, {"version": "1.62.0", "person": "Lastique", "email_address": "Lastique@users.noreply.github.com", "commit_count": 1}, {"version": "1.62.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.62.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 1}, {"version": "1.61.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 7}, {"version": "1.60.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 2}, {"version": "1.58.0", "person": "Lastique", "email_address": "Lastique@users.noreply.github.com", "commit_count": 3}, {"version": "1.58.0", "person": "Edward Diener", "email_address": "eldiener@tropicsoft.com", "commit_count": 3}, {"version": "1.58.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 1}, {"version": "1.58.0", "person": "Beman Dawes", "email_address": "bdawes@acm.org", "commit_count": 1}, {"version": "1.58.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 1}, {"version": "1.57.0", "person": "Beman Dawes", "email_address": "bdawes@acm.org", "commit_count": 2}, {"version": "1.56.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 13}, {"version": "1.56.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 11}, {"version": "1.56.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 6}, {"version": "1.56.0", "person": "Daniel James", "email_address": "daniel@calamity.org.uk", "commit_count": 4}, {"version": "1.56.0", "person": "Steve Gates", "email_address": "stgates@microsoft.com", "commit_count": 3}, {"version": "1.56.0", "person": "Andrey Semashev", "email_address": "Andrey.Semashev@mind.com", "commit_count": 1}, {"version": "1.56.0", "person": "Lastique", "email_address": "Lastique@users.noreply.github.com", "commit_count": 1}, {"version": "1.56.0", "person": "Glen Fernandes", "email_address": "glenfe@live.com", "commit_count": 1}, {"version": "1.56.0", "person": "Kirk Shoop (MS OPEN TECH)", "email_address": "kirk.shoop@microsoft.com", "commit_count": 1}, {"version": "1.55.0", "person": "Andrey Semashev", "email_address": "andrey.semashev@gmail.com", "commit_count": 18}, {"version": "1.55.0", "person": "Stephen Kelly", "email_address": "steveire@gmail.com", "commit_count": 13}, {"version": "1.55.0", "person": "Robert Ramey", "email_address": "ramey@rrsd.com", "commit_count": 3}, {"version": "1.55.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 2}, {"version": "1.55.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 2}, {"version": "1.55.0", "person": "Joaqu\u00edn M L\u00f3pez Mu\u00f1oz", "email_address": "joaquin@tid.es", "commit_count": 1}, {"version": "1.55.0", "person": "Tim Blechmann", "email_address": "tim@klingt.org", "commit_count": 1}, {"version": "1.54.0", "person": "John Maddock", "email_address": "john@johnmaddock.co.uk", "commit_count": 2}, {"version": "1.54.0", "person": "Ion Gazta\u00f1aga", "email_address": "igaztanaga@gmail.com", "commit_count": 1}];
-        let contributorCurrentPage = 1;
-        const contributorItemsPerPage = 10;
-        let contributorSortField = 'version';
-        let contributorSortOrder = 'asc';
-        let contributorFilteredData = [...contributorData];
-        let contributorSearchTerm = '';
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-        function sortContributorData(field) {
-            if (contributorSortField === field) {
-                contributorSortOrder = contributorSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                contributorSortField = field;
-                contributorSortOrder = 'asc';
-            }
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
 
-            contributorFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
 
-                // Handle numeric fields
-                if (field === 'commit_count') {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
 
-                // Handle version strings
-                if (field === 'version') {
-                    aVal = aVal.toString();
-                    bVal = bVal.toString();
-                    // Simple version comparison (can be improved)
-                    const aParts = aVal.split('.').map(Number);
-                    const bParts = bVal.split('.').map(Number);
-                    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-                        const aPart = aParts[i] || 0;
-                        const bPart = bParts[i] || 0;
-                        if (aPart !== bPart) {
-                            return contributorSortOrder === 'asc' ? aPart - bPart : bPart - aPart;
-                        }
-                    }
-                    return 0;
-                }
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
 
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
+    const headersRows = [{"name": "include/boost/detail/lightweight_test.hpp", "count": 1851}, {"name": "include/boost/detail/endian.hpp", "count": 164}, {"name": "include/boost/type.hpp", "count": 95}, {"name": "include/boost/cstdlib.hpp", "count": 88}, {"name": "include/boost/detail/lightweight_main.hpp", "count": 88}, {"name": "include/boost/detail/no_exceptions_support.hpp", "count": 68}, {"name": "include/boost/detail/iterator.hpp", "count": 61}, {"name": "include/boost/blank.hpp", "count": 52}, {"name": "include/boost/detail/utf8_codecvt_facet.ipp", "count": 25}, {"name": "include/boost/detail/container_fwd.hpp", "count": 23}, {"name": "include/boost/detail/winapi/basic_types.hpp", "count": 20}, {"name": "include/boost/detail/win/basic_types.hpp", "count": 20}, {"name": "include/boost/detail/scoped_enum_emulation.hpp", "count": 15}, {"name": "include/boost/visit_each.hpp", "count": 13}, {"name": "include/boost/detail/select_type.hpp", "count": 13}, {"name": "include/boost/detail/allocator_utilities.hpp", "count": 13}, {"name": "include/boost/detail/utf8_codecvt_facet.hpp", "count": 12}, {"name": "include/boost/detail/bitmask.hpp", "count": 10}, {"name": "include/boost/detail/winapi/config.hpp", "count": 10}, {"name": "include/boost/detail/binary_search.hpp", "count": 7}, {"name": "include/boost/detail/win/security.hpp", "count": 6}, {"name": "include/boost/detail/winapi/time.hpp", "count": 5}, {"name": "include/boost/detail/numeric_traits.hpp", "count": 5}, {"name": "include/boost/detail/is_sorted.hpp", "count": 5}, {"name": "include/boost/detail/winapi/security.hpp", "count": 5}, {"name": "include/boost/detail/identifier.hpp", "count": 4}, {"name": "include/boost/detail/winapi/dll.hpp", "count": 3}, {"name": "include/boost/detail/fenv.hpp", "count": 2}, {"name": "include/boost/detail/reference_content.hpp", "count": 2}, {"name": "include/boost/detail/win/GetCurrentProcess.hpp", "count": 2}, {"name": "include/boost/non_type.hpp", "count": 2}, {"name": "include/boost/detail/is_xxx.hpp", "count": 2}, {"name": "include/boost/detail/winapi/GetLastError.hpp", "count": 2}, {"name": "include/boost/detail/templated_streams.hpp", "count": 1}, {"name": "include/boost/detail/winapi/timers.hpp", "count": 1}, {"name": "include/boost/blank_fwd.hpp", "count": 1}, {"name": "include/boost/detail/winapi/file_management.hpp", "count": 1}, {"name": "include/boost/detail/winapi/handles.hpp", "count": 1}, {"name": "include/boost/detail/winapi/GetCurrentThread.hpp", "count": 1}, {"name": "include/boost/detail/winapi/synchronization.hpp", "count": 1}, {"name": "include/boost/detail/win/LocalFree.hpp", "count": 1}, {"name": "include/boost/detail/lightweight_test_report.hpp", "count": 1}];
+    const internalRows = [{"name": "Unknown(185)", "depth": 1}, {"name": "Interval", "depth": 1}, {"name": "Numeric Conversion", "depth": 1}, {"name": "algorithm", "depth": 1}, {"name": "array", "depth": 1}, {"name": "atomic", "depth": 1}, {"name": "bind", "depth": 1}, {"name": "chrono", "depth": 1}, {"name": "circular_buffer", "depth": 1}, {"name": "concept_check", "depth": 1}, {"name": "config", "depth": 1}, {"name": "container", "depth": 1}, {"name": "container_hash", "depth": 1}, {"name": "conversion", "depth": 1}, {"name": "coroutine", "depth": 1}, {"name": "dynamic_bitset", "depth": 1}, {"name": "exception", "depth": 1}, {"name": "filesystem", "depth": 1}, {"name": "flyweight", "depth": 1}, {"name": "function", "depth": 1}, {"name": "function_types", "depth": 1}, {"name": "functional", "depth": 1}, {"name": "fusion", "depth": 1}, {"name": "geometry", "depth": 1}, {"name": "graph", "depth": 1}, {"name": "graph_parallel", "depth": 1}, {"name": "icl", "depth": 1}, {"name": "interprocess", "depth": 1}, {"name": "intrusive", "depth": 1}, {"name": "iostreams", "depth": 1}, {"name": "iterator", "depth": 1}, {"name": "lambda", "depth": 1}, {"name": "log", "depth": 1}, {"name": "math", "depth": 1}, {"name": "move", "depth": 1}, {"name": "mpl", "depth": 1}, {"name": "msm", "depth": 1}, {"name": "multi_array", "depth": 1}, {"name": "multi_index", "depth": 1}, {"name": "multiprecision", "depth": 1}, {"name": "optional", "depth": 1}, {"name": "parameter", "depth": 1}, {"name": "phoenix", "depth": 1}, {"name": "program_options", "depth": 1}, {"name": "property_map", "depth": 1}, {"name": "python", "depth": 1}, {"name": "random", "depth": 1}, {"name": "range", "depth": 1}, {"name": "serialization", "depth": 1}, {"name": "signals2", "depth": 1}, {"name": "smart_ptr", "depth": 1}, {"name": "spirit", "depth": 1}, {"name": "statechart", "depth": 1}, {"name": "test", "depth": 1}, {"name": "thread", "depth": 1}, {"name": "unordered", "depth": 1}, {"name": "utility", "depth": 1}, {"name": "variant", "depth": 1}, {"name": "Odeint", "depth": 2}, {"name": "Tribool", "depth": 2}, {"name": "accumulators", "depth": 2}, {"name": "any", "depth": 2}, {"name": "asio", "depth": 2}, {"name": "assign", "depth": 2}, {"name": "beast", "depth": 2}, {"name": "bimap", "depth": 2}, {"name": "compute", "depth": 2}, {"name": "context", "depth": 2}, {"name": "contract", "depth": 2}, {"name": "convert", "depth": 2}, {"name": "crc", "depth": 2}, {"name": "date_time", "depth": 2}, {"name": "dll", "depth": 2}, {"name": "fiber", "depth": 2}, {"name": "foreach", "depth": 2}, {"name": "format", "depth": 2}, {"name": "gil", "depth": 2}, {"name": "heap", "depth": 2}, {"name": "histogram", "depth": 2}, {"name": "integer", "depth": 2}, {"name": "io", "depth": 2}, {"name": "lexical_cast", "depth": 2}, {"name": "local_function", "depth": 2}, {"name": "locale", "depth": 2}, {"name": "lockfree", "depth": 2}, {"name": "mpi", "depth": 2}, {"name": "mqtt5", "depth": 2}, {"name": "mysql", "depth": 2}, {"name": "nowide", "depth": 2}, {"name": "parameter_python", "depth": 2}, {"name": "poly_collection", "depth": 2}, {"name": "polygon", "depth": 2}, {"name": "pool", "depth": 2}, {"name": "process", "depth": 2}, {"name": "property_map_parallel", "depth": 2}, {"name": "property_tree", "depth": 2}, {"name": "proto", "depth": 2}, {"name": "ptr_container", "depth": 2}, {"name": "ratio", "depth": 2}, {"name": "rational", "depth": 2}, {"name": "regex", "depth": 2}, {"name": "scope_exit", "depth": 2}, {"name": "sort", "depth": 2}, {"name": "stacktrace", "depth": 2}, {"name": "static_assert", "depth": 2}, {"name": "static_string", "depth": 2}, {"name": "system", "depth": 2}, {"name": "timer", "depth": 2}, {"name": "tokenizer", "depth": 2}, {"name": "tti", "depth": 2}, {"name": "tuple", "depth": 2}, {"name": "type_erasure", "depth": 2}, {"name": "type_index", "depth": 2}, {"name": "type_traits", "depth": 2}, {"name": "typeof", "depth": 2}, {"name": "uBLAS", "depth": 2}, {"name": "units", "depth": 2}, {"name": "url", "depth": 2}, {"name": "uuid", "depth": 2}, {"name": "wave", "depth": 2}, {"name": "xpressive", "depth": 2}, {"name": "endian", "depth": 3}, {"name": "hana", "depth": 3}, {"name": "json", "depth": 3}, {"name": "yap", "depth": 3}, {"name": "cobalt", "depth": 4}, {"name": "coroutine2", "depth": 4}, {"name": "metaparse", "depth": 4}, {"name": "outcome", "depth": 4}, {"name": "parser", "depth": 4}, {"name": "qvm", "depth": 4}, {"name": "redis", "depth": 4}, {"name": "safe_numerics", "depth": 4}];
+    const externalRows = [{"name": "FRC900/2018RobotCode", "stars": 17, "usage_count": 3, "created_at": "2018-01-06", "updated_at": "2018-09-06"}, {"name": "deepseek-ai/3FS", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "stlab/adobe_platform_libraries", "stars": 30, "usage_count": 1, "created_at": "2013-10-23", "updated_at": "2020-11-07"}, {"name": "stlab/adobe_source_libraries", "stars": 295, "usage_count": 2, "created_at": "2012-11-09", "updated_at": "2026-03-08"}, {"name": "jackson-nestelroad/aether-proxy", "stars": 14, "usage_count": 1, "created_at": "2020-05-30", "updated_at": "2024-04-07"}, {"name": "emuell/AFEC", "stars": 29, "usage_count": 2, "created_at": "2021-05-18", "updated_at": "2026-01-16"}, {"name": "AlchemyViewer/Alchemy", "stars": 47, "usage_count": 1, "created_at": "2022-12-08", "updated_at": "2026-02-07"}, {"name": "AliceO2Group/AliceO2", "stars": 117, "usage_count": 3, "created_at": "2014-10-07", "updated_at": "2026-02-20"}, {"name": "alicevision/AliceVision", "stars": 3389, "usage_count": 2, "created_at": "2014-12-30", "updated_at": "2026-03-06"}, {"name": "ALPSim/ALPS", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "Amber-MD/AmberClassic", "stars": 16, "usage_count": 1, "created_at": "2024-11-21", "updated_at": "2026-02-16"}, {"name": "HiraokaTakuya/apery", "stars": 277, "usage_count": 1, "created_at": "2015-03-16", "updated_at": "2022-06-02"}, {"name": "amanzi/ats-dev", "stars": 55, "usage_count": 1, "created_at": "2016-07-25", "updated_at": "2025-12-13"}, {"name": "avplayer/avbot", "stars": 223, "usage_count": 1, "created_at": "2013-07-19", "updated_at": "2015-10-25"}, {"name": "apache/avro", "stars": 3192, "usage_count": 1, "created_at": "2009-05-21", "updated_at": "2025-12-14"}, {"name": "vasumahesh1/azura", "stars": 17, "usage_count": 2, "created_at": "2018-08-07", "updated_at": "2019-05-31"}, {"name": "ivanpustogarov/bcclient", "stars": 15, "usage_count": 3, "created_at": "2016-11-23", "updated_at": "2018-03-23"}, {"name": "BitCannaGlobal/BCNA_bitcore_old", "stars": 19, "usage_count": 2, "created_at": "2018-06-27", "updated_at": "2021-09-02"}, {"name": "bigdawg-istc/bigdawg", "stars": 39, "usage_count": 1, "created_at": "2017-03-21", "updated_at": "2022-10-04"}, {"name": "NiranV/Black-Dragon-Viewer", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "sikuner/book-code", "stars": 38, "usage_count": 2, "created_at": "2018-08-28", "updated_at": "2018-08-28"}, {"name": "alecnunn/bookresources", "stars": 31, "usage_count": 1, "created_at": "2018-12-22", "updated_at": "2018-12-22"}, {"name": "boost-cmake/boost", "stars": 57, "usage_count": 10, "created_at": "2017-07-03", "updated_at": "2019-10-29"}, {"name": "apolukhin/Boost-Cookbook", "stars": 429, "usage_count": 1, "created_at": "2014-03-01", "updated_at": "2025-01-14"}, {"name": "PacktPublishing/Boost-Cpp-Application-Development-Cookbook-Second-Edition", "stars": 43, "usage_count": 2, "created_at": "2017-08-28", "updated_at": "2021-01-14"}, {"name": "kkodev/boost-ios", "stars": 23, "usage_count": 19, "created_at": "2013-01-09", "updated_at": "2013-04-19"}, {"name": "ToruNiina/Boost.toml", "stars": 31, "usage_count": 1, "created_at": "2018-04-17", "updated_at": "2019-12-08"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 3, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "mz2/boostoniphone", "stars": 44, "usage_count": 26, "created_at": "2012-02-03", "updated_at": "2015-08-26"}, {"name": "Organic-Code/Breep", "stars": 146, "usage_count": 1, "created_at": "2017-04-07", "updated_at": "2018-12-07"}, {"name": "Beman/btree", "stars": 71, "usage_count": 34, "created_at": "2010-09-06", "updated_at": "2014-03-20"}, {"name": "bumptop/BumpTop", "stars": 621, "usage_count": 20, "created_at": "2014-10-25", "updated_at": "2024-01-08"}, {"name": "ByConity/ByConity", "stars": 2227, "usage_count": 1, "created_at": "2022-12-22", "updated_at": "2025-03-24"}, {"name": "homer6/c_reading", "stars": 25, "usage_count": 3, "created_at": "2011-04-30", "updated_at": "2011-04-30"}, {"name": "rundel/carto-parser", "stars": 12, "usage_count": 1, "created_at": "2011-05-24", "updated_at": "2012-09-08"}, {"name": "DataRealms/CCOSS", "stars": 405, "usage_count": 1, "created_at": "2019-06-30", "updated_at": "2023-12-27"}, {"name": "ChainSQL/chainsqld", "stars": 214, "usage_count": 1, "created_at": "2017-11-14", "updated_at": "2023-01-12"}, {"name": "chdb-io/chdb", "stars": 2627, "usage_count": 2, "created_at": "2023-02-25", "updated_at": "2026-03-02"}, {"name": "AllenDang/cimgui-go", "stars": 506, "usage_count": 10, "created_at": "2022-08-09", "updated_at": "2026-02-27"}, {"name": "ClickHouse/ClickHouse", "stars": 46014, "usage_count": 2, "created_at": "2016-06-02", "updated_at": "2026-02-23"}, {"name": "inetic/club", "stars": 189, "usage_count": 1, "created_at": "2016-06-02", "updated_at": "2016-10-11"}, {"name": "revolucas/CoC-Xray", "stars": 80, "usage_count": 1, "created_at": "2017-03-05", "updated_at": "2019-08-03"}, {"name": "cocos/cocos-engine", "stars": 9416, "usage_count": 1, "created_at": "2015-12-05", "updated_at": "2026-02-11"}, {"name": "cocos/cocos4", "stars": 1106, "usage_count": 1, "created_at": "2025-12-18", "updated_at": "2026-03-11"}, {"name": "yielding/code", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "demonsaw/Code", "stars": 122, "usage_count": 3, "created_at": "2017-07-25", "updated_at": "2021-10-26"}, {"name": "regehr/compiler-crashes", "stars": 39, "usage_count": 1, "created_at": "2016-06-19", "updated_at": "2016-07-17"}, {"name": "Devronium/ConceptApplicationServer", "stars": 12, "usage_count": 1, "created_at": "2016-01-21", "updated_at": "2025-11-07"}, {"name": "ONLYOFFICE/core", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "ccshiro/corecraft", "stars": 29, "usage_count": 1, "created_at": "2018-01-15", "updated_at": "2018-01-15"}, {"name": "cortex-command-community/Cortex-Command-Community-Project", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "hlrs-vis/covise", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "pdeitel/CPlusPlusHowToProgram11e", "stars": 111, "usage_count": 9, "created_at": "2022-04-13", "updated_at": "2024-04-27"}, {"name": "puppetlabs/cpp-hocon", "stars": 85, "usage_count": 1, "created_at": "2015-07-28", "updated_at": "2025-01-14"}, {"name": "ErdemOzgen/Cpp-Learning-Archive", "stars": 89, "usage_count": 1, "created_at": "2019-04-08", "updated_at": "2022-12-27"}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 94, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "kwanti/CppRemote", "stars": 26, "usage_count": 3, "created_at": "2013-11-14", "updated_at": "2015-07-09"}, {"name": "TadaoYamaoka/cshogi", "stars": 148, "usage_count": 1, "created_at": "2019-02-10", "updated_at": "2025-12-20"}, {"name": "niumuguang/CTPTrader", "stars": 22, "usage_count": 1, "created_at": "2014-06-26", "updated_at": "2014-07-01"}, {"name": "RomanKubiak/ctrlr", "stars": 649, "usage_count": 1, "created_at": "2013-11-24", "updated_at": "2024-04-24"}, {"name": "zhangxaochen/CuFusion", "stars": 54, "usage_count": 2, "created_at": "2017-08-05", "updated_at": "2022-05-22"}, {"name": "datablade-io/daisy", "stars": 33, "usage_count": 1, "created_at": "2021-02-18", "updated_at": "2022-02-22"}, {"name": "dendisuhubdy/dark_pool", "stars": 34, "usage_count": 1, "created_at": "2017-08-22", "updated_at": "2019-08-26"}, {"name": "marsermd/DeepestScatter", "stars": 21, "usage_count": 1, "created_at": "2018-03-27", "updated_at": "2022-12-08"}, {"name": "TadaoYamaoka/DeepLearningShogi", "stars": 229, "usage_count": 1, "created_at": "2017-04-10", "updated_at": "2026-01-17"}, {"name": "deskvox/deskvox", "stars": 21, "usage_count": 1, "created_at": "2011-10-20", "updated_at": "2026-01-22"}, {"name": "MaxSavenkov/drdestructo2", "stars": 29, "usage_count": 2, "created_at": "2015-04-15", "updated_at": "2021-01-08"}, {"name": "MarkLi1992/DuctileFracture", "stars": 11, "usage_count": 1, "created_at": "2019-03-15", "updated_at": "2018-08-27"}, {"name": "entboost/ebc", "stars": 25, "usage_count": 4, "created_at": "2016-09-10", "updated_at": "2020-09-22"}, {"name": "ECO-chain/ecochain", "stars": 53, "usage_count": 1, "created_at": "2018-09-28", "updated_at": "2020-10-04"}, {"name": "EQEmu/EQEmu", "stars": 601, "usage_count": 1, "created_at": "2013-01-18", "updated_at": "2026-02-25"}, {"name": "espressif/esp-boost", "stars": 18, "usage_count": 22, "created_at": "2025-03-26", "updated_at": "2026-03-11"}, {"name": "LutzGross/esys-escript.github.io", "stars": 35, "usage_count": 3, "created_at": "2020-08-10", "updated_at": "2026-03-11"}, {"name": "gavofyork/ethereum", "stars": 156, "usage_count": 1, "created_at": "2013-12-23", "updated_at": "2018-01-27"}, {"name": "ethz-asl/ethzasl_icp_mapping", "stars": 273, "usage_count": 1, "created_at": "2011-01-18", "updated_at": "2021-07-13"}, {"name": "gintenlabo/etude", "stars": 21, "usage_count": 1, "created_at": "2010-11-29", "updated_at": "2015-06-11"}, {"name": "grasmanek94/eXe", "stars": 12, "usage_count": 1, "created_at": "2015-03-01", "updated_at": "2016-06-10"}, {"name": "RogerSanders/Exodus", "stars": 110, "usage_count": 1, "created_at": "2020-07-01", "updated_at": "2024-02-16"}, {"name": "NationalAssociationOfRealtors/ezRETS", "stars": 16, "usage_count": 1, "created_at": "2014-04-04", "updated_at": "2019-08-23"}, {"name": "SingularInversions/FaceGenBaseLibrary", "stars": 51, "usage_count": 3, "created_at": "2015-09-22", "updated_at": "2025-04-01"}, {"name": "4x7y/FakeImageKiller", "stars": 19, "usage_count": 2, "created_at": "2015-05-15", "updated_at": "2015-06-06"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 5, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "windoze/fibio", "stars": 259, "usage_count": 1, "created_at": "2014-03-09", "updated_at": "2017-12-03"}, {"name": "Beman/filesystem-proposal", "stars": 22, "usage_count": 11, "created_at": "2012-06-04", "updated_at": "2014-04-30"}, {"name": "firebreath/firebreath-boost", "stars": 13, "usage_count": 3, "created_at": "2010-11-27", "updated_at": "2017-04-17"}, {"name": "Sigil-Ebook/flightcrew", "stars": 36, "usage_count": 6, "created_at": "2015-03-13", "updated_at": "2019-07-21"}, {"name": "mirror/freedownload", "stars": 35, "usage_count": 1, "created_at": "2013-08-04", "updated_at": "2024-09-28"}, {"name": "vice87/gam-ngs", "stars": 26, "usage_count": 2, "created_at": "2011-10-21", "updated_at": "2023-11-10"}, {"name": "HEP85/game-ai", "stars": 41, "usage_count": 1, "created_at": "2013-12-17", "updated_at": "2015-11-17"}, {"name": "Lyall-X/GameServer", "stars": 20, "usage_count": 1, "created_at": "2019-05-06", "updated_at": "2019-11-05"}, {"name": "nousxiong/gce", "stars": 128, "usage_count": 1, "created_at": "2014-01-25", "updated_at": "2017-07-25"}, {"name": "beiko-lab/gengis", "stars": 29, "usage_count": 1, "created_at": "2013-03-18", "updated_at": "2017-11-09"}, {"name": "goldeneye-source/ges-code", "stars": 208, "usage_count": 1, "created_at": "2014-01-24", "updated_at": "2018-09-27"}, {"name": "strk/gnash", "stars": 81, "usage_count": 3, "created_at": "2010-11-30", "updated_at": "2017-07-05"}, {"name": "trondeau/gnuradio-old", "stars": 26, "usage_count": 2, "created_at": "2010-09-17", "updated_at": "2019-11-29"}, {"name": "kit-cel/gr-drm", "stars": 76, "usage_count": 1, "created_at": "2012-09-14", "updated_at": "2019-11-16"}, {"name": "osmocom/gr-osmosdr", "stars": 328, "usage_count": 4, "created_at": "2014-09-23", "updated_at": "2025-09-23"}, {"name": "FreeSRP/gr-osmosdr", "stars": 21, "usage_count": 4, "created_at": "2016-04-03", "updated_at": "2017-04-19"}, {"name": "csete/gr-osmosdr-gqrx", "stars": 24, "usage_count": 4, "created_at": "2016-09-20", "updated_at": "2018-09-05"}, {"name": "jpenalbae/gr-osmosdr_hackrftcp", "stars": 36, "usage_count": 5, "created_at": "2014-09-04", "updated_at": "2014-09-05"}, {"name": "Freeeaky/GTALua", "stars": 60, "usage_count": 1, "created_at": "2015-04-21", "updated_at": "2016-11-13"}, {"name": "bitcoin-core/gui", "stars": 705, "usage_count": 1, "created_at": "2020-06-16", "updated_at": "2026-03-11"}, {"name": "cvx/hadesmem", "stars": 28, "usage_count": 22, "created_at": "2015-01-08", "updated_at": "2015-01-07"}, {"name": "Nocte-/hexahedra", "stars": 53, "usage_count": 1, "created_at": "2012-08-21", "updated_at": "2014-12-04"}, {"name": "openhive-network/hive", "stars": 373, "usage_count": 3, "created_at": "2020-03-20", "updated_at": "2026-02-20"}, {"name": "HoverRace/HoverRace", "stars": 32, "usage_count": 1, "created_at": "2012-11-12", "updated_at": "2025-03-07"}, {"name": "STEllAR-GROUP/hpx", "stars": 2799, "usage_count": 1, "created_at": "2012-05-26", "updated_at": "2026-03-01"}, {"name": "BlockLink/HX-core", "stars": 13, "usage_count": 5, "created_at": "2017-09-11", "updated_at": "2018-07-24"}, {"name": "sdl-research/hyp", "stars": 31, "usage_count": 1, "created_at": "2014-12-19", "updated_at": "2016-07-09"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 1456, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "hypertable/hypertable", "stars": 268, "usage_count": 1, "created_at": "2011-04-07", "updated_at": "2018-12-21"}, {"name": "vicaya/hypertable", "stars": 115, "usage_count": 1, "created_at": "2008-05-22", "updated_at": "2009-10-02"}, {"name": "hyrise/hyrise", "stars": 860, "usage_count": 1, "created_at": "2017-04-06", "updated_at": "2026-03-10"}, {"name": "zarathustr/icp_mapping_QPEP", "stars": 14, "usage_count": 1, "created_at": "2021-10-02", "updated_at": "2021-10-04"}, {"name": "fungosforks/icq-desktop", "stars": 54, "usage_count": 23, "created_at": "2016-03-15", "updated_at": "2016-03-15"}, {"name": "igatoolsProject/igatools", "stars": 32, "usage_count": 1, "created_at": "2015-03-21", "updated_at": "2016-05-11"}, {"name": "salilab/imp", "stars": 81, "usage_count": 1, "created_at": "2012-06-21", "updated_at": "2026-03-08"}, {"name": "KevinStern/index-cpp", "stars": 78, "usage_count": 1, "created_at": "2013-10-02", "updated_at": "2020-11-28"}, {"name": "hkroeger/insightcae", "stars": 88, "usage_count": 1, "created_at": "2017-09-12", "updated_at": "2025-12-16"}, {"name": "scen/ionlib", "stars": 49, "usage_count": 1, "created_at": "2012-09-03", "updated_at": "2014-01-15"}, {"name": "isis-group/isis", "stars": 18, "usage_count": 1, "created_at": "2010-11-12", "updated_at": "2022-08-24"}, {"name": "wdkk/iSuperColliderKit", "stars": 97, "usage_count": 2, "created_at": "2015-02-02", "updated_at": "2025-02-11"}, {"name": "mathLab/ITHACA-SEM", "stars": 21, "usage_count": 1, "created_at": "2018-06-07", "updated_at": "2022-06-21"}, {"name": "ixray-team/ixray-1.0-stsoc", "stars": 31, "usage_count": 1, "created_at": "2019-06-29", "updated_at": "2025-01-02"}, {"name": "ixray-team/ixray-1.5-stcs", "stars": 36, "usage_count": 1, "created_at": "2019-06-29", "updated_at": "2026-01-29"}, {"name": "izenecloud/izenelib", "stars": 43, "usage_count": 3, "created_at": "2014-09-11", "updated_at": "2015-04-21"}, {"name": "jgresula/jagpdf", "stars": 71, "usage_count": 1, "created_at": "2009-05-08", "updated_at": "2020-11-12"}, {"name": "wwoods/job_stream", "stars": 33, "usage_count": 1, "created_at": "2014-01-11", "updated_at": "2018-07-30"}, {"name": "couchdeveloper/JPJson", "stars": 28, "usage_count": 1, "created_at": "2012-03-22", "updated_at": "2014-11-17"}, {"name": "msesia/knockoffgwas", "stars": 16, "usage_count": 43, "created_at": "2020-07-21", "updated_at": "2022-07-07"}, {"name": "krig/koi", "stars": 12, "usage_count": 1, "created_at": "2012-11-04", "updated_at": "2024-01-11"}, {"name": "kokua/kokua", "stars": 24, "usage_count": 2, "created_at": "2010-11-11", "updated_at": "2011-05-04"}, {"name": "nsimplex/ktools", "stars": 175, "usage_count": 1, "created_at": "2014-04-21", "updated_at": "2021-09-15"}, {"name": "jakeowner/lastbattle", "stars": 55, "usage_count": 6, "created_at": "2017-11-24", "updated_at": "2017-11-24"}, {"name": "kumagi/lfmalloc", "stars": 14, "usage_count": 1, "created_at": "2010-12-13", "updated_at": "2010-12-13"}, {"name": "mrsharpoblunto/LHP", "stars": 27, "usage_count": 1, "created_at": "2012-07-25", "updated_at": "2012-07-25"}, {"name": "alanxz/libamqp-cpp", "stars": 20, "usage_count": 2, "created_at": "2011-09-30", "updated_at": "2011-10-21"}, {"name": "inetic/libclub", "stars": 189, "usage_count": 1, "created_at": "2016-06-02", "updated_at": "2016-10-11"}, {"name": "mstump/libcql", "stars": 32, "usage_count": 1, "created_at": "2012-12-21", "updated_at": "2013-11-18"}, {"name": "danieljoos/libkafka-asio", "stars": 74, "usage_count": 1, "created_at": "2015-02-20", "updated_at": "2017-11-06"}, {"name": "aldebaran/libqi", "stars": 71, "usage_count": 2, "created_at": "2011-12-13", "updated_at": "2024-06-17"}, {"name": "steeve/libtorrent", "stars": 14, "usage_count": 1, "created_at": "2013-11-25", "updated_at": "2014-11-21"}, {"name": "sccn/lsl_archived", "stars": 244, "usage_count": 2, "created_at": "2015-04-04", "updated_at": "2018-11-23"}, {"name": "rpavlik/luabind", "stars": 74, "usage_count": 1, "created_at": "2010-09-09", "updated_at": "2023-04-03"}, {"name": "Oberon00/luabind", "stars": 47, "usage_count": 1, "created_at": "2012-09-16", "updated_at": "2022-02-19"}, {"name": "luabind/luabind", "stars": 346, "usage_count": 1, "created_at": "2008-07-30", "updated_at": "2020-05-24"}, {"name": "computationalgeography/lue", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "WohlSoft/LunaLua", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "WohlSoft/LunaLUA", "stars": 37, "usage_count": 1, "created_at": "2014-09-08", "updated_at": "2025-10-01"}, {"name": "LUX-Core/lux", "stars": 3759, "usage_count": 3, "created_at": "2018-07-27", "updated_at": "2021-07-14"}, {"name": "LuxCoreRender/LuxCore", "stars": 0, "usage_count": 6, "created_at": "", "updated_at": ""}, {"name": "lvv/lvvlib", "stars": 24, "usage_count": 1, "created_at": "2008-11-29", "updated_at": "2014-01-03"}, {"name": "LiMinggang/madedit-mod", "stars": 132, "usage_count": 9, "created_at": "2013-06-27", "updated_at": "2025-11-10"}, {"name": "SeisComP/main", "stars": 12, "usage_count": 2, "created_at": "2020-03-26", "updated_at": "2026-03-11"}, {"name": "xdlianrong/Maskchain", "stars": 19, "usage_count": 1, "created_at": "2018-11-08", "updated_at": "2019-08-17"}, {"name": "wisk/medusa", "stars": 1080, "usage_count": 1, "created_at": "2011-12-01", "updated_at": "2019-09-16"}, {"name": "mvs-org/metaverse", "stars": 306, "usage_count": 1, "created_at": "2016-10-30", "updated_at": "2023-02-25"}, {"name": "the-metaverse/metaverse", "stars": 306, "usage_count": 1, "created_at": "2016-10-30", "updated_at": "2023-02-25"}, {"name": "metrixplusplus/metrixplusplus", "stars": 86, "usage_count": 18, "created_at": "2019-04-02", "updated_at": "2024-03-29"}, {"name": "shendurelab/MIPGEN", "stars": 24, "usage_count": 1, "created_at": "2014-01-22", "updated_at": "2020-09-30"}, {"name": "nmaier/mkvtoolnix", "stars": 208, "usage_count": 1, "created_at": "2011-11-29", "updated_at": "2015-10-07"}, {"name": "nyanp/mnisten", "stars": 62, "usage_count": 1, "created_at": "2015-05-07", "updated_at": "2016-01-17"}, {"name": "PointCloudLibrary/mobile", "stars": 24, "usage_count": 1, "created_at": "2013-09-01", "updated_at": "2014-07-31"}, {"name": "kikairoya/modern-git", "stars": 13, "usage_count": 1, "created_at": "2010-05-17", "updated_at": "2010-08-27"}, {"name": "thelink2012/modloader", "stars": 339, "usage_count": 1, "created_at": "2013-11-17", "updated_at": "2021-02-27"}, {"name": "Tokutek/mongo", "stars": 703, "usage_count": 1, "created_at": "2013-03-12", "updated_at": "2017-10-11"}, {"name": "Barryrowe/mongo-arm", "stars": 64, "usage_count": 1, "created_at": "2013-12-21", "updated_at": "2016-08-24"}, {"name": "harishd10/mongodb", "stars": 20, "usage_count": 1, "created_at": "2014-10-31", "updated_at": "2016-05-05"}, {"name": "graydon/monotone", "stars": 78, "usage_count": 1, "created_at": "2014-01-28", "updated_at": "2014-01-29"}, {"name": "ccutrer/mordor", "stars": 21, "usage_count": 1, "created_at": "2010-10-20", "updated_at": "2017-09-09"}, {"name": "mozy/mordor", "stars": 352, "usage_count": 1, "created_at": "2010-05-21", "updated_at": "2018-02-06"}, {"name": "motocoin-dev/motocoin", "stars": 19, "usage_count": 1, "created_at": "2014-04-10", "updated_at": "2017-08-19"}, {"name": "LORD-MicroStrain/MSCL", "stars": 0, "usage_count": 4, "created_at": "", "updated_at": ""}, {"name": "philippremy/MTL-AliceVision", "stars": 11, "usage_count": 2, "created_at": "2025-07-25", "updated_at": "2026-01-12"}, {"name": "johnoneil/mupen64plus-web", "stars": 17, "usage_count": 8, "created_at": "2015-12-14", "updated_at": "2018-03-21"}, {"name": "wwylab/MuSE", "stars": 34, "usage_count": 1, "created_at": "2017-10-02", "updated_at": "2026-01-07"}, {"name": "mining-visualizer/MVis-tokenminer", "stars": 22, "usage_count": 2, "created_at": "2018-03-15", "updated_at": "2022-01-03"}, {"name": "larroy/mycelium", "stars": 87, "usage_count": 1, "created_at": "2011-11-21", "updated_at": "2023-06-22"}, {"name": "OriginHubAI/MyScaleDB", "stars": 206, "usage_count": 1, "created_at": "2025-07-16", "updated_at": "2026-01-05"}, {"name": "ydb-platform/nbs", "stars": 100, "usage_count": 1, "created_at": "2023-03-14", "updated_at": "2026-03-11"}, {"name": "CESNET/netconf-cli", "stars": 17, "usage_count": 1, "created_at": "2020-01-08", "updated_at": "2026-01-19"}, {"name": "timblechmann/nova-simd", "stars": 51, "usage_count": 1, "created_at": "2012-05-06", "updated_at": "2025-11-27"}, {"name": "noxrepo/nox", "stars": 145, "usage_count": 3, "created_at": "2012-04-16", "updated_at": "2014-02-14"}, {"name": "LiXizhi/NPLRuntime", "stars": 272, "usage_count": 2, "created_at": "2015-08-10", "updated_at": "2026-01-09"}, {"name": "antimodular/ofxPCL", "stars": 29, "usage_count": 1, "created_at": "2016-03-26", "updated_at": "2016-12-26"}, {"name": "mapsme/omim", "stars": 4608, "usage_count": 1, "created_at": "2015-09-20", "updated_at": "2022-10-05"}, {"name": "tu-rbo/omip", "stars": 29, "usage_count": 1, "created_at": "2016-11-03", "updated_at": "2020-01-16"}, {"name": "diva/OnLook", "stars": 15, "usage_count": 1, "created_at": "2014-10-30", "updated_at": "2014-12-04"}, {"name": "devsarr/ONLYOFFICE-OnlineEditors", "stars": 14, "usage_count": 1, "created_at": "2014-12-17", "updated_at": "2014-12-17"}, {"name": "apoloval/open-airbus-cockpit", "stars": 15, "usage_count": 1, "created_at": "2012-07-02", "updated_at": "2014-11-17"}, {"name": "paps/Open-Trading", "stars": 31, "usage_count": 2, "created_at": "2011-12-19", "updated_at": "2017-02-23"}, {"name": "OpenMS/OpenMS", "stars": 565, "usage_count": 1, "created_at": "2014-01-09", "updated_at": "2026-02-23"}, {"name": "AMDmi3/openstrike", "stars": 71, "usage_count": 1, "created_at": "2014-02-05", "updated_at": "2024-08-12"}, {"name": "antoche/openvibe", "stars": 38, "usage_count": 1, "created_at": "2012-06-16", "updated_at": "2012-06-16"}, {"name": "JimmieKJ/osgQTWidget", "stars": 61, "usage_count": 2, "created_at": "2018-07-14", "updated_at": "2018-07-16"}, {"name": "osquery/osquery", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "OSVR/OSVR-Core", "stars": 338, "usage_count": 1, "created_at": "2014-10-21", "updated_at": "2019-06-06"}, {"name": "OSVR/OSVR-Unreal", "stars": 89, "usage_count": 1, "created_at": "2015-01-25", "updated_at": "2017-12-01"}, {"name": "faithandbrave/OvenToBoost", "stars": 29, "usage_count": 27, "created_at": "2011-02-20", "updated_at": "2014-05-13"}, {"name": "guangzhuwu/p2engine", "stars": 28, "usage_count": 2, "created_at": "2013-09-11", "updated_at": "2023-12-06"}, {"name": "erikogan/passenger", "stars": 19, "usage_count": 1, "created_at": "2010-11-25", "updated_at": "2014-09-01"}, {"name": "RufaelDev/pcc-mp3dg", "stars": 19, "usage_count": 2, "created_at": "2015-04-02", "updated_at": "2017-11-20"}, {"name": "otherlab/pcl", "stars": 71, "usage_count": 2, "created_at": "2012-09-01", "updated_at": "2012-09-01"}, {"name": "leggedrobotics/perfectlyconstrained", "stars": 125, "usage_count": 1, "created_at": "2024-07-08", "updated_at": "2025-05-14"}, {"name": "FirestormViewer/phoenix-firestorm", "stars": 94, "usage_count": 1, "created_at": "2022-08-12", "updated_at": "2026-03-10"}, {"name": "pika-org/pika", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "yet-another-user/pimpl", "stars": 37, "usage_count": 1, "created_at": "2016-05-27", "updated_at": "2018-05-03"}, {"name": "LiveStockShapeAnalysis/Point-Cloud-Processing-example", "stars": 519, "usage_count": 1, "created_at": "2019-02-25", "updated_at": "2021-09-04"}, {"name": "horizon-research/PointCloud-pipeline", "stars": 99, "usage_count": 2, "created_at": "2018-09-21", "updated_at": "2020-08-11"}, {"name": "ANYbotics/pointmatcher-ros", "stars": 15, "usage_count": 1, "created_at": "2015-02-13", "updated_at": "2026-02-17"}, {"name": "maciekgajewski/postgresbson", "stars": 29, "usage_count": 1, "created_at": "2012-12-26", "updated_at": "2013-12-12"}, {"name": "brycelelbach/prana", "stars": 25, "usage_count": 1, "created_at": "2010-10-12", "updated_at": "2011-06-12"}, {"name": "wangchen/Programming-Game-AI-by-Example-src", "stars": 468, "usage_count": 1, "created_at": "2014-08-28", "updated_at": "2022-08-12"}, {"name": "timeplus-io/proton", "stars": 2160, "usage_count": 1, "created_at": "2023-08-14", "updated_at": "2026-03-11"}, {"name": "yahoo/pulsar", "stars": 15014, "usage_count": 1, "created_at": "2016-06-28", "updated_at": "2025-12-19"}, {"name": "mfaithfull/QOR", "stars": 11, "usage_count": 5, "created_at": "2016-03-03", "updated_at": "2017-10-17"}, {"name": "usnistgov/qpx-gamma", "stars": 19, "usage_count": 4, "created_at": "2015-03-31", "updated_at": "2019-04-17"}, {"name": "radekp/qt", "stars": 40, "usage_count": 6, "created_at": "2009-12-02", "updated_at": "2012-12-23"}, {"name": "svalaskevicius/qtjs-generator", "stars": 38, "usage_count": 1, "created_at": "2013-01-27", "updated_at": "2024-06-18"}, {"name": "EPfaehler/RaCat", "stars": 22, "usage_count": 1, "created_at": "2018-12-18", "updated_at": "2020-08-11"}, {"name": "rdkit/rdkit", "stars": 3213, "usage_count": 1, "created_at": "2013-05-12", "updated_at": "2025-12-15"}, {"name": "rdkit/rdkit-orig", "stars": 23, "usage_count": 2, "created_at": "2012-08-17", "updated_at": "2018-07-24"}, {"name": "rinikerlab/RDKit_mETKDG", "stars": 11, "usage_count": 1, "created_at": "2019-06-14", "updated_at": "2019-06-15"}, {"name": "jszhtian/Re_Call", "stars": 15, "usage_count": 2, "created_at": "2024-12-12", "updated_at": "2024-12-12"}, {"name": "BlackEdder/realtimeplot", "stars": 26, "usage_count": 1, "created_at": "2015-02-16", "updated_at": "2015-02-16"}, {"name": "adamhooper/refinery", "stars": 12, "usage_count": 1, "created_at": "2010-12-13", "updated_at": "2013-09-05"}, {"name": "srh/refound", "stars": 33, "usage_count": 2, "created_at": "2022-09-06", "updated_at": "2025-08-07"}, {"name": "weyrick/roadsend-php-raven", "stars": 96, "usage_count": 2, "created_at": "2012-01-16", "updated_at": "2012-02-08"}, {"name": "RosettaCommons/rosetta", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "sknepneklab/SAMoS", "stars": 31, "usage_count": 1, "created_at": "2016-09-27", "updated_at": "2025-04-16"}, {"name": "scalan/scalan", "stars": 96, "usage_count": 1, "created_at": "2014-08-27", "updated_at": "2017-12-09"}, {"name": "scylladb/scylla", "stars": 15146, "usage_count": 2, "created_at": "2014-12-24", "updated_at": "2025-12-19"}, {"name": "scylladb/scylladb", "stars": 15358, "usage_count": 1, "created_at": "2014-12-24", "updated_at": "2026-02-20"}, {"name": "SDChain/SDChain-Core", "stars": 35, "usage_count": 5, "created_at": "2018-02-01", "updated_at": "2019-04-29"}, {"name": "sdhash/sdhash", "stars": 177, "usage_count": 31, "created_at": "2013-10-10", "updated_at": "2020-10-16"}, {"name": "cloudius-systems/seastar", "stars": 9025, "usage_count": 1, "created_at": "2014-08-18", "updated_at": "2025-12-16"}, {"name": "scylladb/seastar", "stars": 9138, "usage_count": 3, "created_at": "2014-08-18", "updated_at": "2026-02-25"}, {"name": "bastosmichael/semantic-web-crawler", "stars": 13, "usage_count": 9, "created_at": "2012-03-19", "updated_at": "2012-06-02"}, {"name": "AliAyub007/SENDA", "stars": 15, "usage_count": 2, "created_at": "2018-07-12", "updated_at": "2018-11-08"}, {"name": "EQEmu/Server", "stars": 589, "usage_count": 1, "created_at": "2013-01-18", "updated_at": "2025-12-14"}, {"name": "mmycly/serverTwo", "stars": 25, "usage_count": 13, "created_at": "2019-03-21", "updated_at": "2019-03-20"}, {"name": "faithandbrave/Shand", "stars": 25, "usage_count": 20, "created_at": "2010-04-09", "updated_at": "2017-03-31"}, {"name": "skarupke/sherwood_map", "stars": 52, "usage_count": 4, "created_at": "2014-05-03", "updated_at": "2014-05-31"}, {"name": "myiosemail/ShowTimeVideoLive", "stars": 253, "usage_count": 26, "created_at": "2016-06-22", "updated_at": "2016-07-07"}, {"name": "IRCAD/sight", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "siriuscore/sirius-old", "stars": 21, "usage_count": 1, "created_at": "2017-12-23", "updated_at": "2019-03-12"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 5, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "pothosware/SoapyOsmo", "stars": 17, "usage_count": 4, "created_at": "2015-04-07", "updated_at": "2025-10-09"}, {"name": "sonic-pi-net/sonic-pi", "stars": 11675, "usage_count": 1, "created_at": "2013-04-29", "updated_at": "2026-02-04"}, {"name": "b6oy/SP2-Server", "stars": 22, "usage_count": 38, "created_at": "2017-01-24", "updated_at": "2017-01-24"}, {"name": "boost-spirit/spirit", "stars": 12, "usage_count": 39, "created_at": "2011-01-17", "updated_at": "2011-01-20"}, {"name": "morrey/STALKER-SOC-DX10", "stars": 11, "usage_count": 1, "created_at": "2018-01-28", "updated_at": "2018-02-22"}, {"name": "qianyizh/StanfordPCL", "stars": 49, "usage_count": 2, "created_at": "2015-07-23", "updated_at": "2015-07-23"}, {"name": "viboes/std-make", "stars": 108, "usage_count": 144, "created_at": "2014-10-04", "updated_at": "2019-05-06"}, {"name": "steemit/steem", "stars": 1955, "usage_count": 5, "created_at": "2016-03-23", "updated_at": "2026-01-15"}, {"name": "Sciss/supercollider", "stars": 19, "usage_count": 1, "created_at": "2014-02-21", "updated_at": "2023-07-10"}, {"name": "sensestage/supercollider", "stars": 15, "usage_count": 1, "created_at": "2013-02-20", "updated_at": "2025-10-25"}, {"name": "samaaron/supersonic", "stars": 162, "usage_count": 1, "created_at": "2025-10-20", "updated_at": "2026-03-10"}, {"name": "pabristow/svg_plot", "stars": 26, "usage_count": 4, "created_at": "2014-03-25", "updated_at": "2021-07-30"}, {"name": "jpmorganchase/swblocks-baselib", "stars": 34, "usage_count": 1, "created_at": "2017-01-26", "updated_at": "2021-09-08"}, {"name": "alamaison/swish", "stars": 236, "usage_count": 4, "created_at": "2011-07-13", "updated_at": "2021-02-09"}, {"name": "hdwiv/swviz", "stars": 11, "usage_count": 1, "created_at": "2014-10-28", "updated_at": "2014-10-30"}, {"name": "viboes/tags", "stars": 11, "usage_count": 8, "created_at": "2014-11-10", "updated_at": "2018-04-02"}, {"name": "hongzhongx/taiyi", "stars": 62, "usage_count": 1, "created_at": "2024-10-26", "updated_at": "2026-01-21"}, {"name": "teknogods/TeknoMW3", "stars": 55, "usage_count": 1, "created_at": "2012-09-23", "updated_at": "2012-09-27"}, {"name": "TritonNetworking/themis_tritonsort", "stars": 11, "usage_count": 1, "created_at": "2015-08-08", "updated_at": "2017-11-02"}, {"name": "aws/thinkbox-library", "stars": 19, "usage_count": 1, "created_at": "2022-11-14", "updated_at": "2022-12-16"}, {"name": "aws/thinkbox-magma", "stars": 13, "usage_count": 2, "created_at": "2022-11-14", "updated_at": "2022-12-16"}, {"name": "xcore/tool_axe", "stars": 16, "usage_count": 1, "created_at": "2011-07-17", "updated_at": "2018-05-30"}, {"name": "torc-isi/torc", "stars": 39, "usage_count": 1, "created_at": "2015-07-29", "updated_at": "2017-04-12"}, {"name": "leapmotion/touchless", "stars": 19, "usage_count": 1, "created_at": "2016-10-05", "updated_at": "2016-10-31"}, {"name": "breese/trial.circular", "stars": 12, "usage_count": 1, "created_at": "2019-05-14", "updated_at": "2024-05-24"}, {"name": "breese/trial.protocol", "stars": 11, "usage_count": 1, "created_at": "2015-06-03", "updated_at": "2025-09-28"}, {"name": "TrunkRecorder/trunk-recorder", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "VietTho1989/TurnBasedGame", "stars": 45, "usage_count": 2, "created_at": "2019-01-24", "updated_at": "2019-07-31"}, {"name": "mat007/turtle", "stars": 51, "usage_count": 1, "created_at": "2015-03-01", "updated_at": "2025-08-24"}, {"name": "kosenko/ui", "stars": 280, "usage_count": 12, "created_at": "2017-09-26", "updated_at": "2022-08-16"}, {"name": "tklab-tud/umundo", "stars": 46, "usage_count": 1, "created_at": "2011-08-13", "updated_at": "2017-01-06"}, {"name": "v-dimension/vds-core", "stars": 75, "usage_count": 3, "created_at": "2019-04-25", "updated_at": "2021-08-02"}, {"name": "viamrobotics/viam-cpp-sdk", "stars": 12, "usage_count": 1, "created_at": "2022-10-17", "updated_at": "2026-03-11"}, {"name": "wallscavesurvey/walls", "stars": 23, "usage_count": 28, "created_at": "2017-02-18", "updated_at": "2025-09-13"}, {"name": "alamaison/washer", "stars": 38, "usage_count": 5, "created_at": "2011-05-24", "updated_at": "2016-04-03"}, {"name": "rime/weasel", "stars": 6838, "usage_count": 1, "created_at": "2012-03-20", "updated_at": "2026-03-06"}, {"name": "wangcy6/weekly", "stars": 12, "usage_count": 1, "created_at": "2018-12-07", "updated_at": "2022-08-03"}, {"name": "ckormanyos/wide-integer", "stars": 212, "usage_count": 1, "created_at": "2018-10-13", "updated_at": "2026-02-22"}, {"name": "Mrsandman327/windows-book-code-c-", "stars": 72, "usage_count": 2, "created_at": "2019-05-29", "updated_at": "2019-05-29"}, {"name": "OzzieIsaacs/winmerge-qt", "stars": 13, "usage_count": 3, "created_at": "2019-08-10", "updated_at": "2021-04-05"}, {"name": "Wolframe/Wolframe", "stars": 13, "usage_count": 4, "created_at": "2010-02-11", "updated_at": "2014-11-15"}, {"name": "bootphon/wordseg", "stars": 19, "usage_count": 1, "created_at": "2017-05-06", "updated_at": "2021-01-27"}, {"name": "mloskot/workshop", "stars": 20, "usage_count": 2, "created_at": "2009-05-04", "updated_at": "2018-03-29"}, {"name": "Selenium/wow-emulator-archive", "stars": 18, "usage_count": 2, "created_at": "2017-11-16", "updated_at": "2021-09-16"}, {"name": "xrModder/X-Ray", "stars": 14, "usage_count": 1, "created_at": "2023-01-27", "updated_at": "2025-05-18"}, {"name": "Xahau/xahaud", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "xiaobai9978/xiaobai-t9", "stars": 42, "usage_count": 1, "created_at": "2020-06-02", "updated_at": "2025-11-24"}, {"name": "highpower/xiva", "stars": 97, "usage_count": 6, "created_at": "2010-03-21", "updated_at": "2011-11-14"}, {"name": "mortany/xray", "stars": 16, "usage_count": 20, "created_at": "2020-08-19", "updated_at": "2021-07-04"}, {"name": "OpenXRay/xray-15", "stars": 178, "usage_count": 1, "created_at": "2014-08-22", "updated_at": "2025-07-04"}, {"name": "v2v3v4/xray-csky", "stars": 11, "usage_count": 1, "created_at": "2022-06-09", "updated_at": "2022-06-08"}, {"name": "Roman-n/xray-monolith__", "stars": 14, "usage_count": 1, "created_at": "2021-02-03", "updated_at": "2021-02-03"}, {"name": "abramcumner/xray16", "stars": 34, "usage_count": 1, "created_at": "2016-08-29", "updated_at": "2025-09-14"}, {"name": "XRPL-Labs/xrpld-hooks", "stars": 114, "usage_count": 1, "created_at": "2020-07-24", "updated_at": "2023-07-04"}, {"name": "wojdyr/xylib", "stars": 69, "usage_count": 1, "created_at": "2013-04-22", "updated_at": "2022-12-20"}, {"name": "alucard-dracula/yggdrasil", "stars": 50, "usage_count": 4, "created_at": "2014-08-24", "updated_at": "2026-01-16"}, {"name": "snakeleon/YouCompleteMe-x86", "stars": 23, "usage_count": 6, "created_at": "2015-01-29", "updated_at": "2022-11-26"}, {"name": "ytsaurus/ytsaurus", "stars": 2133, "usage_count": 1, "created_at": "2022-12-05", "updated_at": "2026-03-11"}, {"name": "ZephyrProtocol/zephyr", "stars": 146, "usage_count": 1, "created_at": "2023-05-25", "updated_at": "2025-06-11"}, {"name": "zettel-kasten/zettelkasten", "stars": 24, "usage_count": 1, "created_at": "2018-03-27", "updated_at": "2022-04-29"}, {"name": "wubenqi/zutils", "stars": 19, "usage_count": 1, "created_at": "2014-11-28", "updated_at": "2015-03-12"}];
+    const contribRows = [{"version": "boost-1.89.0", "person": "Lastique", "commit_count": 9}, {"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.86.0", "person": "Lastique", "commit_count": 3}, {"version": "boost-1.85.0", "person": "Lastique", "commit_count": 3}, {"version": "boost-1.84.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.83.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.81.0", "person": "Lastique", "commit_count": 7}, {"version": "boost-1.79.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Lastique", "commit_count": 9}, {"version": "boost-1.78.0", "person": "Robert Ramey", "commit_count": 2}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.76.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.76.0", "person": "glenfe", "commit_count": 1}, {"version": "boost-1.74.0", "person": "Lastique", "commit_count": 12}, {"version": "boost-1.74.0", "person": "eldiener", "commit_count": 3}, {"version": "boost-1.73.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.72.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.71.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.70.0", "person": "Lastique", "commit_count": 8}, {"version": "boost-1.70.0", "person": "MarcelRaad", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.68.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.67.0", "person": "danieljames", "commit_count": 8}, {"version": "boost-1.67.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.67.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.66.0", "person": "Lastique", "commit_count": 7}, {"version": "boost-1.66.0", "person": "Beman Dawes", "commit_count": 2}, {"version": "boost-1.66.0", "person": "Robert Ramey", "commit_count": 1}, {"version": "boost-1.66.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Robert Ramey", "commit_count": 1}, {"version": "boost-1.63.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.62.0", "person": "grafikrobot", "commit_count": 3}, {"version": "boost-1.62.0", "person": "danieljames", "commit_count": 2}, {"version": "boost-1.62.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.62.0", "person": "Robert Ramey", "commit_count": 1}, {"version": "boost-1.61.0", "person": "Robert Ramey", "commit_count": 7}, {"version": "boost-1.60.0", "person": "Robert Ramey", "commit_count": 2}, {"version": "boost-1.58.0", "person": "Lastique", "commit_count": 4}, {"version": "boost-1.58.0", "person": "eldiener", "commit_count": 3}, {"version": "boost-1.58.0", "person": "Robert Ramey", "commit_count": 1}, {"version": "boost-1.58.0", "person": "Beman Dawes", "commit_count": 1}, {"version": "boost-1.57.0", "person": "Beman Dawes", "commit_count": 2}, {"version": "boost-1.56.0", "person": "Peter Dimov", "commit_count": 13}, {"version": "boost-1.56.0", "person": "Lastique", "commit_count": 12}, {"version": "boost-1.56.0", "person": "Robert Ramey", "commit_count": 5}, {"version": "boost-1.56.0", "person": "danieljames", "commit_count": 4}, {"version": "boost-1.56.0", "person": "stgates", "commit_count": 3}, {"version": "boost-1.56.0", "person": "glenfe", "commit_count": 1}, {"version": "boost-1.56.0", "person": "Andrey Semashev", "commit_count": 1}, {"version": "boost-1.56.0", "person": "Kirk Shoop (MS OPEN TECH)", "commit_count": 1}, {"version": "boost-1.55.0", "person": "Lastique", "commit_count": 18}, {"version": "boost-1.55.0", "person": "Stephen Kelly", "commit_count": 13}, {"version": "boost-1.55.0", "person": "Robert Ramey", "commit_count": 3}, {"version": "boost-1.55.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.55.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.55.0", "person": "joaquintides", "commit_count": 1}, {"version": "boost-1.55.0", "person": "Tim Blechmann", "commit_count": 1}, {"version": "boost-1.54.0", "person": "jzmaddock", "commit_count": 6}, {"version": "boost-1.54.0", "person": "igaztanaga", "commit_count": 2}, {"version": "boost-1.53.0", "person": "mclow", "commit_count": 4}, {"version": "boost-1.52.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.52.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.52.0", "person": "Vicente J. Botet Escriba", "commit_count": 2}, {"version": "boost-1.52.0", "person": "jhunold", "commit_count": 1}, {"version": "boost-1.52.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.51.0", "person": "Vicente J. Botet Escriba", "commit_count": 3}, {"version": "boost-1.50.0", "person": "danieljames", "commit_count": 3}, {"version": "boost-1.50.0", "person": "Vicente J. Botet Escriba", "commit_count": 2}, {"version": "boost-1.50.0", "person": "Anthony Williams", "commit_count": 2}, {"version": "boost-1.50.0", "person": "dabrahams", "commit_count": 2}, {"version": "boost-1.49.0", "person": "danieljames", "commit_count": 7}, {"version": "boost-1.49.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.49.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.48.0", "person": "danieljames", "commit_count": 5}, {"version": "boost-1.48.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.47.0", "person": "danieljames", "commit_count": 4}, {"version": "boost-1.47.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.47.0", "person": "Anthony Williams", "commit_count": 2}, {"version": "boost-1.47.0", "person": "Vicente J. Botet Escriba", "commit_count": 2}, {"version": "boost-1.47.0", "person": "DaveDeakins", "commit_count": 1}, {"version": "boost-1.47.0", "person": "jewillco", "commit_count": 1}, {"version": "boost-1.46.0", "person": "Bryce Adelstein Lelbach aka wash", "commit_count": 10}, {"version": "boost-1.46.0", "person": "Beman Dawes", "commit_count": 7}, {"version": "boost-1.46.0", "person": "swatanabe", "commit_count": 3}, {"version": "boost-1.46.0", "person": "ChrisJefferson", "commit_count": 2}, {"version": "boost-1.46.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.46.0", "person": "Vicente J. Botet Escriba", "commit_count": 2}, {"version": "boost-1.46.0", "person": "hkaiser", "commit_count": 1}, {"version": "boost-1.46.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.45.0", "person": "Beman Dawes", "commit_count": 3}, {"version": "boost-1.45.0", "person": "Bryce Adelstein Lelbach aka wash", "commit_count": 1}, {"version": "boost-1.45.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.45.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.44.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.44.0", "person": "Anthony Williams", "commit_count": 1}, {"version": "boost-1.44.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.43.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.42.0", "person": "jewillco", "commit_count": 2}, {"version": "boost-1.42.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.42.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.41.0", "person": "straszheim", "commit_count": 4}, {"version": "boost-1.40.0", "person": "Beman Dawes", "commit_count": 6}, {"version": "boost-1.40.0", "person": "danieljames", "commit_count": 4}, {"version": "boost-1.40.0", "person": "straszheim", "commit_count": 2}, {"version": "boost-1.40.0", "person": "vprus", "commit_count": 1}, {"version": "boost-1.40.0", "person": "joaquintides", "commit_count": 1}, {"version": "boost-1.39.0", "person": "Peter Dimov", "commit_count": 4}, {"version": "boost-1.39.0", "person": "Beman Dawes", "commit_count": 4}, {"version": "boost-1.39.0", "person": "danieljames", "commit_count": 3}, {"version": "boost-1.39.0", "person": "joaquintides", "commit_count": 1}, {"version": "boost-1.38.0", "person": "Beman Dawes", "commit_count": 4}, {"version": "boost-1.38.0", "person": "danieljames", "commit_count": 3}, {"version": "boost-1.38.0", "person": "straszheim", "commit_count": 1}, {"version": "boost-1.37.0", "person": "gennaroprota", "commit_count": 2}, {"version": "boost-1.37.0", "person": "imikejackson", "commit_count": 1}, {"version": "boost-1.37.0", "person": "mclow", "commit_count": 1}, {"version": "boost-1.37.0", "person": "Robert Ramey", "commit_count": 1}, {"version": "boost-1.37.0", "person": "joaquintides", "commit_count": 1}, {"version": "boost-1.36.0", "person": "Peter Dimov", "commit_count": 4}, {"version": "boost-1.36.0", "person": "joaquintides", "commit_count": 2}, {"version": "boost-1.36.0", "person": "Robert Ramey", "commit_count": 2}, {"version": "boost-1.36.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.36.0", "person": "turkanis", "commit_count": 1}, {"version": "boost-1.36.0", "person": "mclow", "commit_count": 1}, {"version": "boost-1.35.0", "person": "Beman Dawes", "commit_count": 4}, {"version": "boost-1.35.0", "person": "joaquintides", "commit_count": 1}, {"version": "boost-1.35.0", "person": "Anthony Williams", "commit_count": 1}, {"version": "boost-1.34.0", "person": "dabrahams", "commit_count": 9}, {"version": "boost-1.34.0", "person": "Anthony Williams", "commit_count": 8}, {"version": "boost-1.34.0", "person": "Andreas Huber", "commit_count": 6}, {"version": "boost-1.34.0", "person": "jzmaddock", "commit_count": 6}, {"version": "boost-1.34.0", "person": "Peter Dimov", "commit_count": 4}, {"version": "boost-1.34.0", "person": "turkanis", "commit_count": 2}, {"version": "boost-1.34.0", "person": "Beman Dawes", "commit_count": 2}, {"version": "boost-1.34.0", "person": "gennaroprota", "commit_count": 2}, {"version": "boost-1.34.0", "person": "Ralf W. Grosse-Kunstleve", "commit_count": 1}, {"version": "boost-1.34.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.34.0", "person": "Eric Friedman", "commit_count": 1}, {"version": "boost-1.34.0", "person": "rxg", "commit_count": 1}, {"version": "boost-1.34.0", "person": "AlisdairM", "commit_count": 1}, {"version": "boost-1.34.0", "person": "matthiastroyer", "commit_count": 1}, {"version": "boost-1.33.0", "person": "Peter Dimov", "commit_count": 3}, {"version": "boost-1.33.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.33.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.33.0", "person": "Robert Ramey", "commit_count": 2}, {"version": "boost-1.33.0", "person": "dabrahams", "commit_count": 2}, {"version": "boost-1.33.0", "person": "turkanis", "commit_count": 2}, {"version": "boost-1.33.0", "person": "Caleb Epstein", "commit_count": 1}, {"version": "boost-1.33.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.33.0", "person": "vprus", "commit_count": 1}, {"version": "boost-1.33.0", "person": "joaquintides", "commit_count": 1}, {"version": "boost-1.32.0", "person": "Robert Ramey", "commit_count": 8}, {"version": "boost-1.32.0", "person": "jzmaddock", "commit_count": 7}, {"version": "boost-1.32.0", "person": "joaquintides", "commit_count": 6}, {"version": "boost-1.32.0", "person": "DougGregor", "commit_count": 4}, {"version": "boost-1.32.0", "person": "gennaroprota", "commit_count": 3}, {"version": "boost-1.32.0", "person": "dabrahams", "commit_count": 3}, {"version": "boost-1.32.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.32.0", "person": "Aleksey Gurtovoy", "commit_count": 1}, {"version": "boost-1.32.0", "person": "Stefan Slapeta", "commit_count": 1}, {"version": "boost-1.32.0", "person": "jsiek", "commit_count": 1}, {"version": "boost-1.31.0", "person": "dabrahams", "commit_count": 10}, {"version": "boost-1.31.0", "person": "Eric Friedman", "commit_count": 8}, {"version": "boost-1.31.0", "person": "jzmaddock", "commit_count": 4}, {"version": "boost-1.31.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.31.0", "person": "gennaroprota", "commit_count": 2}, {"version": "boost-1.31.0", "person": "Beman Dawes", "commit_count": 1}, {"version": "boost-1.31.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.31.0", "person": "jensmaurer", "commit_count": 1}, {"version": "boost-1.30.0", "person": "Peter Dimov", "commit_count": 6}, {"version": "boost-1.30.0", "person": "dabrahams", "commit_count": 6}, {"version": "boost-1.30.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.30.0", "person": "Beman Dawes", "commit_count": 1}, {"version": "boost-1.29.0", "person": "dabrahams", "commit_count": 3}, {"version": "boost-1.29.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.29.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.29.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.29.0", "person": "Aleksey Gurtovoy", "commit_count": 1}, {"version": "boost-1.28.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.28.0", "person": "jensmaurer", "commit_count": 1}, {"version": "boost-1.28.0", "person": "Beman Dawes", "commit_count": 1}, {"version": "boost-1.27.0", "person": "dabrahams", "commit_count": 2}, {"version": "boost-1.27.0", "person": "Ralf W. Grosse-Kunstleve", "commit_count": 1}, {"version": "boost-1.26.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.26.0", "person": "dabrahams", "commit_count": 1}, {"version": "boost-1.25.0", "person": "jzmaddock", "commit_count": 4}, {"version": "boost-1.25.0", "person": "jsiek", "commit_count": 2}, {"version": "boost-1.25.0", "person": "jensmaurer", "commit_count": 1}, {"version": "boost-1.24.0", "person": "dabrahams", "commit_count": 1}, {"version": "boost-1.24.0", "person": "jensmaurer", "commit_count": 1}, {"version": "boost-1.24.0", "person": "Darin Adler", "commit_count": 1}, {"version": "boost-1.23.0", "person": "Beman Dawes", "commit_count": 1}, {"version": "boost-1.23.0", "person": "jsiek", "commit_count": 1}, {"version": "boost-1.22.0", "person": "jsiek", "commit_count": 3}, {"version": "boost-1.22.0", "person": "jensmaurer", "commit_count": 1}, {"version": "boost-1.21.0", "person": "dabrahams", "commit_count": 28}, {"version": "boost-1.21.0", "person": "jsiek", "commit_count": 6}, {"version": "boost-1.21.0", "person": "jensmaurer", "commit_count": 2}, {"version": "boost-1.21.0", "person": "Beman Dawes", "commit_count": 2}, {"version": "boost-1.21.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.19.0", "person": "jsiek", "commit_count": 1}, {"version": "boost-1.18.0", "person": "jsiek", "commit_count": 2}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 37, 36, 38, 39, 40, 40, 40, 40, 40, 40, 41, 45, 48, 48, 48, 48, 48, 51, 54, 56, 25, 25, 24, 24, 24, 24, 24, 24, 24, 23, 23, 23, 23, 23, 22, 21, 21, 21, 21, 22, 21, 20, 20, 20, 19, 18, 18, 18, 18, 18, 18, 17, 17, 17, 17];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 73, 74, 76, 77, 77, 78, 79, 79, 81, 81, 82, 86, 89, 90, 91, 92, 92, 97, 100, 100, 75, 76, 74, 74, 74, 77, 78, 78, 79, 99, 100, 89, 90, 98, 98, 97, 97, 99, 99, 107, 100, 91, 90, 90, 90, 76, 77, 77, 78, 78, 77, 75, 73, 73, 73];
+    const usageYears = ["2005", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [0, 0, 3, 10, 85, 1551, 79, 84, 235, 89, 186, 129, 38, 51, 82, 5, 32, 7, 8, 28, 0];
+    const byUpdated = [2, 1, 13, 16, 24, 42, 96, 125, 1514, 49, 207, 170, 120, 82, 79, 27, 32, 13, 18, 43, 29];
+    const repoCounts = [0, 0, 3, 4, 18, 19, 26, 25, 40, 30, 24, 23, 22, 16, 12, 4, 11, 5, 4, 5, 0];
+    const commitVersions = ["boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [8, 2, 0, 2, 11, 11, 2, 2, 9, 1, 2, 1, 15, 0, 2, 1, 11, 1, 0, 7, 0, 1, 1, 3, 3, 1, 0, 9, 0];
 
-                if (aVal < bVal) {
-                    return contributorSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return contributorSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
 
-            updateContributorSortIndicators();
-            contributorCurrentPage = 1;
-            updateContributorTable();
-        }
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
 
-        function filterContributorData(searchTerm) {
-            contributorSearchTerm = searchTerm.toLowerCase();
-            contributorFilteredData = contributorData.filter(contrib => {
-                const version = (contrib.version || '').toLowerCase();
-                const person = (contrib.person || '').toLowerCase();
-                const email = (contrib.email_address || '').toLowerCase();
-                return version.includes(contributorSearchTerm) ||
-                       person.includes(contributorSearchTerm) ||
-                       email.includes(contributorSearchTerm);
-            });
-            contributorCurrentPage = 1;
-            sortContributorData(contributorSortField);
-        }
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
 
-        function updateContributorSortIndicators() {
-            document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === contributorSortField) {
-                    indicator.textContent = contributorSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateContributorTable() {
-            const start = (contributorCurrentPage - 1) * contributorItemsPerPage;
-            const end = start + contributorItemsPerPage;
-            const pageData = contributorFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('contributor-table-tbody');
-            if (contributorFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No commit data available (boost_commit table not yet populated)</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(contrib => {
-                    const version = contrib.version || 'N/A';
-                    const person = contrib.person || contrib.email_address || 'N/A';
-                    const email = contrib.email_address || 'N/A';
-                    const commitCount = (contrib.commit_count || 0).toLocaleString();
-
-                    return `
-                        <tr>
-                            <td>${version}</td>
-                            <td>${person}</td>
-                            <td>${email}</td>
-                            <td>${commitCount}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateContributorPaginationInfo();
-            updateContributorPaginationButtons();
-        }
-
-        function updateContributorPaginationInfo() {
-            const start = contributorFilteredData.length === 0 ? 0 : (contributorCurrentPage - 1) * contributorItemsPerPage + 1;
-            const end = Math.min(contributorCurrentPage * contributorItemsPerPage, contributorFilteredData.length);
-            const total = contributorFilteredData.length;
-            document.getElementById('contributor-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateContributorPaginationButtons() {
-            const prevBtn = document.getElementById('contributor-prev-btn');
-            const nextBtn = document.getElementById('contributor-next-btn');
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-
-            prevBtn.disabled = contributorCurrentPage === 1 || contributorFilteredData.length === 0;
-            nextBtn.disabled = contributorCurrentPage >= totalPages || contributorFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortContributorData(th.dataset.sort));
-        });
-
-        document.getElementById('contributor-prev-btn').addEventListener('click', () => {
-            if (contributorCurrentPage > 1) {
-                contributorCurrentPage--;
-                updateContributorTable();
-            }
-        });
-
-        document.getElementById('contributor-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-            if (contributorCurrentPage < totalPages) {
-                contributorCurrentPage++;
-                updateContributorTable();
-            }
-        });
-
-        // Add search input handler
-        const contributorSearchInput = document.getElementById('contributor-search');
-        if (contributorSearchInput) {
-            contributorSearchInput.addEventListener('input', (e) => {
-                filterContributorData(e.target.value);
-            });
-        }
-
-        // Initial display - wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                sortContributorData('version');
-            });
-        } else {
-            sortContributorData('version');
-        }
-    
-    </script>
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
 </body>
 </html>

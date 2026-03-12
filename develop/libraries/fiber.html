@@ -1,1097 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fiber - Boost Library Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-weight: 700;
-        }
-        .panel {
-            background: #ffffff;
-            padding: 30px;
-            margin: 25px 0;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .panel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .panel h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #1a202c;
-            font-size: 1.6em;
-            font-weight: 600;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-        }
-        .panel h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        .chart-container {
-            margin: 25px 0;
-            height: 450px;
-            position: relative;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-        }
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-        .panel-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-        .panel-row .chart-container {
-            margin: 0;
-        }
-        .panel-row table {
-            margin: 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .sortable {
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-        .sortable:hover {
-            background-color: #e0e0e0 !important;
-        }
-        .sort-indicator {
-            margin-left: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .back-link {
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            display: inline-block;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-        .back-link a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            text-decoration: none;
-            transform: translateX(-3px);
-        }
-        .depth-1 {
-            background-color: #dbeafe;
-        }
-        .depth-2 {
-            background-color: #d1fae5;
-        }
-        .depth-3, .depth-4, .depth-5 {
-            background-color: #fef3c7;
-        }
-        @media (max-width: 1200px) {
-            .panel-row {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 20px 15px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fiber - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
 </head>
 <body>
-    <div class="back-link">
-        <a href="../index.html">← Back to Dashboard</a>
-    </div>
-    <h1>📚 fiber</h1>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 fiber</h1>
 
-    <!-- Panel 0: Overview -->
-    <div class="panel">
-        <h2>Overview</h2>
-        <div class="overview-container">
-
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                <div>
-                    
-            <div>
-                <p style="color: #666;">
-                    (C++11) Userland threads library.
-                </p>
-            </div>
-    
-                    <table style="width: 100%; margin: 0;">
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Created Version:</td>
-                                <td style="padding: 8px;">1.62.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Modified Version:</td>
-                                <td style="padding: 8px;">1.90.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Repositories:</td>
-                                <td style="padding: 8px;">62</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average New Repositories Per Year:</td>
-                                <td style="padding: 8px;">3.00</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Year Repository Count:</td>
-                                <td style="padding: 8px;">3 (2025)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Used Year:</td>
-                                <td style="padding: 8px;">2022 (12 repos)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average Stars:</td>
-                                <td style="padding: 8px;">434</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Activity Score:</td>
-                                <td style="padding: 8px;">0.362 <span style="color: #666; font-size: 0.9em;">(high)</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Internal Consumers:</td>
-                                <td style="padding: 8px;">0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Contributors in Most Recent Version:</td>
-                                <td style="padding: 8px;">0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Contributors:</td>
-                                <td style="padding: 8px;">47</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="headers-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="headers-search" placeholder="Filter headers..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Header</th>
-                                <th style="text-align: right; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Times Included</th>
-                            </tr>
-                        </thead>
-                        <tbody id="headers-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="headers-pagination-info">Showing 1-10 of 42</span>
-                        </div>
-                        <div>
-                            <button id="headers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="headers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                
-        const headersData = [{"name": "boost/fiber/all.hpp", "count": 94}, {"name": "boost/fiber/operations.hpp", "count": 83}, {"name": "boost/fiber/fiber.hpp", "count": 48}, {"name": "boost/fiber/mutex.hpp", "count": 43}, {"name": "boost/fiber/condition_variable.hpp", "count": 42}, {"name": "boost/fiber/context.hpp", "count": 41}, {"name": "boost/fiber/future/promise.hpp", "count": 32}, {"name": "boost/fiber/buffered_channel.hpp", "count": 31}, {"name": "boost/fiber/scheduler.hpp", "count": 31}, {"name": "boost/fiber/future.hpp", "count": 23}, {"name": "boost/fiber/future/future.hpp", "count": 20}, {"name": "boost/fiber/fss.hpp", "count": 13}, {"name": "boost/fiber/future/async.hpp", "count": 13}, {"name": "boost/fiber/algo/algorithm.hpp", "count": 13}, {"name": "boost/fiber/detail/config.hpp", "count": 11}, {"name": "boost/fiber/channel_op_status.hpp", "count": 10}, {"name": "boost/fiber/protected_fixedsize_stack.hpp", "count": 10}, {"name": "boost/fiber/barrier.hpp", "count": 8}, {"name": "boost/fiber/future/future_status.hpp", "count": 8}, {"name": "boost/fiber/type.hpp", "count": 8}, {"name": "boost/fiber/detail/context_spinlock_queue.hpp", "count": 6}, {"name": "boost/fiber/unbuffered_channel.hpp", "count": 6}, {"name": "boost/fiber/algo/round_robin.hpp", "count": 6}, {"name": "boost/fiber/detail/spinlock.hpp", "count": 5}, {"name": "boost/fiber/properties.hpp", "count": 5}, {"name": "boost/fiber/policy.hpp", "count": 5}, {"name": "boost/fiber/future/packaged_task.hpp", "count": 4}, {"name": "boost/fiber/detail/context_spmc_queue.hpp", "count": 4}, {"name": "boost/fiber/recursive_mutex.hpp", "count": 3}, {"name": "boost/fiber/timed_mutex.hpp", "count": 3}, {"name": "boost/fiber/detail/thread_barrier.hpp", "count": 3}, {"name": "boost/fiber/detail/cpu_relax.hpp", "count": 2}, {"name": "boost/fiber/numa/pin_thread.hpp", "count": 2}, {"name": "boost/fiber/numa/topology.hpp", "count": 2}, {"name": "boost/fiber/algo/asio.hpp", "count": 2}, {"name": "boost/fiber/asio/use_future.hpp", "count": 2}, {"name": "boost/fiber/algo/shared_work.hpp", "count": 1}, {"name": "boost/fiber/exceptions.hpp", "count": 1}, {"name": "boost/fiber/future/detail/shared_state.hpp", "count": 1}, {"name": "boost/fiber/pooled_fixedsize_stack.hpp", "count": 1}, {"name": "boost/fiber/algo/work_stealing.hpp", "count": 1}, {"name": "boost/fiber/waker.hpp", "count": 1}];
-        let headersCurrentPage = 1;
-        const headersItemsPerPage = 10;
-        let headersFilteredData = [...headersData];
-        let headersSearchTerm = '';
-
-        function filterHeadersData(searchTerm) {
-            headersSearchTerm = searchTerm.toLowerCase();
-            headersFilteredData = headersData.filter(header => {
-                const name = (header.name || '').toLowerCase();
-                const count = (header.count || 0).toString();
-                return name.includes(headersSearchTerm) || count.includes(headersSearchTerm);
-            });
-            headersCurrentPage = 1;
-            updateHeadersTable();
-        }
-
-        function updateHeadersTable() {
-            const start = (headersCurrentPage - 1) * headersItemsPerPage;
-            const end = start + headersItemsPerPage;
-            const pageData = headersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('headers-table-tbody');
-            tbody.innerHTML = pageData.map(header => {
-                const name = header.name || 'N/A';
-                const count = (header.count || 0).toLocaleString();
-                return `
-                    <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${name}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${count}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            // Update pagination info
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            const startItem = headersFilteredData.length === 0 ? 0 : start + 1;
-            const endItem = Math.min(start + headersItemsPerPage, headersFilteredData.length);
-            document.getElementById('headers-pagination-info').textContent =
-                headersFilteredData.length === 0 ? 'No data available' : `Showing ${startItem}-${endItem} of ${headersFilteredData.length}`;
-
-            // Update button states
-            document.getElementById('headers-prev-btn').disabled = headersCurrentPage === 1;
-            document.getElementById('headers-next-btn').disabled = headersCurrentPage >= totalPages;
-        }
-
-        document.getElementById('headers-prev-btn').addEventListener('click', () => {
-            if (headersCurrentPage > 1) {
-                headersCurrentPage--;
-                updateHeadersTable();
-            }
-        });
-
-        document.getElementById('headers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            if (headersCurrentPage < totalPages) {
-                headersCurrentPage++;
-                updateHeadersTable();
-            }
-        });
-
-        // Add search input handler
-        const headersSearchInput = document.getElementById('headers-search');
-        if (headersSearchInput) {
-            headersSearchInput.addEventListener('input', (e) => {
-                filterHeadersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        updateHeadersTable();
-    
-            </script>
-    
-        </div>
-    </div>
-
-    <!-- Panel 1: Internal Consumers -->
-    <div class="panel">
-        <h2>Internal Consumers</h2>
-        <p style="color: #666; margin-top: 0; margin-bottom: 15px;">
-            Showing all consumers for the latest version.
-            Colors indicate depth: <span style="color: #3b82f6; font-weight: 600;">Blue (d1)</span> = Direct,
-            <span style="color: #10b981; font-weight: 600;">Green (d2)</span> = Second level,
-            <span style="color: #f59e0b; font-weight: 600;">Orange (d3)</span> = Third level,
-            <span style="color: #ef4444; font-weight: 600;">Red (d4+)</span> = Deeper levels.
-        </p>
-        <div class="panel-row">
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4">Consumer Libraries</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                <tr>
-                    <td colspan="4">No dependencies found</td>
-                </tr>
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="chart-container">
-                <canvas id="dependentsChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 2: External Consumers -->
-    <div class="panel">
-        <h2>External Consumers</h2>
-        <div class="panel-row">
-            <div>
-                <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                    <label for="external-consumers-search" style="margin-right: 10px;">Search:</label>
-                    <input type="text" id="external-consumers-search" placeholder="Filter repositories..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                </div>
-                <table id="external-consumers-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="name">Repository <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="stars">Stars <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="usage_count">Header Includes <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="created_at">Created <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="updated_at">Updated <span class="sort-indicator">↕</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="external-consumers-tbody">
-                    </tbody>
-                </table>
-                <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span id="external-consumers-pagination-info">Showing 1-10 of 62</span>
-                    </div>
-                    <div>
-                        <button id="external-consumers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                        <button id="external-consumers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="usageChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 3: Contributors -->
-    <div class="panel">
-        <h2>Contribution</h2>
-        <div class="panel-row">
-            <div>
-                <div id="contributor-table-container">
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="contributor-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="contributor-search" placeholder="Filter contributors..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table id="contributor-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable" data-sort="version">Version <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="person">Contributor <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="email_address">Email <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="commit_count">Commit Count <span class="sort-indicator">↕</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="contributor-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="contributor-pagination-info">Showing 1-10 of 109</span>
-                        </div>
-                        <div>
-                            <button id="contributor-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="contributor-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="commitChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <script>
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">(C++11) Userland threads library.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.62.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.88.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>202</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>11.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>3</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2017</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>335</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-0.283</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>1</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>1</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>47</td></tr>
+        </tbody></table>
+      </div>
+      <div>
         
-        new Chart(document.getElementById('dependentsChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Primary Consumers',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }, {
-                    label: 'Transitive Consumers',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: true,
-                            maxRotation: 90,
-                            minRotation: 45,
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Consumer Count',
-                            font: {
-                                size: 12,
-                                weight: '600'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            },
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('usageChart'), {
-            type: 'bar',
-            data: {
-                labels: ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"],
-                datasets: [
-                    {
-                        label: 'Created Repositories',
-                        type: 'line',
-                        data: [1, 0, 0, 0, 3, 2, 3, 5, 3, 4, 3, 7, 7, 12, 3, 6, 3, 0],
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        fill: false,
-                        tension: 0.3,
-                        yAxisID: 'y1',
-                        order: 1
-                    },
-                    {
-                        label: 'Header Includes (New Repos)',
-                        type: 'bar',
-                        data: [7, 0, 0, 0, 10, 31, 36, 36, 40, 15, 5, 92, 43, 228, 26, 29, 50, 0],
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    },
-                    {
-                        label: 'Header Includes (Updated Repos)',
-                        type: 'bar',
-                        data: [0, 0, 0, 0, 0, 0, 0, 31, 6, 6, 54, 60, 31, 34, 113, 64, 238, 11],
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Headers',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Repositories',
-                            font: {
-                                size: 14,
-                                weight: 'bold',
-                                color: 'rgba(255, 99, 132, 0.8)'
-                            }
-                        },
-                        grid: {
-                            drawOnChartArea: false
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Year',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('commitChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.62.0", "1.63.0", "1.64.0", "1.65.0", "1.65.1", "1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Commit Count',
-                    data: [69, 58, 135, 110, 52, 0, 30, 13, 19, 11, 2, 8, 27, 14, 12, 15, 6, 6, 3, 5, 1, 0, 2, 4, 7, 8, 4, 2, 0, 0],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
         
-        const externalConsumersData = [{"name": "ray-project/ray", "stars": 40407, "usage_count": 2, "created_at": "2016-10-25", "updated_at": "2025-12-19"}, {"name": "dragonflydb/dragonfly", "stars": 29631, "usage_count": 1, "created_at": "2021-12-11", "updated_at": "2026-01-02"}, {"name": "manticoresoftware/manticoresearch", "stars": 11552, "usage_count": 1, "created_at": "2017-06-28", "updated_at": "2025-12-29"}, {"name": "manticoresoftware/manticore", "stars": 11486, "usage_count": 2, "created_at": "2017-06-28", "updated_at": "2025-12-19"}, {"name": "ethereum/cpp-ethereum", "stars": 3981, "usage_count": 1, "created_at": "2013-12-26", "updated_at": "2024-03-05"}, {"name": "bytedance/terarkdb", "stars": 2133, "usage_count": 7, "created_at": "2020-12-11", "updated_at": "2025-08-25"}, {"name": "ruslo/hunter", "stars": 1938, "usage_count": 3, "created_at": "2013-11-07", "updated_at": "2019-12-26"}, {"name": "category-labs/monad", "stars": 1181, "usage_count": 51, "created_at": "2022-12-14", "updated_at": "2026-01-26"}, {"name": "jmzkChain/jmzk", "stars": 1172, "usage_count": 6, "created_at": "2018-03-20", "updated_at": "2022-06-20"}, {"name": "romange/helio", "stars": 526, "usage_count": 2, "created_at": "2020-08-18", "updated_at": "2026-01-27"}, {"name": "triSYCL/triSYCL", "stars": 454, "usage_count": 30, "created_at": "2014-04-19", "updated_at": "2024-11-02"}, {"name": "Clarionos/clarion", "stars": 319, "usage_count": 6, "created_at": "2021-01-29", "updated_at": "2022-03-08"}, {"name": "nelhage/rules_boost", "stars": 301, "usage_count": 1, "created_at": "2016-08-14", "updated_at": "2025-12-18"}, {"name": "secondlife/viewer", "stars": 264, "usage_count": 14, "created_at": "2022-08-05", "updated_at": "2026-01-26"}, {"name": "bitconch/bitconch-core", "stars": 202, "usage_count": 6, "created_at": "2018-07-09", "updated_at": "2023-07-05"}, {"name": "simbricks/simbricks", "stars": 162, "usage_count": 1, "created_at": "2021-01-07", "updated_at": "2026-01-19"}, {"name": "AntelopeIO/leap", "stars": 123, "usage_count": 6, "created_at": "2022-08-11", "updated_at": "2025-08-02"}, {"name": "encryptogroup/MOTION", "stars": 91, "usage_count": 21, "created_at": "2020-09-15", "updated_at": "2023-07-20"}, {"name": "FirestormViewer/phoenix-firestorm", "stars": 88, "usage_count": 14, "created_at": "2022-08-12", "updated_at": "2026-01-14"}, {"name": "romange/gaia", "stars": 76, "usage_count": 37, "created_at": "2017-12-15", "updated_at": "2024-02-07"}, {"name": "thu-pacman/TriCache", "stars": 75, "usage_count": 13, "created_at": "2022-04-15", "updated_at": "2025-12-08"}, {"name": "google-deepmind/actionengine", "stars": 70, "usage_count": 4, "created_at": "2025-04-02", "updated_at": "2026-01-18"}, {"name": "dmemsys/FUSEE", "stars": 60, "usage_count": 7, "created_at": "2023-01-05", "updated_at": "2023-02-14"}, {"name": "PDS-Lab/Rcmp", "stars": 60, "usage_count": 18, "created_at": "2023-10-11", "updated_at": "2023-12-26"}, {"name": "i42output/neolib", "stars": 56, "usage_count": 2, "created_at": "2016-01-17", "updated_at": "2026-01-14"}, {"name": "nv-morpheus/MRC", "stars": 51, "usage_count": 91, "created_at": "2022-05-24", "updated_at": "2026-01-22"}, {"name": "Messi-Q/IR-Fuzz", "stars": 50, "usage_count": 1, "created_at": "2022-04-21", "updated_at": "2023-02-28"}, {"name": "HFTrader/hbthreads", "stars": 49, "usage_count": 1, "created_at": "2022-10-20", "updated_at": "2025-10-01"}, {"name": "synodic/Soul-Engine", "stars": 46, "usage_count": 11, "created_at": "2015-09-15", "updated_at": "2025-11-20"}, {"name": "Synodic-Software/Soul-Engine", "stars": 45, "usage_count": 9, "created_at": "2015-09-15", "updated_at": "2025-11-20"}, {"name": "AlchemyViewer/Alchemy", "stars": 43, "usage_count": 14, "created_at": "2022-12-08", "updated_at": "2026-01-03"}, {"name": "catchthatrabbit/coreminer", "stars": 40, "usage_count": 2, "created_at": "2020-11-19", "updated_at": "2025-05-27"}, {"name": "sanguinariojoe/aquagpusph", "stars": 39, "usage_count": 6, "created_at": "2013-11-26", "updated_at": "2025-12-21"}, {"name": "victor-smirnov/memoria", "stars": 37, "usage_count": 52, "created_at": "2020-03-05", "updated_at": "2025-07-02"}, {"name": "romange/midi-redis", "stars": 37, "usage_count": 4, "created_at": "2021-11-16", "updated_at": "2025-12-22"}, {"name": "okyfirmansyah/libasyik", "stars": 37, "usage_count": 6, "created_at": "2020-05-25", "updated_at": "2025-11-30"}, {"name": "code-423n4/2025-09-monad", "stars": 33, "usage_count": 45, "created_at": "2025-09-05", "updated_at": "2025-10-10"}, {"name": "encryptogroup/MOTION2NX", "stars": 33, "usage_count": 26, "created_at": "2021-11-01", "updated_at": "2023-02-26"}, {"name": "jafl/jx_application_framework", "stars": 30, "usage_count": 7, "created_at": "2009-04-15", "updated_at": "2025-12-09"}, {"name": "tenstorrent/tt-budabackend", "stars": 30, "usage_count": 1, "created_at": "2024-01-20", "updated_at": "2025-04-02"}, {"name": "PooyaEimandar/WolfEngine", "stars": 28, "usage_count": 1, "created_at": "2014-10-31", "updated_at": "2023-08-16"}, {"name": "OpenFAM/OpenFAM", "stars": 27, "usage_count": 1, "created_at": "2019-10-14", "updated_at": "2025-11-18"}, {"name": "zmij/pg_async", "stars": 26, "usage_count": 16, "created_at": "2015-07-18", "updated_at": "2019-01-24"}, {"name": "dominant-strategies/quai-gpu-miner", "stars": 26, "usage_count": 2, "created_at": "2024-08-12", "updated_at": "2025-03-25"}, {"name": "fansehep/ShaunDB", "stars": 25, "usage_count": 3, "created_at": "2022-10-24", "updated_at": "2023-08-18"}, {"name": "franktea/temp", "stars": 24, "usage_count": 1, "created_at": "2018-12-10", "updated_at": "2026-01-26"}, {"name": "dmemsys/Aceso", "stars": 22, "usage_count": 2, "created_at": "2024-09-20", "updated_at": "2024-10-20"}, {"name": "moneroexamples/generic-xmr-scanner", "stars": 20, "usage_count": 2, "created_at": "2019-04-27", "updated_at": "2023-11-03"}, {"name": "topling/topling-ark", "stars": 17, "usage_count": 16, "created_at": "2024-06-23", "updated_at": "2026-01-26"}, {"name": "Chroma-CITI/DANCERS", "stars": 15, "usage_count": 1, "created_at": "2024-03-11", "updated_at": "2025-12-05"}, {"name": "apohl79/petrel", "stars": 14, "usage_count": 17, "created_at": "2016-01-18", "updated_at": "2017-01-25"}, {"name": "swstarlab-infolab/ash", "stars": 14, "usage_count": 4, "created_at": "2021-10-10", "updated_at": "2023-06-04"}, {"name": "iTXTech/Cenisys", "stars": 14, "usage_count": 14, "created_at": "2016-09-27", "updated_at": "2016-11-26"}, {"name": "tom--bo/mysqlredo", "stars": 13, "usage_count": 7, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "keryell/muSYCL", "stars": 13, "usage_count": 2, "created_at": "2020-09-22", "updated_at": "2024-08-25"}, {"name": "Maverobot/cpp_playground", "stars": 13, "usage_count": 2, "created_at": "2019-05-22", "updated_at": "2025-06-02"}, {"name": "Messi-Q/MuFuzz", "stars": 13, "usage_count": 1, "created_at": "2023-03-29", "updated_at": "2023-08-04"}, {"name": "Fujitsu-UTokyo-QDD/QDD", "stars": 12, "usage_count": 10, "created_at": "2022-10-13", "updated_at": "2025-12-23"}, {"name": "eBay/IOManager", "stars": 11, "usage_count": 10, "created_at": "2022-09-21", "updated_at": "2025-12-09"}, {"name": "makodb/mako", "stars": 11, "usage_count": 1, "created_at": "2025-08-03", "updated_at": "2026-01-27"}, {"name": "zerohourcash/zerohourcash", "stars": 10, "usage_count": 1, "created_at": "2021-04-25", "updated_at": "2025-07-31"}, {"name": "blak3mill3r/mouser", "stars": 10, "usage_count": 2, "created_at": "2018-12-31", "updated_at": "2024-08-28"}];
-        let externalConsumersCurrentPage = 1;
-        const externalConsumersItemsPerPage = 10;
-        let externalConsumersSortField = 'stars';
-        let externalConsumersSortOrder = 'asc';
-        let externalConsumersFilteredData = [...externalConsumersData];
-        let externalConsumersSearchTerm = '';
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
 
-        function sortExternalConsumersData(field) {
-            if (externalConsumersSortField === field) {
-                externalConsumersSortOrder = externalConsumersSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                externalConsumersSortField = field;
-                externalConsumersSortOrder = 'asc';
-            }
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
 
-            externalConsumersFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
-
-                // Handle numeric fields
-                if (['stars', 'usage_count'].includes(field)) {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
-
-                // Handle date fields
-                if (['created_at', 'updated_at'].includes(field)) {
-                    aVal = aVal ? new Date(aVal) : new Date(0);
-                    bVal = bVal ? new Date(bVal) : new Date(0);
-                }
-
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
-
-                if (aVal < bVal) {
-                    return externalConsumersSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return externalConsumersSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-
-            updateExternalConsumersSortIndicators();
-            externalConsumersCurrentPage = 1;
-            updateExternalConsumersTable();
-        }
-
-        function filterExternalConsumersData(searchTerm) {
-            externalConsumersSearchTerm = searchTerm.toLowerCase();
-            externalConsumersFilteredData = externalConsumersData.filter(repo => {
-                const name = ((repo.name || repo.repo_name) || '').toLowerCase();
-                const stars = (repo.stars || 0).toString();
-                const usageCount = (repo.usage_count || 0).toString();
-                const createdAt = (repo.created_at || '').toLowerCase();
-                const updatedAt = (repo.updated_at || '').toLowerCase();
-                return name.includes(externalConsumersSearchTerm) ||
-                       stars.includes(externalConsumersSearchTerm) ||
-                       usageCount.includes(externalConsumersSearchTerm) ||
-                       createdAt.includes(externalConsumersSearchTerm) ||
-                       updatedAt.includes(externalConsumersSearchTerm);
-            });
-            externalConsumersCurrentPage = 1;
-            sortExternalConsumersData(externalConsumersSortField);
-        }
-
-        function updateExternalConsumersSortIndicators() {
-            document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === externalConsumersSortField) {
-                    indicator.textContent = externalConsumersSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateExternalConsumersTable() {
-            const start = (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage;
-            const end = start + externalConsumersItemsPerPage;
-            const pageData = externalConsumersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('external-consumers-tbody');
-            if (externalConsumersFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No repositories found</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(repo => {
-                    const name = repo.name || repo.repo_name || 'N/A';
-                    const stars = (repo.stars || 0).toLocaleString();
-                    const usageCount = (repo.usage_count || 0).toLocaleString();
-                    let createdAt = repo.created_at || 'N/A';
-                    let updatedAt = repo.updated_at || 'N/A';
-                    if (createdAt !== 'N/A' && createdAt.length > 10) {
-                        createdAt = createdAt.substring(0, 10);
-                    }
-                    if (updatedAt !== 'N/A' && updatedAt.length > 10) {
-                        updatedAt = updatedAt.substring(0, 10);
-                    }
-
-                    return `
-                        <tr>
-                            <td><a href="https://github.com/${name}" target="_blank">${name}</a></td>
-                            <td>${stars}</td>
-                            <td>${usageCount}</td>
-                            <td>${createdAt}</td>
-                            <td>${updatedAt}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateExternalConsumersPaginationInfo();
-            updateExternalConsumersPaginationButtons();
-        }
-
-        function updateExternalConsumersPaginationInfo() {
-            const start = externalConsumersFilteredData.length === 0 ? 0 : (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage + 1;
-            const end = Math.min(externalConsumersCurrentPage * externalConsumersItemsPerPage, externalConsumersFilteredData.length);
-            const total = externalConsumersFilteredData.length;
-            document.getElementById('external-consumers-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateExternalConsumersPaginationButtons() {
-            const prevBtn = document.getElementById('external-consumers-prev-btn');
-            const nextBtn = document.getElementById('external-consumers-next-btn');
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-
-            prevBtn.disabled = externalConsumersCurrentPage === 1 || externalConsumersFilteredData.length === 0;
-            nextBtn.disabled = externalConsumersCurrentPage >= totalPages || externalConsumersFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortExternalConsumersData(th.dataset.sort));
-        });
-
-        document.getElementById('external-consumers-prev-btn').addEventListener('click', () => {
-            if (externalConsumersCurrentPage > 1) {
-                externalConsumersCurrentPage--;
-                updateExternalConsumersTable();
-            }
-        });
-
-        document.getElementById('external-consumers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-            if (externalConsumersCurrentPage < totalPages) {
-                externalConsumersCurrentPage++;
-                updateExternalConsumersTable();
-            }
-        });
-
-        // Add search input handler
-        const externalConsumersSearchInput = document.getElementById('external-consumers-search');
-        if (externalConsumersSearchInput) {
-            externalConsumersSearchInput.addEventListener('input', (e) => {
-                filterExternalConsumersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        sortExternalConsumersData('stars');
+  <script>
     
-        
-        const contributorData = [{"version": "1.88.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 2}, {"version": "1.87.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 3}, {"version": "1.87.0", "person": "Danil Sidoruk", "email_address": "danilsidoruknv@yandex.ru", "commit_count": 1}, {"version": "1.86.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 7}, {"version": "1.86.0", "person": "xiaodaxia", "email_address": "xiaozisheng2008@qq.com", "commit_count": 1}, {"version": "1.85.0", "person": "Brad Smith", "email_address": "brad@comstyle.com", "commit_count": 2}, {"version": "1.85.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 2}, {"version": "1.85.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 2}, {"version": "1.85.0", "person": "Jakob Lovhall", "email_address": "lovhall@protonmail.com", "commit_count": 1}, {"version": "1.84.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 4}, {"version": "1.83.0", "person": "David Eritsyan", "email_address": "65646045+Davidoc26@users.noreply.github.com", "commit_count": 1}, {"version": "1.83.0", "person": "Sergey Fedorov", "email_address": "vital.had@gmail.com", "commit_count": 1}, {"version": "1.81.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 1}, {"version": "1.80.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 3}, {"version": "1.80.0", "person": "Ed Catmur", "email_address": "ed@catmur.uk", "commit_count": 1}, {"version": "1.80.0", "person": "PooyaEimandar", "email_address": "pooya.eimandar@gmail.com", "commit_count": 1}, {"version": "1.79.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 2}, {"version": "1.79.0", "person": "Khem Raj", "email_address": "raj.khem@gmail.com", "commit_count": 1}, {"version": "1.78.0", "person": "A.Abelha", "email_address": "andre.abelha@siemens.com", "commit_count": 3}, {"version": "1.78.0", "person": "Yao Yao", "email_address": "lowsfer@gmail.com", "commit_count": 1}, {"version": "1.78.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 1}, {"version": "1.78.0", "person": "yhsb2k", "email_address": "yhsb2k@outlook.com", "commit_count": 1}, {"version": "1.77.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 4}, {"version": "1.77.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 1}, {"version": "1.77.0", "person": "Romain Geissler", "email_address": "romain.geissler@amadeus.com", "commit_count": 1}, {"version": "1.76.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 7}, {"version": "1.76.0", "person": "Benjamin Kaufmann", "email_address": "benjamin.kaufmann@teufel.de", "commit_count": 2}, {"version": "1.76.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 2}, {"version": "1.76.0", "person": "Rosen Penev", "email_address": "rosenp@gmail.com", "commit_count": 2}, {"version": "1.76.0", "person": "Tianqi", "email_address": "airstone42@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Ronan Keryell", "email_address": "rkeryell@xilinx.com", "commit_count": 1}, {"version": "1.75.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 9}, {"version": "1.75.0", "person": "Dmitry Khominich", "email_address": "dmitry.khominich@exness.com", "commit_count": 2}, {"version": "1.75.0", "person": "Dix Lorenz", "email_address": "dlorenz@medimach.de", "commit_count": 1}, {"version": "1.74.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 8}, {"version": "1.74.0", "person": "EGuesnet", "email_address": "51407514+EGuesnet@users.noreply.github.com", "commit_count": 2}, {"version": "1.74.0", "person": "Martin R\u00fcckl", "email_address": "enigma@nbubu.de", "commit_count": 2}, {"version": "1.74.0", "person": "Jason C.H", "email_address": "ctrysbita@outlook.com", "commit_count": 1}, {"version": "1.74.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 1}, {"version": "1.73.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 14}, {"version": "1.73.0", "person": "Rosen Penev", "email_address": "rosenp@gmail.com", "commit_count": 9}, {"version": "1.73.0", "person": "Ingo Mueller", "email_address": "ingo.mueller@inf.ethz.ch", "commit_count": 2}, {"version": "1.73.0", "person": "niekbouman", "email_address": "niekbouman@gmail.com", "commit_count": 1}, {"version": "1.73.0", "person": "Romain Geissler", "email_address": "romain.geissler@amadeus.com", "commit_count": 1}, {"version": "1.72.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 6}, {"version": "1.72.0", "person": "Rosen Penev", "email_address": "rosenp@gmail.com", "commit_count": 2}, {"version": "1.71.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 2}, {"version": "1.70.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 8}, {"version": "1.70.0", "person": "Kumar Shivam Ranjan", "email_address": "42781233+ksrrock@users.noreply.github.com", "commit_count": 1}, {"version": "1.70.0", "person": "Romain Geissler", "email_address": "romain.geissler@amadeus.com", "commit_count": 1}, {"version": "1.70.0", "person": "Roman Gershman", "email_address": "romange@gmail.com", "commit_count": 1}, {"version": "1.69.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 16}, {"version": "1.69.0", "person": "Edward Diener", "email_address": "eld@tropicsoft.com", "commit_count": 1}, {"version": "1.69.0", "person": "Milan Svoboda", "email_address": "milan.svoboda@centrum.cz", "commit_count": 1}, {"version": "1.69.0", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 1}, {"version": "1.68.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 11}, {"version": "1.68.0", "person": "Damian Jarek", "email_address": "damian.jarek93@gmail.com", "commit_count": 1}, {"version": "1.68.0", "person": "Romain Geissler", "email_address": "romain.geissler@amadeus.com", "commit_count": 1}, {"version": "1.67.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 27}, {"version": "1.67.0", "person": "Daniela Engert", "email_address": "dani@ngrt.de", "commit_count": 2}, {"version": "1.67.0", "person": "Jan Beich", "email_address": "jbeich@FreeBSD.org", "commit_count": 1}, {"version": "1.65.1", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 46}, {"version": "1.65.1", "person": "Peter Dimov", "email_address": "pdimov@pdimov.com", "commit_count": 5}, {"version": "1.65.1", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 1}, {"version": "1.65.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 104}, {"version": "1.65.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 2}, {"version": "1.65.0", "person": "Daniela Engert", "email_address": "dani@ngrt.de", "commit_count": 1}, {"version": "1.65.0", "person": "Fr\u00e9d\u00e9ric Bron", "email_address": "frederic.bron@m4x.org", "commit_count": 1}, {"version": "1.65.0", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 1}, {"version": "1.65.0", "person": "Gregor Jasny", "email_address": "gregor.jasny@logmein.com", "commit_count": 1}, {"version": "1.64.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 127}, {"version": "1.64.0", "person": "Brandon Kohn", "email_address": "blkohn@hotmail.com", "commit_count": 4}, {"version": "1.64.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 3}, {"version": "1.64.0", "person": "Daniela Engert", "email_address": "dani@ngrt.de", "commit_count": 1}, {"version": "1.63.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 32}, {"version": "1.63.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 20}, {"version": "1.63.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 2}, {"version": "1.63.0", "person": "xaqq", "email_address": "kapp.arno@gmail.com", "commit_count": 2}, {"version": "1.63.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 2}, {"version": "1.62.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 35}, {"version": "1.62.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 33}, {"version": "1.62.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 1}, {"version": "1.61.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 126}, {"version": "1.61.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 55}, {"version": "1.61.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 45}, {"version": "1.60.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 255}, {"version": "1.60.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 106}, {"version": "1.60.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 24}, {"version": "1.59.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 72}, {"version": "1.59.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 36}, {"version": "1.59.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 12}, {"version": "1.59.0", "person": "Benjamin Worpitz", "email_address": "benjaminworpitz@gmail.com", "commit_count": 1}, {"version": "1.58.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 54}, {"version": "1.58.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 16}, {"version": "1.58.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 4}, {"version": "1.57.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 31}, {"version": "1.57.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 3}, {"version": "1.57.0", "person": "Vincent Lee", "email_address": "cool8511@gmail.com", "commit_count": 2}, {"version": "1.57.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 1}, {"version": "1.57.0", "person": "niXman", "email_address": "niXman@users.noreply.github.com", "commit_count": 1}, {"version": "1.56.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 136}, {"version": "1.56.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 14}, {"version": "1.56.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 12}, {"version": "1.56.0", "person": "Mario Lang", "email_address": "mlang@delysid.org", "commit_count": 2}, {"version": "1.55.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 85}, {"version": "1.55.0", "person": "Nat Goodspeed", "email_address": "nat@lindenlab.com", "commit_count": 10}, {"version": "1.55.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 3}, {"version": "1.54.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmx.de", "commit_count": 19}, {"version": "1.54.0", "person": "Oliver Kowalke", "email_address": "oliver.kowalke@gmail.com", "commit_count": 1}];
-        let contributorCurrentPage = 1;
-        const contributorItemsPerPage = 10;
-        let contributorSortField = 'version';
-        let contributorSortOrder = 'asc';
-        let contributorFilteredData = [...contributorData];
-        let contributorSearchTerm = '';
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-        function sortContributorData(field) {
-            if (contributorSortField === field) {
-                contributorSortOrder = contributorSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                contributorSortField = field;
-                contributorSortOrder = 'asc';
-            }
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
 
-            contributorFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
 
-                // Handle numeric fields
-                if (field === 'commit_count') {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
 
-                // Handle version strings
-                if (field === 'version') {
-                    aVal = aVal.toString();
-                    bVal = bVal.toString();
-                    // Simple version comparison (can be improved)
-                    const aParts = aVal.split('.').map(Number);
-                    const bParts = bVal.split('.').map(Number);
-                    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-                        const aPart = aParts[i] || 0;
-                        const bPart = bParts[i] || 0;
-                        if (aPart !== bPart) {
-                            return contributorSortOrder === 'asc' ? aPart - bPart : bPart - aPart;
-                        }
-                    }
-                    return 0;
-                }
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
 
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
+    const headersRows = [{"name": "boost/atomic.hpp", "count": 271}, {"name": "include/boost/fiber/all.hpp", "count": 90}, {"name": "include/boost/fiber/operations.hpp", "count": 83}, {"name": "boost/fiber/all.hpp", "count": 60}, {"name": "include/boost/fiber/fiber.hpp", "count": 50}, {"name": "include/boost/fiber/condition_variable.hpp", "count": 49}, {"name": "include/boost/fiber/context.hpp", "count": 45}, {"name": "include/boost/fiber/mutex.hpp", "count": 44}, {"name": "include/boost/fiber/scheduler.hpp", "count": 42}, {"name": "include/boost/fiber/future/promise.hpp", "count": 33}, {"name": "include/boost/fiber/buffered_channel.hpp", "count": 33}, {"name": "boost/fiber/operations.hpp", "count": 27}, {"name": "boost/fiber/fiber.hpp", "count": 24}, {"name": "include/boost/fiber/future.hpp", "count": 22}, {"name": "include/boost/fiber/future/future.hpp", "count": 21}, {"name": "include/boost/fiber/fss.hpp", "count": 16}, {"name": "include/boost/fiber/future/async.hpp", "count": 13}, {"name": "include/boost/fiber/algo/algorithm.hpp", "count": 12}, {"name": "include/boost/fiber/protected_fixedsize_stack.hpp", "count": 11}, {"name": "include/boost/fiber/channel_op_status.hpp", "count": 10}, {"name": "boost/fiber/mutex.hpp", "count": 9}, {"name": "boost/fiber/exceptions.hpp", "count": 9}, {"name": "include/boost/fiber/numa/pin_thread.hpp", "count": 9}, {"name": "include/boost/fiber/numa/topology.hpp", "count": 9}, {"name": "include/boost/fiber/detail/config.hpp", "count": 9}, {"name": "include/boost/fiber/future/future_status.hpp", "count": 8}, {"name": "include/boost/fiber/algo/round_robin.hpp", "count": 8}, {"name": "include/boost/fiber/barrier.hpp", "count": 8}, {"name": "include/boost/fiber/type.hpp", "count": 7}, {"name": "include/boost/fiber/unbuffered_channel.hpp", "count": 7}, {"name": "boost/atomic/detail/base.hpp", "count": 7}, {"name": "include/boost/fiber/properties.hpp", "count": 6}, {"name": "include/boost/fiber/detail/spinlock.hpp", "count": 6}, {"name": "include/boost/fiber/detail/context_spinlock_queue.hpp", "count": 6}, {"name": "include/boost/fiber/recursive_mutex.hpp", "count": 5}, {"name": "include/boost/fiber/timed_mutex.hpp", "count": 5}, {"name": "boost/fiber/detail/scheduler.hpp", "count": 5}, {"name": "boost/fiber/interruption.hpp", "count": 5}, {"name": "boost/fiber/future.hpp", "count": 5}, {"name": "include/boost/fiber/policy.hpp", "count": 5}, {"name": "include/boost/fiber/fiber_manager.hpp", "count": 4}, {"name": "include/boost/fiber/future/packaged_task.hpp", "count": 4}, {"name": "include/boost/fiber/detail/context_spmc_queue.hpp", "count": 4}, {"name": "include/boost/fiber/detail/thread_barrier.hpp", "count": 3}, {"name": "include/boost/fiber/detail/cpu_relax.hpp", "count": 3}, {"name": "boost/atomic/detail/builder.hpp", "count": 2}, {"name": "include/boost/fiber/asio/use_future.hpp", "count": 2}, {"name": "boost/fiber/barrier.hpp", "count": 2}, {"name": "include/boost/fiber/round_robin.hpp", "count": 2}, {"name": "boost/fiber/condition.hpp", "count": 2}, {"name": "include/boost/fiber/algo/shared_work.hpp", "count": 1}, {"name": "include/boost/fiber/exceptions.hpp", "count": 1}, {"name": "include/boost/fiber/posix/thread_local_ptr.hpp", "count": 1}, {"name": "include/boost/fiber/recursive_timed_mutex.hpp", "count": 1}, {"name": "include/boost/fiber/detail/worker_fiber.hpp", "count": 1}, {"name": "boost/fiber/detail/config.hpp", "count": 1}, {"name": "boost/fiber/detail/fiber_base.hpp", "count": 1}, {"name": "boost/fiber/attributes.hpp", "count": 1}, {"name": "boost/fiber/detail/interrupt_flags.hpp", "count": 1}, {"name": "include/boost/fiber/waker.hpp", "count": 1}, {"name": "include/boost/fiber/pooled_fixedsize_stack.hpp", "count": 1}, {"name": "include/boost/fiber/algo/work_stealing.hpp", "count": 1}];
+    const internalRows = [{"name": "coroutine2", "depth": 1}];
+    const externalRows = [{"name": "code-423n4/2025-09-monad", "stars": 33, "usage_count": 45, "created_at": "2025-09-05", "updated_at": "2025-10-10"}, {"name": "dmemsys/Aceso", "stars": 24, "usage_count": 2, "created_at": "2024-09-20", "updated_at": "2024-10-20"}, {"name": "google-deepmind/actionengine", "stars": 0, "usage_count": 9, "created_at": "", "updated_at": ""}, {"name": "pkoshevoy/aeyae", "stars": 26, "usage_count": 6, "created_at": "2015-08-01", "updated_at": "2026-02-17"}, {"name": "AlchemyViewer/Alchemy", "stars": 47, "usage_count": 14, "created_at": "2022-12-08", "updated_at": "2026-02-07"}, {"name": "sanguinariojoe/aquagpusph", "stars": 39, "usage_count": 4, "created_at": "2013-11-26", "updated_at": "2025-12-21"}, {"name": "lightvector/arimaasharp", "stars": 15, "usage_count": 1, "created_at": "2021-04-28", "updated_at": "2021-04-28"}, {"name": "ORANKWON/ARS408", "stars": 24, "usage_count": 1, "created_at": "2019-07-05", "updated_at": "2019-07-05"}, {"name": "swstarlab-infolab/ash", "stars": 14, "usage_count": 4, "created_at": "2021-10-10", "updated_at": "2023-06-04"}, {"name": "Cocos-BCX/bcxLibrary-Cpp", "stars": 19, "usage_count": 6, "created_at": "2019-07-24", "updated_at": "2020-01-07"}, {"name": "zhihaibang/benson-style", "stars": 16, "usage_count": 3, "created_at": "2015-11-06", "updated_at": "2017-09-22"}, {"name": "bitconch/bitconch-core", "stars": 202, "usage_count": 6, "created_at": "2018-07-09", "updated_at": "2023-07-05"}, {"name": "BithumbCoin/BithumbCoin", "stars": 37, "usage_count": 7, "created_at": "2018-04-18", "updated_at": "2020-04-28"}, {"name": "NiranV/Black-Dragon-Viewer", "stars": 0, "usage_count": 14, "created_at": "", "updated_at": ""}, {"name": "UCLA-VAST/blaze", "stars": 24, "usage_count": 4, "created_at": "2016-05-25", "updated_at": "2017-03-23"}, {"name": "sikuner/book-code", "stars": 38, "usage_count": 3, "created_at": "2018-08-28", "updated_at": "2018-08-28"}, {"name": "cryptozoidberg/boolberry", "stars": 40, "usage_count": 2, "created_at": "2014-04-19", "updated_at": "2020-01-15"}, {"name": "boost-cmake/boost", "stars": 57, "usage_count": 9, "created_at": "2017-07-03", "updated_at": "2019-10-29"}, {"name": "PacktPublishing/Boost-Cpp-Application-Development-Cookbook-Second-Edition", "stars": 43, "usage_count": 5, "created_at": "2017-08-28", "updated_at": "2021-01-14"}, {"name": "bkietz/boost-dbus", "stars": 11, "usage_count": 1, "created_at": "2014-03-08", "updated_at": "2015-02-01"}, {"name": "kkodev/boost-ios", "stars": 23, "usage_count": 4, "created_at": "2013-01-09", "updated_at": "2013-04-19"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 5, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "legendzhouqiang/BRPC", "stars": 39, "usage_count": 1, "created_at": "2018-06-04", "updated_at": "2018-06-04"}, {"name": "Bitcoin-Ultimatum-BTCU/btcu-wallet", "stars": 24, "usage_count": 1, "created_at": "2021-01-04", "updated_at": "2021-02-08"}, {"name": "ndt93/bubble-client", "stars": 13, "usage_count": 2, "created_at": "2017-01-03", "updated_at": "2017-01-07"}, {"name": "clvn/buze", "stars": 12, "usage_count": 2, "created_at": "2017-12-23", "updated_at": "2018-06-14"}, {"name": "skylian/caffe-action", "stars": 14, "usage_count": 2, "created_at": "2015-08-03", "updated_at": "2016-03-05"}, {"name": "cppalliance/capy", "stars": 19, "usage_count": 1, "created_at": "2025-06-29", "updated_at": "2026-03-10"}, {"name": "iTXTech/Cenisys", "stars": 13, "usage_count": 5, "created_at": "2016-09-27", "updated_at": "2016-11-26"}, {"name": "Clarionos/clarion", "stars": 317, "usage_count": 6, "created_at": "2021-01-29", "updated_at": "2022-03-08"}, {"name": "sero-cash/cminer", "stars": 16, "usage_count": 2, "created_at": "2019-02-13", "updated_at": "2020-05-30"}, {"name": "zjdx1998/cocos2dx-based-networked-mobiled-game", "stars": 13, "usage_count": 1, "created_at": "2018-09-14", "updated_at": "2018-12-28"}, {"name": "coschain/contentos", "stars": 14, "usage_count": 6, "created_at": "2018-06-05", "updated_at": "2018-12-27"}, {"name": "catchthatrabbit/coreminer", "stars": 40, "usage_count": 2, "created_at": "2020-11-19", "updated_at": "2025-05-27"}, {"name": "clustertech/cpfs-os", "stars": 12, "usage_count": 9, "created_at": "2017-05-16", "updated_at": "2018-05-18"}, {"name": "ethereum/cpp-ethereum", "stars": 3981, "usage_count": 1, "created_at": "2013-12-26", "updated_at": "2024-03-05"}, {"name": "BaerChain/cpp-lsac", "stars": 11, "usage_count": 1, "created_at": "2019-03-26", "updated_at": "2021-03-01"}, {"name": "scylladb/cpp-rs-driver", "stars": 21, "usage_count": 1, "created_at": "2021-10-08", "updated_at": "2026-03-02"}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 1, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "Maverobot/cpp_playground", "stars": 14, "usage_count": 2, "created_at": "2019-05-22", "updated_at": "2025-06-02"}, {"name": "Chroma-CITI/DANCERS", "stars": 16, "usage_count": 1, "created_at": "2024-03-11", "updated_at": "2025-12-05"}, {"name": "CryptoCoinLabs/darknetspace", "stars": 13, "usage_count": 2, "created_at": "2014-10-13", "updated_at": "2019-05-25"}, {"name": "cth103/dcpomatic", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "yzr95924/DEBE", "stars": 17, "usage_count": 2, "created_at": "2022-05-08", "updated_at": "2022-10-18"}, {"name": "splatlab/debgr", "stars": 31, "usage_count": 1, "created_at": "2017-02-04", "updated_at": "2021-01-19"}, {"name": "infinitex-tech/default-template", "stars": 25, "usage_count": 7, "created_at": "2018-05-21", "updated_at": "2018-08-02"}, {"name": "ernfrid/diagnose_dups", "stars": 12, "usage_count": 2, "created_at": "2015-03-21", "updated_at": "2017-12-08"}, {"name": "IOCoin/DIONS", "stars": 42, "usage_count": 1, "created_at": "2015-11-10", "updated_at": "2026-02-28"}, {"name": "dragonflydb/dragonfly", "stars": 30147, "usage_count": 2, "created_at": "2021-12-11", "updated_at": "2026-03-11"}, {"name": "SJTU-IPADS/dst", "stars": 16, "usage_count": 1, "created_at": "2020-10-07", "updated_at": "2021-04-12"}, {"name": "guowentian/dynamicppr", "stars": 25, "usage_count": 1, "created_at": "2018-02-26", "updated_at": "2018-03-01"}, {"name": "entboost/ebc", "stars": 25, "usage_count": 1, "created_at": "2016-09-10", "updated_at": "2020-09-22"}, {"name": "HKUST-Aerial-Robotics/edge_alignment", "stars": 31, "usage_count": 1, "created_at": "2018-11-14", "updated_at": "2018-11-14"}, {"name": "jdj2261/ERP42-ROS", "stars": 11, "usage_count": 1, "created_at": "2020-07-16", "updated_at": "2021-10-10"}, {"name": "espressif/esp-boost", "stars": 18, "usage_count": 1, "created_at": "2025-03-26", "updated_at": "2026-03-11"}, {"name": "SquirrelsResearch/ethminer-sqrl", "stars": 11, "usage_count": 2, "created_at": "2020-08-20", "updated_at": "2021-02-01"}, {"name": "EvrmoreOrg/evrprogpowminer", "stars": 13, "usage_count": 2, "created_at": "2022-07-12", "updated_at": "2022-10-20"}, {"name": "EOSIO/fc", "stars": 41, "usage_count": 6, "created_at": "2018-06-04", "updated_at": "2022-09-21"}, {"name": "w136111526/ffmpeg-video-client", "stars": 14, "usage_count": 1, "created_at": "2018-07-11", "updated_at": "2018-07-12"}, {"name": "hampus/fiberio", "stars": 13, "usage_count": 11, "created_at": "2018-05-06", "updated_at": "2018-10-28"}, {"name": "moneroexamples/fiberpool", "stars": 27, "usage_count": 1, "created_at": "2019-04-11", "updated_at": "2019-05-17"}, {"name": "izenecloud/fiberproxy", "stars": 11, "usage_count": 57, "created_at": "2015-01-26", "updated_at": "2015-01-27"}, {"name": "firoorg/firominer", "stars": 14, "usage_count": 2, "created_at": "2021-06-13", "updated_at": "2021-12-17"}, {"name": "dmemsys/FUSEE", "stars": 62, "usage_count": 7, "created_at": "2023-01-05", "updated_at": "2023-02-14"}, {"name": "romange/gaia", "stars": 76, "usage_count": 37, "created_at": "2017-12-15", "updated_at": "2024-02-07"}, {"name": "GamechainSystem/GameChainBase", "stars": 19, "usage_count": 6, "created_at": "2017-11-30", "updated_at": "2018-05-18"}, {"name": "moneroexamples/generic-xmr-scanner", "stars": 20, "usage_count": 2, "created_at": "2019-04-27", "updated_at": "2023-11-03"}, {"name": "daseECNU/Ginkgo", "stars": 27, "usage_count": 1, "created_at": "2017-04-18", "updated_at": "2021-06-14"}, {"name": "gkcproject/gkccash_core", "stars": 13, "usage_count": 1, "created_at": "2020-04-20", "updated_at": "2021-06-28"}, {"name": "carlesfernandez/gnss-sdr", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "gnss-sdr/gnss-sdr", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "EGO4D/hands-and-objects", "stars": 80, "usage_count": 2, "created_at": "2021-09-27", "updated_at": "2022-09-04"}, {"name": "HFTrader/hbthreads", "stars": 52, "usage_count": 1, "created_at": "2022-10-20", "updated_at": "2026-02-02"}, {"name": "HcashOrg/Hcash", "stars": 54, "usage_count": 5, "created_at": "2017-06-18", "updated_at": "2018-02-06"}, {"name": "romange/helio", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "openhive-network/hive", "stars": 373, "usage_count": 7, "created_at": "2020-03-20", "updated_at": "2026-02-20"}, {"name": "Fraxul/hmdcam", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "STEllAR-GROUP/hpxcl", "stars": 33, "usage_count": 2, "created_at": "2013-10-07", "updated_at": "2022-01-05"}, {"name": "ruslo/hunter", "stars": 1938, "usage_count": 3, "created_at": "2013-11-07", "updated_at": "2019-12-26"}, {"name": "HcashOrg/HyperExchange", "stars": 40, "usage_count": 6, "created_at": "2018-06-15", "updated_at": "2021-10-26"}, {"name": "PurpleI2P/i2pd", "stars": 3897, "usage_count": 1, "created_at": "2013-09-01", "updated_at": "2026-03-01"}, {"name": "fungosforks/icq-desktop", "stars": 54, "usage_count": 1, "created_at": "2016-03-15", "updated_at": "2016-03-15"}, {"name": "ros-industrial-attic/industrial_moveit", "stars": 97, "usage_count": 2, "created_at": "2013-08-27", "updated_at": "2021-09-29"}, {"name": "eBay/IOManager", "stars": 11, "usage_count": 10, "created_at": "2022-09-21", "updated_at": "2025-12-09"}, {"name": "Messi-Q/IR-Fuzz", "stars": 50, "usage_count": 1, "created_at": "2022-04-21", "updated_at": "2023-02-28"}, {"name": "FOSCAR-2020/ISCC_2020", "stars": 11, "usage_count": 1, "created_at": "2020-08-03", "updated_at": "2020-11-16"}, {"name": "jmzkChain/jmzk", "stars": 1171, "usage_count": 6, "created_at": "2018-03-20", "updated_at": "2022-06-20"}, {"name": "Juniper/JP4Agent", "stars": 18, "usage_count": 1, "created_at": "2017-11-18", "updated_at": "2018-09-24"}, {"name": "jafl/jx_application_framework", "stars": 32, "usage_count": 7, "created_at": "2009-04-15", "updated_at": "2025-12-09"}, {"name": "KenshiReclaimer/KenshiLib", "stars": 17, "usage_count": 1, "created_at": "2021-04-12", "updated_at": "2026-03-10"}, {"name": "msesia/knockoffgwas", "stars": 16, "usage_count": 1, "created_at": "2020-07-21", "updated_at": "2022-07-07"}, {"name": "OpenMPDK/KVRocks", "stars": 47, "usage_count": 1, "created_at": "2019-09-20", "updated_at": "2022-06-21"}, {"name": "jakeowner/lastbattle", "stars": 55, "usage_count": 2, "created_at": "2017-11-24", "updated_at": "2017-11-24"}, {"name": "openlastchaos/lastchaos-source-server", "stars": 14, "usage_count": 2, "created_at": "2021-07-31", "updated_at": "2021-07-31"}, {"name": "AntelopeIO/leap", "stars": 122, "usage_count": 6, "created_at": "2022-08-11", "updated_at": "2025-08-02"}, {"name": "fgmailbox/LibAsio", "stars": 19, "usage_count": 1, "created_at": "2014-12-20", "updated_at": "2020-09-27"}, {"name": "okyfirmansyah/libasyik", "stars": 0, "usage_count": 10, "created_at": "", "updated_at": ""}, {"name": "elky84/light", "stars": 13, "usage_count": 2, "created_at": "2016-07-31", "updated_at": "2022-11-23"}, {"name": "lightchainone/lightchain", "stars": 22, "usage_count": 7, "created_at": "2018-01-18", "updated_at": "2019-12-16"}, {"name": "lsds/LightSaber", "stars": 73, "usage_count": 2, "created_at": "2020-03-16", "updated_at": "2021-10-20"}, {"name": "apache/logging-log4cxx", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "bytemaster/mace", "stars": 18, "usage_count": 4, "created_at": "2012-05-14", "updated_at": "2012-10-21"}, {"name": "makodb/mako", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "r-lyeh-archived/malloc-survey", "stars": 31, "usage_count": 1, "created_at": "2013-12-26", "updated_at": "2016-07-06"}, {"name": "manticoresoftware/manticore", "stars": 11486, "usage_count": 2, "created_at": "2017-06-28", "updated_at": "2025-12-19"}, {"name": "manticoresoftware/manticoresearch", "stars": 11668, "usage_count": 1, "created_at": "2017-06-28", "updated_at": "2026-02-23"}, {"name": "xdlianrong/Maskchain", "stars": 19, "usage_count": 1, "created_at": "2018-11-08", "updated_at": "2019-08-17"}, {"name": "stan-dev/math", "stars": 0, "usage_count": 3, "created_at": "", "updated_at": ""}, {"name": "victor-smirnov/memoria", "stars": 37, "usage_count": 52, "created_at": "2020-03-05", "updated_at": "2025-07-02"}, {"name": "jjuran/metamage_1", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "romange/midi-redis", "stars": 39, "usage_count": 3, "created_at": "2021-11-16", "updated_at": "2025-12-22"}, {"name": "Maufeat/MobileMOBA-Server", "stars": 16, "usage_count": 4, "created_at": "2017-01-11", "updated_at": "2017-08-29"}, {"name": "category-labs/monad", "stars": 1193, "usage_count": 75, "created_at": "2022-12-14", "updated_at": "2026-03-11"}, {"name": "encryptogroup/MOTION", "stars": 91, "usage_count": 21, "created_at": "2020-09-15", "updated_at": "2023-07-20"}, {"name": "encryptogroup/MOTION2NX", "stars": 31, "usage_count": 26, "created_at": "2021-11-01", "updated_at": "2023-02-26"}, {"name": "nv-morpheus/MRC", "stars": 52, "usage_count": 91, "created_at": "2022-05-24", "updated_at": "2026-01-22"}, {"name": "mtodat/ms-bfs", "stars": 25, "usage_count": 1, "created_at": "2014-10-30", "updated_at": "2015-09-22"}, {"name": "Messi-Q/MuFuzz", "stars": 13, "usage_count": 1, "created_at": "2023-03-29", "updated_at": "2023-08-04"}, {"name": "grimoire/multi-camera-pose-estimation", "stars": 15, "usage_count": 1, "created_at": "2019-07-08", "updated_at": "2019-07-08"}, {"name": "keryell/muSYCL", "stars": 13, "usage_count": 2, "created_at": "2020-09-22", "updated_at": "2024-08-25"}, {"name": "etri/mw-nfd", "stars": 15, "usage_count": 1, "created_at": "2020-12-22", "updated_at": "2021-12-23"}, {"name": "tom--bo/mysqlredo", "stars": 14, "usage_count": 7, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "kumagi/nanahan", "stars": 29, "usage_count": 3, "created_at": "2012-06-23", "updated_at": "2013-06-22"}, {"name": "i42output/neolib", "stars": 56, "usage_count": 3, "created_at": "2016-01-17", "updated_at": "2026-02-25"}, {"name": "ramirezd42/node-audio", "stars": 89, "usage_count": 1, "created_at": "2017-10-29", "updated_at": "2018-04-03"}, {"name": "lucasjones/node-cryptonote-util", "stars": 14, "usage_count": 1, "created_at": "2014-05-15", "updated_at": "2017-01-12"}, {"name": "mickem/nscp", "stars": 280, "usage_count": 1, "created_at": "2012-04-28", "updated_at": "2026-03-04"}, {"name": "infinitex-tech/Oasis", "stars": 39, "usage_count": 7, "created_at": "2018-05-03", "updated_at": "2018-08-02"}, {"name": "nicolov/occupancy_mapping_benchmarks", "stars": 21, "usage_count": 1, "created_at": "2019-03-16", "updated_at": "2019-03-17"}, {"name": "okcashpro/okcash-oldsrc-history", "stars": 60, "usage_count": 1, "created_at": "2014-11-24", "updated_at": "2016-10-30"}, {"name": "OpenFAM/OpenFAM", "stars": 27, "usage_count": 1, "created_at": "2019-10-14", "updated_at": "2025-11-18"}, {"name": "Tsinghua-OpenICV/OpenICV", "stars": 13, "usage_count": 4, "created_at": "2019-12-04", "updated_at": "2022-02-28"}, {"name": "fallahn/osgc", "stars": 27, "usage_count": 1, "created_at": "2019-04-01", "updated_at": "2021-02-11"}, {"name": "LuZhangstat/Pathfinder", "stars": 25, "usage_count": 9, "created_at": "2020-08-15", "updated_at": "2022-11-02"}, {"name": "gaopengcarl/percona-server-locks-detail-5.7.22", "stars": 31, "usage_count": 1, "created_at": "2019-01-18", "updated_at": "2022-10-19"}, {"name": "apohl79/petrel", "stars": 14, "usage_count": 17, "created_at": "2016-01-18", "updated_at": "2017-01-25"}, {"name": "zmij/pg_async", "stars": 26, "usage_count": 16, "created_at": "2015-07-18", "updated_at": "2019-01-24"}, {"name": "FirestormViewer/phoenix-firestorm", "stars": 94, "usage_count": 17, "created_at": "2022-08-12", "updated_at": "2026-03-10"}, {"name": "dbis-ilm/pipefabric", "stars": 13, "usage_count": 2, "created_at": "2017-01-25", "updated_at": "2021-04-07"}, {"name": "openalea/plantgl", "stars": 71, "usage_count": 1, "created_at": "2016-01-07", "updated_at": "2026-02-16"}, {"name": "dknetz/prm_planner", "stars": 20, "usage_count": 7, "created_at": "2017-05-18", "updated_at": "2021-03-03"}, {"name": "procommerce-io/procurrency", "stars": 13, "usage_count": 4, "created_at": "2017-04-21", "updated_at": "2019-05-09"}, {"name": "datavetaren/prologcoin", "stars": 36, "usage_count": 1, "created_at": "2017-06-12", "updated_at": "2021-05-26"}, {"name": "henryatman/PyMT4", "stars": 13, "usage_count": 1, "created_at": "2018-08-06", "updated_at": "2018-08-06"}, {"name": "Fujitsu-UTokyo-QDD/QDD", "stars": 13, "usage_count": 10, "created_at": "2022-10-13", "updated_at": "2025-12-23"}, {"name": "usnistgov/qpx-gamma", "stars": 19, "usage_count": 9, "created_at": "2015-03-31", "updated_at": "2019-04-17"}, {"name": "dominant-strategies/quai-gpu-miner", "stars": 26, "usage_count": 2, "created_at": "2024-08-12", "updated_at": "2025-03-25"}, {"name": "pcaspers/Quantuccia", "stars": 25, "usage_count": 2, "created_at": "2017-03-18", "updated_at": "2017-11-04"}, {"name": "Engineev/quintet", "stars": 14, "usage_count": 2, "created_at": "2018-03-18", "updated_at": "2018-08-06"}, {"name": "araij/rabbit_order", "stars": 48, "usage_count": 1, "created_at": "2016-05-20", "updated_at": "2026-01-30"}, {"name": "ray-project/ray", "stars": 40407, "usage_count": 2, "created_at": "2016-10-25", "updated_at": "2025-12-19"}, {"name": "PDS-Lab/Rcmp", "stars": 62, "usage_count": 18, "created_at": "2023-10-11", "updated_at": "2023-12-26"}, {"name": "thu-pacman/RisGraph", "stars": 37, "usage_count": 1, "created_at": "2021-08-24", "updated_at": "2022-05-11"}, {"name": "fiveai/ros_comm", "stars": 12, "usage_count": 1, "created_at": "2021-07-15", "updated_at": "2021-08-18"}, {"name": "nelhage/rules_boost", "stars": 298, "usage_count": 2, "created_at": "2016-08-14", "updated_at": "2026-02-19"}, {"name": "AliAyub007/SENDA", "stars": 15, "usage_count": 3, "created_at": "2018-07-12", "updated_at": "2018-11-08"}, {"name": "sero-cash/serominer", "stars": 17, "usage_count": 2, "created_at": "2019-05-21", "updated_at": "2019-06-10"}, {"name": "najsword/serverTwo", "stars": 63, "usage_count": 4, "created_at": "2019-03-21", "updated_at": "2019-03-21"}, {"name": "mmycly/serverTwo", "stars": 25, "usage_count": 7, "created_at": "2019-03-21", "updated_at": "2019-03-20"}, {"name": "frederikaalund/sfj", "stars": 17, "usage_count": 1, "created_at": "2012-02-05", "updated_at": "2016-12-05"}, {"name": "duytai/sFuzz", "stars": 102, "usage_count": 1, "created_at": "2019-05-16", "updated_at": "2022-03-24"}, {"name": "jingwei87/sgxdedup", "stars": 14, "usage_count": 1, "created_at": "2021-05-14", "updated_at": "2021-05-14"}, {"name": "fansehep/ShaunDB", "stars": 25, "usage_count": 3, "created_at": "2022-10-24", "updated_at": "2023-08-18"}, {"name": "simbricks/simbricks", "stars": 169, "usage_count": 1, "created_at": "2021-01-07", "updated_at": "2026-01-19"}, {"name": "smart-fm/simmobility-prod", "stars": 79, "usage_count": 1, "created_at": "2017-08-24", "updated_at": "2022-06-29"}, {"name": "RapidsAtHKUST/SimRank", "stars": 14, "usage_count": 2, "created_at": "2017-11-19", "updated_at": "2020-08-29"}, {"name": "smokenetwork/smoked", "stars": 11, "usage_count": 6, "created_at": "2018-04-11", "updated_at": "2021-06-03"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 7, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "takyonxxx/SoftPhone", "stars": 13, "usage_count": 1, "created_at": "2017-12-06", "updated_at": "2018-01-03"}, {"name": "synodic/soul-engine", "stars": 47, "usage_count": 9, "created_at": "2015-09-15", "updated_at": "2025-11-20"}, {"name": "synodic/Soul-Engine", "stars": 46, "usage_count": 11, "created_at": "2015-09-15", "updated_at": "2025-11-20"}, {"name": "mkskeller/SPDZ-Yao", "stars": 11, "usage_count": 1, "created_at": "2018-05-28", "updated_at": "2018-10-11"}, {"name": "su2code/SU2", "stars": 0, "usage_count": 6, "created_at": "", "updated_at": ""}, {"name": "ajg/synth", "stars": 67, "usage_count": 1, "created_at": "2014-02-10", "updated_at": "2018-03-15"}, {"name": "HoerTech-gGmbH/tascar", "stars": 37, "usage_count": 1, "created_at": "2019-02-13", "updated_at": "2026-03-09"}, {"name": "zausiu/tcpgo_another_tcpcopy_core", "stars": 13, "usage_count": 1, "created_at": "2018-07-31", "updated_at": "2018-07-31"}, {"name": "herayning/tecio", "stars": 17, "usage_count": 6, "created_at": "2019-08-19", "updated_at": "2019-08-19"}, {"name": "franktea/temp", "stars": 24, "usage_count": 1, "created_at": "2018-12-10", "updated_at": "2026-02-07"}, {"name": "bytedance/terarkdb", "stars": 2144, "usage_count": 7, "created_at": "2020-12-11", "updated_at": "2025-08-25"}, {"name": "BorisSchaeling/theboostcpplibraries", "stars": 99, "usage_count": 5, "created_at": "2018-01-04", "updated_at": "2022-06-29"}, {"name": "damien911224/theWorldInSafety", "stars": 42, "usage_count": 2, "created_at": "2017-09-12", "updated_at": "2022-07-07"}, {"name": "maginatics/threadpool", "stars": 18, "usage_count": 1, "created_at": "2013-10-01", "updated_at": "2015-07-21"}, {"name": "tivalueproject/TiValue", "stars": 79, "usage_count": 10, "created_at": "2017-12-25", "updated_at": "2018-08-03"}, {"name": "taihedeveloper/tmq", "stars": 11, "usage_count": 2, "created_at": "2017-06-20", "updated_at": "2017-06-20"}, {"name": "topling/topling-ark", "stars": 0, "usage_count": 26, "created_at": "", "updated_at": ""}, {"name": "leapmotion/touchless", "stars": 19, "usage_count": 1, "created_at": "2016-10-05", "updated_at": "2016-10-31"}, {"name": "rburkholder/trade-frame", "stars": 0, "usage_count": 3, "created_at": "", "updated_at": ""}, {"name": "chenhongge/treeVerification", "stars": 27, "usage_count": 1, "created_at": "2019-06-10", "updated_at": "2019-06-15"}, {"name": "thu-pacman/TriCache", "stars": 76, "usage_count": 13, "created_at": "2022-04-15", "updated_at": "2025-12-08"}, {"name": "triSYCL/triSYCL", "stars": 455, "usage_count": 30, "created_at": "2014-04-19", "updated_at": "2024-11-02"}, {"name": "tenstorrent/tt-budabackend", "stars": 30, "usage_count": 1, "created_at": "2024-01-20", "updated_at": "2025-04-02"}, {"name": "victl/VeloSLAM", "stars": 20, "usage_count": 3, "created_at": "2016-07-12", "updated_at": "2019-12-14"}, {"name": "secondlife/viewer", "stars": 271, "usage_count": 17, "created_at": "2022-08-05", "updated_at": "2026-03-11"}, {"name": "openvstorage/volumedriver", "stars": 38, "usage_count": 1, "created_at": "2015-09-29", "updated_at": "2018-03-05"}, {"name": "topskychen/voxelizer", "stars": 78, "usage_count": 2, "created_at": "2014-06-17", "updated_at": "2021-04-10"}, {"name": "Mrsandman327/windows-book-code-c-", "stars": 72, "usage_count": 3, "created_at": "2019-05-29", "updated_at": "2019-05-29"}, {"name": "OzzieIsaacs/winmerge-qt", "stars": 13, "usage_count": 5, "created_at": "2019-08-10", "updated_at": "2021-04-05"}, {"name": "PooyaEimandar/WolfEngine", "stars": 28, "usage_count": 1, "created_at": "2014-10-31", "updated_at": "2023-08-16"}, {"name": "ToolmanInside/xfuzz_tool", "stars": 11, "usage_count": 1, "created_at": "2022-08-21", "updated_at": "2022-08-21"}, {"name": "yandex/yamail", "stars": 13, "usage_count": 3, "created_at": "2014-02-24", "updated_at": "2015-11-23"}, {"name": "SeadexGmbH/yasmine", "stars": 38, "usage_count": 3, "created_at": "2016-09-19", "updated_at": "2018-08-22"}, {"name": "DurianStallSingapore/ZILMiner", "stars": 38, "usage_count": 2, "created_at": "2019-01-16", "updated_at": "2021-06-25"}];
+    const contribRows = [{"version": "boost-1.88.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.87.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.87.0", "person": "eoan-ermine", "commit_count": 1}, {"version": "boost-1.86.0", "person": "grafikrobot", "commit_count": 7}, {"version": "boost-1.86.0", "person": "xiaodaxia", "commit_count": 1}, {"version": "boost-1.85.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.85.0", "person": "brad0", "commit_count": 2}, {"version": "boost-1.85.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.85.0", "person": "Hailios", "commit_count": 1}, {"version": "boost-1.84.0", "person": "olk", "commit_count": 4}, {"version": "boost-1.83.0", "person": "barracuda156", "commit_count": 1}, {"version": "boost-1.83.0", "person": "Davidoc26", "commit_count": 1}, {"version": "boost-1.81.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.80.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.80.0", "person": "Outer Heaven Legacy", "commit_count": 1}, {"version": "boost-1.80.0", "person": "Ed Catmur", "commit_count": 1}, {"version": "boost-1.79.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.79.0", "person": "kraj", "commit_count": 1}, {"version": "boost-1.78.0", "person": "A.Abelha", "commit_count": 3}, {"version": "boost-1.78.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.78.0", "person": "lowsfer", "commit_count": 1}, {"version": "boost-1.78.0", "person": "yhsb2k", "commit_count": 1}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 3}, {"version": "boost-1.77.0", "person": "Romain Geissler @ Amadeus", "commit_count": 1}, {"version": "boost-1.77.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.76.0", "person": "olk", "commit_count": 7}, {"version": "boost-1.76.0", "person": "neheb", "commit_count": 2}, {"version": "boost-1.76.0", "person": "eldiener", "commit_count": 2}, {"version": "boost-1.76.0", "person": "Benjamin Kaufmann", "commit_count": 2}, {"version": "boost-1.76.0", "person": "Ronan Keryell", "commit_count": 1}, {"version": "boost-1.76.0", "person": "airstone42", "commit_count": 1}, {"version": "boost-1.75.0", "person": "olk", "commit_count": 9}, {"version": "boost-1.75.0", "person": "Dmitry Khominich", "commit_count": 2}, {"version": "boost-1.75.0", "person": "dixlorenz", "commit_count": 1}, {"version": "boost-1.74.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.74.0", "person": "EGuesnet", "commit_count": 2}, {"version": "boost-1.74.0", "person": "dune-evalview", "commit_count": 2}, {"version": "boost-1.74.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.74.0", "person": "ctrysbita", "commit_count": 1}, {"version": "boost-1.73.0", "person": "olk", "commit_count": 14}, {"version": "boost-1.73.0", "person": "neheb", "commit_count": 9}, {"version": "boost-1.73.0", "person": "ingomueller-net", "commit_count": 2}, {"version": "boost-1.73.0", "person": "niekbouman", "commit_count": 1}, {"version": "boost-1.73.0", "person": "Romain Geissler @ Amadeus", "commit_count": 1}, {"version": "boost-1.72.0", "person": "olk", "commit_count": 6}, {"version": "boost-1.72.0", "person": "neheb", "commit_count": 2}, {"version": "boost-1.71.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.70.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.70.0", "person": "Romain Geissler @ Amadeus", "commit_count": 1}, {"version": "boost-1.70.0", "person": "Roman Gershman", "commit_count": 1}, {"version": "boost-1.70.0", "person": "kumar-shivam-ranjan", "commit_count": 1}, {"version": "boost-1.69.0", "person": "olk", "commit_count": 16}, {"version": "boost-1.69.0", "person": "Edward Diener", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Milan Svoboda", "commit_count": 1}, {"version": "boost-1.68.0", "person": "olk", "commit_count": 11}, {"version": "boost-1.68.0", "person": "Damian Jarek", "commit_count": 1}, {"version": "boost-1.68.0", "person": "Romain Geissler @ Amadeus", "commit_count": 1}, {"version": "boost-1.67.0", "person": "olk", "commit_count": 27}, {"version": "boost-1.67.0", "person": "Daniela Engert", "commit_count": 2}, {"version": "boost-1.67.0", "person": "jbeich", "commit_count": 1}, {"version": "boost-1.66.0", "person": "olk", "commit_count": 46}, {"version": "boost-1.66.0", "person": "Peter Dimov", "commit_count": 5}, {"version": "boost-1.66.0", "person": "glenfe", "commit_count": 1}, {"version": "boost-1.65.0", "person": "olk", "commit_count": 104}, {"version": "boost-1.65.0", "person": "Oliver Kowalke", "commit_count": 2}, {"version": "boost-1.65.0", "person": "glenfe", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.65.0", "person": "kivadiu", "commit_count": 1}, {"version": "boost-1.65.0", "person": "gjasny", "commit_count": 1}, {"version": "boost-1.64.0", "person": "olk", "commit_count": 127}, {"version": "boost-1.64.0", "person": "Brandon Kohn", "commit_count": 4}, {"version": "boost-1.64.0", "person": "Oliver Kowalke", "commit_count": 3}, {"version": "boost-1.64.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.63.0", "person": "Oliver Kowalke", "commit_count": 27}, {"version": "boost-1.63.0", "person": "olk", "commit_count": 24}, {"version": "boost-1.63.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.63.0", "person": "nat-goodspeed", "commit_count": 2}, {"version": "boost-1.63.0", "person": "KAPP Arnaud", "commit_count": 2}, {"version": "boost-1.62.0", "person": "Oliver Kowalke", "commit_count": 34}, {"version": "boost-1.62.0", "person": "olk", "commit_count": 34}, {"version": "boost-1.62.0", "person": "nat-goodspeed", "commit_count": 1}, {"version": "boost-1.61.0", "person": "Oliver Kowalke", "commit_count": 126}, {"version": "boost-1.61.0", "person": "nat-goodspeed", "commit_count": 54}, {"version": "boost-1.61.0", "person": "olk", "commit_count": 45}, {"version": "boost-1.60.0", "person": "Oliver Kowalke", "commit_count": 255}, {"version": "boost-1.60.0", "person": "nat-goodspeed", "commit_count": 98}, {"version": "boost-1.60.0", "person": "olk", "commit_count": 24}, {"version": "boost-1.59.0", "person": "Oliver Kowalke", "commit_count": 72}, {"version": "boost-1.59.0", "person": "nat-goodspeed", "commit_count": 36}, {"version": "boost-1.59.0", "person": "olk", "commit_count": 12}, {"version": "boost-1.59.0", "person": "Benjamin Worpitz", "commit_count": 1}, {"version": "boost-1.58.0", "person": "Oliver Kowalke", "commit_count": 54}, {"version": "boost-1.58.0", "person": "nat-goodspeed", "commit_count": 16}, {"version": "boost-1.58.0", "person": "olk", "commit_count": 4}, {"version": "boost-1.57.0", "person": "Oliver Kowalke", "commit_count": 31}, {"version": "boost-1.57.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.57.0", "person": "absolute8511", "commit_count": 2}, {"version": "boost-1.57.0", "person": "niXman", "commit_count": 1}, {"version": "boost-1.57.0", "person": "nat-goodspeed", "commit_count": 1}, {"version": "boost-1.56.0", "person": "Oliver Kowalke", "commit_count": 136}, {"version": "boost-1.56.0", "person": "nat-goodspeed", "commit_count": 14}, {"version": "boost-1.56.0", "person": "olk", "commit_count": 12}, {"version": "boost-1.56.0", "person": "Mario Lang", "commit_count": 2}, {"version": "boost-1.55.0", "person": "Oliver Kowalke", "commit_count": 85}, {"version": "boost-1.55.0", "person": "nat-goodspeed", "commit_count": 10}, {"version": "boost-1.55.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.54.0", "person": "Oliver Kowalke", "commit_count": 48}, {"version": "boost-1.54.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.54.0", "person": "Russell Power", "commit_count": 1}, {"version": "boost-1.53.0", "person": "Oliver Kowalke", "commit_count": 135}, {"version": "boost-1.53.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.51.0", "person": "Oliver Kowalke", "commit_count": 4}, {"version": "boost-1.49.0", "person": "Oliver Kowalke", "commit_count": 4}, {"version": "boost-1.48.0", "person": "Oliver Kowalke", "commit_count": 2}, {"version": "boost-1.47.0", "person": "Oliver Kowalke", "commit_count": 14}, {"version": "boost-1.46.0", "person": "Oliver Kowalke", "commit_count": 6}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    const usageYears = ["2009", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [9, 9, 25, 48, 125, 50, 128, 98, 57, 130, 55, 263, 26, 53, 58, 0];
+    const byUpdated = [0, 5, 8, 11, 65, 40, 109, 89, 107, 72, 65, 45, 111, 87, 271, 49];
+    const repoCounts = [1, 4, 9, 12, 11, 15, 28, 25, 24, 16, 16, 15, 3, 5, 3, 0];
+    const commitVersions = ["boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [69, 57, 135, 110, 52, 30, 13, 19, 11, 2, 8, 27, 14, 12, 15, 5, 6, 3, 5, 1, 0, 2, 4, 7, 8, 4, 2, 0, 0];
 
-                if (aVal < bVal) {
-                    return contributorSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return contributorSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
 
-            updateContributorSortIndicators();
-            contributorCurrentPage = 1;
-            updateContributorTable();
-        }
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
 
-        function filterContributorData(searchTerm) {
-            contributorSearchTerm = searchTerm.toLowerCase();
-            contributorFilteredData = contributorData.filter(contrib => {
-                const version = (contrib.version || '').toLowerCase();
-                const person = (contrib.person || '').toLowerCase();
-                const email = (contrib.email_address || '').toLowerCase();
-                return version.includes(contributorSearchTerm) ||
-                       person.includes(contributorSearchTerm) ||
-                       email.includes(contributorSearchTerm);
-            });
-            contributorCurrentPage = 1;
-            sortContributorData(contributorSortField);
-        }
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
 
-        function updateContributorSortIndicators() {
-            document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === contributorSortField) {
-                    indicator.textContent = contributorSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateContributorTable() {
-            const start = (contributorCurrentPage - 1) * contributorItemsPerPage;
-            const end = start + contributorItemsPerPage;
-            const pageData = contributorFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('contributor-table-tbody');
-            if (contributorFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No commit data available (boost_commit table not yet populated)</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(contrib => {
-                    const version = contrib.version || 'N/A';
-                    const person = contrib.person || contrib.email_address || 'N/A';
-                    const email = contrib.email_address || 'N/A';
-                    const commitCount = (contrib.commit_count || 0).toLocaleString();
-
-                    return `
-                        <tr>
-                            <td>${version}</td>
-                            <td>${person}</td>
-                            <td>${email}</td>
-                            <td>${commitCount}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateContributorPaginationInfo();
-            updateContributorPaginationButtons();
-        }
-
-        function updateContributorPaginationInfo() {
-            const start = contributorFilteredData.length === 0 ? 0 : (contributorCurrentPage - 1) * contributorItemsPerPage + 1;
-            const end = Math.min(contributorCurrentPage * contributorItemsPerPage, contributorFilteredData.length);
-            const total = contributorFilteredData.length;
-            document.getElementById('contributor-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateContributorPaginationButtons() {
-            const prevBtn = document.getElementById('contributor-prev-btn');
-            const nextBtn = document.getElementById('contributor-next-btn');
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-
-            prevBtn.disabled = contributorCurrentPage === 1 || contributorFilteredData.length === 0;
-            nextBtn.disabled = contributorCurrentPage >= totalPages || contributorFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortContributorData(th.dataset.sort));
-        });
-
-        document.getElementById('contributor-prev-btn').addEventListener('click', () => {
-            if (contributorCurrentPage > 1) {
-                contributorCurrentPage--;
-                updateContributorTable();
-            }
-        });
-
-        document.getElementById('contributor-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-            if (contributorCurrentPage < totalPages) {
-                contributorCurrentPage++;
-                updateContributorTable();
-            }
-        });
-
-        // Add search input handler
-        const contributorSearchInput = document.getElementById('contributor-search');
-        if (contributorSearchInput) {
-            contributorSearchInput.addEventListener('input', (e) => {
-                filterContributorData(e.target.value);
-            });
-        }
-
-        // Initial display - wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                sortContributorData('version');
-            });
-        } else {
-            sortContributorData('version');
-        }
-    
-    </script>
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
 </body>
 </html>

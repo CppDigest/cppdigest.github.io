@@ -1,1094 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pfr - Boost Library Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        h1 {
-            text-align: center;
-            color: #fff;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-weight: 700;
-        }
-        .panel {
-            background: #ffffff;
-            padding: 30px;
-            margin: 25px 0;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .panel:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .panel h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #1a202c;
-            font-size: 1.6em;
-            font-weight: 600;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-        }
-        .panel h3 {
-            color: #2d3748;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        .chart-container {
-            margin: 25px 0;
-            height: 450px;
-            position: relative;
-            background: #fafafa;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-        }
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block;
-        }
-        .panel-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-        .panel-row .chart-container {
-            margin: 0;
-        }
-        .panel-row table {
-            margin: 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f0f0f0;
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .sortable {
-            cursor: pointer;
-            user-select: none;
-            position: relative;
-        }
-        .sortable:hover {
-            background-color: #e0e0e0 !important;
-        }
-        .sort-indicator {
-            margin-left: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .back-link {
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            display: inline-block;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-        .back-link a:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #fff;
-            text-decoration: none;
-            transform: translateX(-3px);
-        }
-        .depth-1 {
-            background-color: #dbeafe;
-        }
-        .depth-2 {
-            background-color: #d1fae5;
-        }
-        .depth-3, .depth-4, .depth-5 {
-            background-color: #fef3c7;
-        }
-        @media (max-width: 1200px) {
-            .panel-row {
-                grid-template-columns: 1fr;
-            }
-            body {
-                padding: 20px 15px;
-            }
-            .panel {
-                padding: 20px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pfr - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
 </head>
 <body>
-    <div class="back-link">
-        <a href="../index.html">← Back to Dashboard</a>
-    </div>
-    <h1>📚 pfr</h1>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 pfr</h1>
 
-    <!-- Panel 0: Overview -->
-    <div class="panel">
-        <h2>Overview</h2>
-        <div class="overview-container">
-
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
-                <div>
-                    
-            <div>
-                <p style="color: #666;">
-                    Basic reflection  for user defined types.
-                </p>
-            </div>
-    
-                    <table style="width: 100%; margin: 0;">
-                        <tbody>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Created Version:</td>
-                                <td style="padding: 8px;">1.75.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Modified Version:</td>
-                                <td style="padding: 8px;">1.90.0</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Repositories:</td>
-                                <td style="padding: 8px;">58</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average New Repositories Per Year:</td>
-                                <td style="padding: 8px;">3.00</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Recent Year Repository Count:</td>
-                                <td style="padding: 8px;">5 (2025)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Most Used Year:</td>
-                                <td style="padding: 8px;">2024 (10 repos)</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Average Stars:</td>
-                                <td style="padding: 8px;">474</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Activity Score:</td>
-                                <td style="padding: 8px;">-0.077 <span style="color: #666; font-size: 0.9em;">(middle)</span></td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Internal Consumers:</td>
-                                <td style="padding: 8px;">1</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Contributors in Most Recent Version:</td>
-                                <td style="padding: 8px;">2</td>
-                            </tr>
-                            <tr>
-                                <td style="font-weight: 600; padding: 8px;">Total Contributors:</td>
-                                <td style="padding: 8px;">29</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="headers-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="headers-search" placeholder="Filter headers..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Header</th>
-                                <th style="text-align: right; padding: 8px; border-bottom: 2px solid #ddd; font-weight: 600;">Times Included</th>
-                            </tr>
-                        </thead>
-                        <tbody id="headers-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="headers-pagination-info">Showing 1-10 of 39</span>
-                        </div>
-                        <div>
-                            <button id="headers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="headers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <script>
-                
-        const headersData = [{"name": "boost/pfr.hpp", "count": 65}, {"name": "boost/pfr/core.hpp", "count": 40}, {"name": "boost/pfr/detail/config.hpp", "count": 38}, {"name": "boost/pfr/detail/sequence_tuple.hpp", "count": 17}, {"name": "boost/pfr/tuple_size.hpp", "count": 15}, {"name": "boost/pfr/ops_fields.hpp", "count": 11}, {"name": "boost/pfr/detail/make_integer_sequence.hpp", "count": 10}, {"name": "boost/pfr/detail/rvalue_t.hpp", "count": 8}, {"name": "boost/pfr/core_name.hpp", "count": 7}, {"name": "boost/pfr/io_fields.hpp", "count": 5}, {"name": "boost/pfr/detail/fields_count.hpp", "count": 5}, {"name": "boost/pfr/ops.hpp", "count": 5}, {"name": "boost/pfr/precise.hpp", "count": 4}, {"name": "boost/pfr/functors.hpp", "count": 4}, {"name": "boost/pfr/detail/core.hpp", "count": 4}, {"name": "boost/pfr/detail/size_t_.hpp", "count": 4}, {"name": "boost/pfr/traits.hpp", "count": 3}, {"name": "boost/pfr/config.hpp", "count": 3}, {"name": "boost/pfr/functions_for.hpp", "count": 3}, {"name": "boost/pfr/io.hpp", "count": 3}, {"name": "boost/pfr/traits_fwd.hpp", "count": 3}, {"name": "boost/pfr/detail/core17_generated.hpp", "count": 2}, {"name": "boost/pfr/detail/detectors.hpp", "count": 2}, {"name": "boost/pfr/detail/for_each_field_impl.hpp", "count": 2}, {"name": "boost/pfr/detail/functional.hpp", "count": 2}, {"name": "boost/pfr/detail/make_flat_tuple_of_references.hpp", "count": 2}, {"name": "boost/pfr/detail/offset_based_getter.hpp", "count": 2}, {"name": "boost/pfr/detail/stdarray.hpp", "count": 2}, {"name": "boost/pfr/detail/stdtuple.hpp", "count": 2}, {"name": "boost/pfr/detail/unsafe_declval.hpp", "count": 2}, {"name": "boost/pfr/detail/for_each_field.hpp", "count": 1}, {"name": "boost/pfr/detail/core_name.hpp", "count": 1}, {"name": "boost/pfr/detail/core_name14_disabled.hpp", "count": 1}, {"name": "boost/pfr/detail/core_name20_static.hpp", "count": 1}, {"name": "boost/pfr/detail/fake_object.hpp", "count": 1}, {"name": "boost/pfr/detail/io.hpp", "count": 1}, {"name": "boost/pfr/detail/possible_reflectable.hpp", "count": 1}, {"name": "boost/pfr/detail/size_array.hpp", "count": 1}, {"name": "boost/pfr/detail/tie_from_structure_tuple.hpp", "count": 1}];
-        let headersCurrentPage = 1;
-        const headersItemsPerPage = 10;
-        let headersFilteredData = [...headersData];
-        let headersSearchTerm = '';
-
-        function filterHeadersData(searchTerm) {
-            headersSearchTerm = searchTerm.toLowerCase();
-            headersFilteredData = headersData.filter(header => {
-                const name = (header.name || '').toLowerCase();
-                const count = (header.count || 0).toString();
-                return name.includes(headersSearchTerm) || count.includes(headersSearchTerm);
-            });
-            headersCurrentPage = 1;
-            updateHeadersTable();
-        }
-
-        function updateHeadersTable() {
-            const start = (headersCurrentPage - 1) * headersItemsPerPage;
-            const end = start + headersItemsPerPage;
-            const pageData = headersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('headers-table-tbody');
-            tbody.innerHTML = pageData.map(header => {
-                const name = header.name || 'N/A';
-                const count = (header.count || 0).toLocaleString();
-                return `
-                    <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${name}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${count}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            // Update pagination info
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            const startItem = headersFilteredData.length === 0 ? 0 : start + 1;
-            const endItem = Math.min(start + headersItemsPerPage, headersFilteredData.length);
-            document.getElementById('headers-pagination-info').textContent =
-                headersFilteredData.length === 0 ? 'No data available' : `Showing ${startItem}-${endItem} of ${headersFilteredData.length}`;
-
-            // Update button states
-            document.getElementById('headers-prev-btn').disabled = headersCurrentPage === 1;
-            document.getElementById('headers-next-btn').disabled = headersCurrentPage >= totalPages;
-        }
-
-        document.getElementById('headers-prev-btn').addEventListener('click', () => {
-            if (headersCurrentPage > 1) {
-                headersCurrentPage--;
-                updateHeadersTable();
-            }
-        });
-
-        document.getElementById('headers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(headersFilteredData.length / headersItemsPerPage);
-            if (headersCurrentPage < totalPages) {
-                headersCurrentPage++;
-                updateHeadersTable();
-            }
-        });
-
-        // Add search input handler
-        const headersSearchInput = document.getElementById('headers-search');
-        if (headersSearchInput) {
-            headersSearchInput.addEventListener('input', (e) => {
-                filterHeadersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        updateHeadersTable();
-    
-            </script>
-    
-        </div>
-    </div>
-
-    <!-- Panel 1: Internal Consumers -->
-    <div class="panel">
-        <h2>Internal Consumers</h2>
-        <p style="color: #666; margin-top: 0; margin-bottom: 15px;">
-            Showing all consumers for the latest version.
-            Colors indicate depth: <span style="color: #3b82f6; font-weight: 600;">Blue (d1)</span> = Direct,
-            <span style="color: #10b981; font-weight: 600;">Green (d2)</span> = Second level,
-            <span style="color: #f59e0b; font-weight: 600;">Orange (d3)</span> = Third level,
-            <span style="color: #ef4444; font-weight: 600;">Red (d4+)</span> = Deeper levels.
-        </p>
-        <div class="panel-row">
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="4">Consumer Libraries</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-<tr><td style="background-color: #3b82f620; border-left: 3px solid #3b82f6;"><a href="mysql.html" style="color: #3b82f6; font-weight: bold;">mysql</a> <span style="color: #3b82f6; font-size: 0.85em; opacity: 0.7;"></span></td><td></td><td></td><td></td></tr>
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="chart-container">
-                <canvas id="dependentsChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 2: External Consumers -->
-    <div class="panel">
-        <h2>External Consumers</h2>
-        <div class="panel-row">
-            <div>
-                <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                    <label for="external-consumers-search" style="margin-right: 10px;">Search:</label>
-                    <input type="text" id="external-consumers-search" placeholder="Filter repositories..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                </div>
-                <table id="external-consumers-table">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="name">Repository <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="stars">Stars <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="usage_count">Header Includes <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="created_at">Created <span class="sort-indicator">↕</span></th>
-                            <th class="sortable" data-sort="updated_at">Updated <span class="sort-indicator">↕</span></th>
-                        </tr>
-                    </thead>
-                    <tbody id="external-consumers-tbody">
-                    </tbody>
-                </table>
-                <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <span id="external-consumers-pagination-info">Showing 1-10 of 58</span>
-                    </div>
-                    <div>
-                        <button id="external-consumers-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                        <button id="external-consumers-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="usageChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel 3: Contributors -->
-    <div class="panel">
-        <h2>Contribution</h2>
-        <div class="panel-row">
-            <div>
-                <div id="contributor-table-container">
-                    <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
-                        <label for="contributor-search" style="margin-right: 10px;">Search:</label>
-                        <input type="text" id="contributor-search" placeholder="Filter contributors..." style="padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                    <table id="contributor-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable" data-sort="version">Version <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="person">Contributor <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="email_address">Email <span class="sort-indicator">↕</span></th>
-                                <th class="sortable" data-sort="commit_count">Commit Count <span class="sort-indicator">↕</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="contributor-table-tbody">
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="contributor-pagination-info">Showing 1-10 of 64</span>
-                        </div>
-                        <div>
-                            <button id="contributor-prev-btn" style="padding: 6px 12px; margin-right: 10px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Previous</button>
-                            <button id="contributor-next-btn" style="padding: 6px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: white;">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <canvas id="commitChart"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <script>
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">Basic reflection  for user defined types.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.75.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.90.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>65</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>4.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>7</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2018</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>576</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>0.107</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>1</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>2</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>28</td></tr>
+        </tbody></table>
+      </div>
+      <div>
         
-        new Chart(document.getElementById('dependentsChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.66.0", "1.67.0", "1.68.0", "1.69.0", "1.70.0", "1.71.0", "1.72.0", "1.73.0", "1.74.0", "1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Primary Consumers',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgba(59, 130, 246, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }, {
-                    label: 'Transitive Consumers',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    borderWidth: 2,
-                    borderRadius: 4,
-                    stack: 'stack1'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            autoSkip: true,
-                            maxRotation: 90,
-                            minRotation: 45,
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Consumer Count',
-                            font: {
-                                size: 12,
-                                weight: '600'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            },
-                            font: {
-                                size: 11
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('usageChart'), {
-            type: 'bar',
-            data: {
-                labels: ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"],
-                datasets: [
-                    {
-                        label: 'Created Repositories',
-                        type: 'line',
-                        data: [0, 1, 0, 3, 0, 2, 2, 7, 6, 4, 1, 6, 3, 8, 10, 5, 0],
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'transparent',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        fill: false,
-                        tension: 0.3,
-                        yAxisID: 'y1',
-                        order: 1
-                    },
-                    {
-                        label: 'Header Includes (New Repos)',
-                        type: 'bar',
-                        data: [0, 4, 0, 10, 0, 2, 4, 7, 7, 7, 1, 46, 10, 11, 159, 16, 0],
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    },
-                    {
-                        label: 'Header Includes (Updated Repos)',
-                        type: 'bar',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 2, 5, 9, 18, 20, 219, 7],
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        borderRadius: 4,
-                        order: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            usePointStyle: true,
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
-                        borderWidth: 1,
-                        displayColors: true,
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString();
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Headers',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Repositories',
-                            font: {
-                                size: 14,
-                                weight: 'bold',
-                                color: 'rgba(255, 99, 132, 0.8)'
-                            }
-                        },
-                        grid: {
-                            drawOnChartArea: false
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString();
-                            }
-                        }
-                    },
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Year',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
         
-        new Chart(document.getElementById('commitChart'), {
-            type: 'bar',
-            data: {
-                labels: ["1.75.0", "1.76.0", "1.77.0", "1.78.0", "1.79.0", "1.80.0", "1.81.0", "1.82.0", "1.83.0", "1.84.0", "1.85.0", "1.86.0", "1.87.0", "1.88.0", "1.89.0", "1.90.0"],
-                datasets: [{
-                    label: 'Commit Count',
-                    data: [81, 24, 39, 8, 1, 2, 26, 33, 9, 70, 8, 0, 14, 1, 18, 5],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
         
-        const externalConsumersData = [{"name": "EOSIO/eos", "stars": 11243, "usage_count": 1, "created_at": "2017-04-05", "updated_at": "2022-07-27"}, {"name": "derceg/explorerplusplus", "stars": 3078, "usage_count": 2, "created_at": "2013-08-23", "updated_at": "2026-01-18"}, {"name": "userver-framework/userver", "stars": 2785, "usage_count": 28, "created_at": "2021-12-16", "updated_at": "2025-12-30"}, {"name": "SpriteOvO/AirPodsDesktop", "stars": 2199, "usage_count": 1, "created_at": "2021-05-24", "updated_at": "2024-07-12"}, {"name": "ossia/score", "stars": 1943, "usage_count": 5, "created_at": "2013-10-15", "updated_at": "2026-01-14"}, {"name": "WiVRn/WiVRn", "stars": 1072, "usage_count": 6, "created_at": "2022-09-21", "updated_at": "2026-01-23"}, {"name": "dartsim/dart", "stars": 1042, "usage_count": 4, "created_at": "2011-09-19", "updated_at": "2026-01-13"}, {"name": "uber/neuropod", "stars": 941, "usage_count": 1, "created_at": "2019-01-23", "updated_at": "2024-01-03"}, {"name": "zhllxt/asio2", "stars": 909, "usage_count": 1, "created_at": "2017-10-27", "updated_at": "2026-01-13"}, {"name": "arximboldi/lager", "stars": 754, "usage_count": 1, "created_at": "2017-10-18", "updated_at": "2026-01-15"}, {"name": "beached/daw_json_link", "stars": 499, "usage_count": 1, "created_at": "2017-07-03", "updated_at": "2025-12-24"}, {"name": "celtera/avendish", "stars": 461, "usage_count": 10, "created_at": "2021-10-23", "updated_at": "2026-01-16"}, {"name": "vcoda/magma", "stars": 337, "usage_count": 1, "created_at": "2018-01-10", "updated_at": "2026-01-25"}, {"name": "nelhage/rules_boost", "stars": 301, "usage_count": 1, "created_at": "2016-08-14", "updated_at": "2025-12-18"}, {"name": "neobrain/blobify", "stars": 276, "usage_count": 4, "created_at": "2019-07-11", "updated_at": "2023-12-11"}, {"name": "serenedb/serenedb", "stars": 245, "usage_count": 10, "created_at": "2025-08-31", "updated_at": "2026-01-26"}, {"name": "XRay3D/GERBER_X3", "stars": 231, "usage_count": 3, "created_at": "2016-11-01", "updated_at": "2025-06-24"}, {"name": "MoeMod/CSMoE", "stars": 223, "usage_count": 1, "created_at": "2018-06-22", "updated_at": "2024-05-14"}, {"name": "ChainSQL/chainsqld", "stars": 215, "usage_count": 1, "created_at": "2017-11-14", "updated_at": "2023-01-12"}, {"name": "learnforpractice/pyeos", "stars": 132, "usage_count": 1, "created_at": "2017-10-11", "updated_at": "2022-11-18"}, {"name": "mason0510/eosDapps", "stars": 112, "usage_count": 1, "created_at": "2023-02-20", "updated_at": "2025-06-30"}, {"name": "PlatONnetwork/pWASM", "stars": 102, "usage_count": 1, "created_at": "2018-12-24", "updated_at": "2019-05-28"}, {"name": "kamping-site/kamping", "stars": 68, "usage_count": 1, "created_at": "2021-10-21", "updated_at": "2026-01-13"}, {"name": "egorpugin/tgbot", "stars": 68, "usage_count": 1, "created_at": "2020-03-27", "updated_at": "2025-12-31"}, {"name": "bot-motherlib/TGBM", "stars": 62, "usage_count": 1, "created_at": "2024-08-05", "updated_at": "2025-10-15"}, {"name": "ximicpp/XOffsetDatastructure", "stars": 59, "usage_count": 1, "created_at": "2024-05-24", "updated_at": "2025-12-15"}, {"name": "adah1972/mozi", "stars": 55, "usage_count": 1, "created_at": "2023-11-25", "updated_at": "2025-04-17"}, {"name": "ddmitv/option", "stars": 51, "usage_count": 1, "created_at": "2023-10-30", "updated_at": "2025-03-01"}, {"name": "Bobini1/RhythmGame", "stars": 39, "usage_count": 3, "created_at": "2022-07-04", "updated_at": "2026-01-21"}, {"name": "sanguinariojoe/aquagpusph", "stars": 39, "usage_count": 3, "created_at": "2013-11-26", "updated_at": "2025-12-21"}, {"name": "dragon-dreamer/pe_bliss2", "stars": 34, "usage_count": 3, "created_at": "2021-10-08", "updated_at": "2025-01-15"}, {"name": "iTwin/itwin-unreal-plugin", "stars": 34, "usage_count": 1, "created_at": "2024-04-09", "updated_at": "2026-01-27"}, {"name": "zhllxt/asio3", "stars": 32, "usage_count": 1, "created_at": "2023-09-15", "updated_at": "2025-10-28"}, {"name": "GuusKemperman/CoralEngine", "stars": 23, "usage_count": 3, "created_at": "2024-07-12", "updated_at": "2025-03-20"}, {"name": "dragon-dreamer/binary-valentine", "stars": 22, "usage_count": 1, "created_at": "2023-06-04", "updated_at": "2025-01-21"}, {"name": "fabian-jung/glpp", "stars": 22, "usage_count": 1, "created_at": "2019-11-27", "updated_at": "2024-08-22"}, {"name": "SnaxFoundation/snax", "stars": 20, "usage_count": 1, "created_at": "2018-11-23", "updated_at": "2022-12-09"}, {"name": "rbrich/xcikit", "stars": 19, "usage_count": 1, "created_at": "2018-03-09", "updated_at": "2025-12-02"}, {"name": "Nagisaaaaaaaaa/ARIA", "stars": 18, "usage_count": 1, "created_at": "2024-02-13", "updated_at": "2025-05-19"}, {"name": "lowkey42/mirrage", "stars": 18, "usage_count": 1, "created_at": "2017-09-20", "updated_at": "2020-08-16"}, {"name": "cppgres/cppgres", "stars": 16, "usage_count": 1, "created_at": "2025-02-24", "updated_at": "2025-09-27"}, {"name": "strozfriedberg/llama", "stars": 16, "usage_count": 1, "created_at": "2024-06-26", "updated_at": "2025-10-28"}, {"name": "janezz55/generic", "stars": 16, "usage_count": 1, "created_at": "2015-04-28", "updated_at": "2024-05-18"}, {"name": "user1095108/generic", "stars": 16, "usage_count": 1, "created_at": "2015-04-28", "updated_at": "2024-05-18"}, {"name": "GordonSmith/component-model-cpp", "stars": 15, "usage_count": 148, "created_at": "2024-03-14", "updated_at": "2026-01-11"}, {"name": "Twon/Morpheus", "stars": 14, "usage_count": 2, "created_at": "2018-10-20", "updated_at": "2025-12-10"}, {"name": "EternalSaga/RGL", "stars": 14, "usage_count": 1, "created_at": "2024-07-22", "updated_at": "2025-07-12"}, {"name": "dragon-dreamer/simple_asn1", "stars": 14, "usage_count": 1, "created_at": "2022-12-08", "updated_at": "2023-08-15"}, {"name": "tucher/JsonFusion", "stars": 13, "usage_count": 3, "created_at": "2021-10-08", "updated_at": "2026-01-22"}, {"name": "tr3dh/ALF", "stars": 13, "usage_count": 1, "created_at": "2025-04-01", "updated_at": "2025-11-18"}, {"name": "liamT86/kamping", "stars": 13, "usage_count": 1, "created_at": "2025-09-08", "updated_at": "2025-09-08"}, {"name": "EOSIO/taurus-node", "stars": 13, "usage_count": 1, "created_at": "2023-06-16", "updated_at": "2024-03-29"}, {"name": "Maverobot/cpp_playground", "stars": 13, "usage_count": 1, "created_at": "2019-05-22", "updated_at": "2025-06-02"}, {"name": "CoronaEngine/Helicon", "stars": 12, "usage_count": 3, "created_at": "2025-05-17", "updated_at": "2026-01-05"}, {"name": "TUMFTM/TAM__common", "stars": 12, "usage_count": 1, "created_at": "2024-09-30", "updated_at": "2025-02-01"}, {"name": "linuxnyasha/utempl", "stars": 11, "usage_count": 1, "created_at": "2024-02-22", "updated_at": "2024-08-29"}, {"name": "vector-of-bool/lmno", "stars": 11, "usage_count": 1, "created_at": "2023-01-21", "updated_at": "2023-09-01"}, {"name": "ashtum/psql", "stars": 10, "usage_count": 4, "created_at": "2023-07-19", "updated_at": "2024-06-08"}];
-        let externalConsumersCurrentPage = 1;
-        const externalConsumersItemsPerPage = 10;
-        let externalConsumersSortField = 'stars';
-        let externalConsumersSortOrder = 'asc';
-        let externalConsumersFilteredData = [...externalConsumersData];
-        let externalConsumersSearchTerm = '';
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
 
-        function sortExternalConsumersData(field) {
-            if (externalConsumersSortField === field) {
-                externalConsumersSortOrder = externalConsumersSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                externalConsumersSortField = field;
-                externalConsumersSortOrder = 'asc';
-            }
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
 
-            externalConsumersFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
-
-                // Handle numeric fields
-                if (['stars', 'usage_count'].includes(field)) {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
-
-                // Handle date fields
-                if (['created_at', 'updated_at'].includes(field)) {
-                    aVal = aVal ? new Date(aVal) : new Date(0);
-                    bVal = bVal ? new Date(bVal) : new Date(0);
-                }
-
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
-
-                if (aVal < bVal) {
-                    return externalConsumersSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return externalConsumersSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-
-            updateExternalConsumersSortIndicators();
-            externalConsumersCurrentPage = 1;
-            updateExternalConsumersTable();
-        }
-
-        function filterExternalConsumersData(searchTerm) {
-            externalConsumersSearchTerm = searchTerm.toLowerCase();
-            externalConsumersFilteredData = externalConsumersData.filter(repo => {
-                const name = ((repo.name || repo.repo_name) || '').toLowerCase();
-                const stars = (repo.stars || 0).toString();
-                const usageCount = (repo.usage_count || 0).toString();
-                const createdAt = (repo.created_at || '').toLowerCase();
-                const updatedAt = (repo.updated_at || '').toLowerCase();
-                return name.includes(externalConsumersSearchTerm) ||
-                       stars.includes(externalConsumersSearchTerm) ||
-                       usageCount.includes(externalConsumersSearchTerm) ||
-                       createdAt.includes(externalConsumersSearchTerm) ||
-                       updatedAt.includes(externalConsumersSearchTerm);
-            });
-            externalConsumersCurrentPage = 1;
-            sortExternalConsumersData(externalConsumersSortField);
-        }
-
-        function updateExternalConsumersSortIndicators() {
-            document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === externalConsumersSortField) {
-                    indicator.textContent = externalConsumersSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateExternalConsumersTable() {
-            const start = (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage;
-            const end = start + externalConsumersItemsPerPage;
-            const pageData = externalConsumersFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('external-consumers-tbody');
-            if (externalConsumersFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No repositories found</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(repo => {
-                    const name = repo.name || repo.repo_name || 'N/A';
-                    const stars = (repo.stars || 0).toLocaleString();
-                    const usageCount = (repo.usage_count || 0).toLocaleString();
-                    let createdAt = repo.created_at || 'N/A';
-                    let updatedAt = repo.updated_at || 'N/A';
-                    if (createdAt !== 'N/A' && createdAt.length > 10) {
-                        createdAt = createdAt.substring(0, 10);
-                    }
-                    if (updatedAt !== 'N/A' && updatedAt.length > 10) {
-                        updatedAt = updatedAt.substring(0, 10);
-                    }
-
-                    return `
-                        <tr>
-                            <td><a href="https://github.com/${name}" target="_blank">${name}</a></td>
-                            <td>${stars}</td>
-                            <td>${usageCount}</td>
-                            <td>${createdAt}</td>
-                            <td>${updatedAt}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateExternalConsumersPaginationInfo();
-            updateExternalConsumersPaginationButtons();
-        }
-
-        function updateExternalConsumersPaginationInfo() {
-            const start = externalConsumersFilteredData.length === 0 ? 0 : (externalConsumersCurrentPage - 1) * externalConsumersItemsPerPage + 1;
-            const end = Math.min(externalConsumersCurrentPage * externalConsumersItemsPerPage, externalConsumersFilteredData.length);
-            const total = externalConsumersFilteredData.length;
-            document.getElementById('external-consumers-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateExternalConsumersPaginationButtons() {
-            const prevBtn = document.getElementById('external-consumers-prev-btn');
-            const nextBtn = document.getElementById('external-consumers-next-btn');
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-
-            prevBtn.disabled = externalConsumersCurrentPage === 1 || externalConsumersFilteredData.length === 0;
-            nextBtn.disabled = externalConsumersCurrentPage >= totalPages || externalConsumersFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#external-consumers-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortExternalConsumersData(th.dataset.sort));
-        });
-
-        document.getElementById('external-consumers-prev-btn').addEventListener('click', () => {
-            if (externalConsumersCurrentPage > 1) {
-                externalConsumersCurrentPage--;
-                updateExternalConsumersTable();
-            }
-        });
-
-        document.getElementById('external-consumers-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(externalConsumersFilteredData.length / externalConsumersItemsPerPage);
-            if (externalConsumersCurrentPage < totalPages) {
-                externalConsumersCurrentPage++;
-                updateExternalConsumersTable();
-            }
-        });
-
-        // Add search input handler
-        const externalConsumersSearchInput = document.getElementById('external-consumers-search');
-        if (externalConsumersSearchInput) {
-            externalConsumersSearchInput.addEventListener('input', (e) => {
-                filterExternalConsumersData(e.target.value);
-            });
-        }
-
-        // Initial display
-        sortExternalConsumersData('stars');
+  <script>
     
-        
-        const contributorData = [{"version": "1.90.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 3}, {"version": "1.90.0", "person": "Flamefire", "email_address": "Flamefire@users.noreply.github.com", "commit_count": 2}, {"version": "1.89.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 16}, {"version": "1.89.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 1}, {"version": "1.89.0", "person": "Sam Darwin", "email_address": "samuel.d.darwin@gmail.com", "commit_count": 1}, {"version": "1.88.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 1}, {"version": "1.87.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 9}, {"version": "1.87.0", "person": "Anarthal (Rub\u00e9n P\u00e9rez)", "email_address": "34971811+anarthal@users.noreply.github.com", "commit_count": 2}, {"version": "1.87.0", "person": "Lena", "email_address": "23459846+Baduit@users.noreply.github.com", "commit_count": 1}, {"version": "1.87.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 1}, {"version": "1.87.0", "person": "Zachary Wassall", "email_address": "runer112@gmail.com", "commit_count": 1}, {"version": "1.85.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 7}, {"version": "1.85.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 1}, {"version": "1.84.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 44}, {"version": "1.84.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 21}, {"version": "1.84.0", "person": "bela", "email_address": "asd@asd.asd", "commit_count": 4}, {"version": "1.84.0", "person": "Alexander Karatarakis", "email_address": "alex@karatarakis.com", "commit_count": 1}, {"version": "1.83.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 8}, {"version": "1.83.0", "person": "Mohammad Nejati", "email_address": "tufanpc@gmail.com", "commit_count": 1}, {"version": "1.82.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 16}, {"version": "1.82.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 14}, {"version": "1.82.0", "person": "caozhanhao", "email_address": "cao2013zh@163.com", "commit_count": 1}, {"version": "1.82.0", "person": "Ren\u00e9 Ferdinand Rivera Morell", "email_address": "grafikrobot@gmail.com", "commit_count": 1}, {"version": "1.82.0", "person": "Markus F.X.J. Oberhumer", "email_address": "markus@oberhumer.com", "commit_count": 1}, {"version": "1.81.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 14}, {"version": "1.81.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 10}, {"version": "1.81.0", "person": "Alexander Malkov", "email_address": "alexipro2@yandex.ru", "commit_count": 1}, {"version": "1.81.0", "person": "Alexander Malkov", "email_address": "alexiprof@yandex-team.ru", "commit_count": 1}, {"version": "1.80.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 2}, {"version": "1.79.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 1}, {"version": "1.78.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 7}, {"version": "1.78.0", "person": "Jean-Micha\u00ebl Celerier", "email_address": "jeanmichael.celerier+github@gmail.com", "commit_count": 1}, {"version": "1.77.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 25}, {"version": "1.77.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 12}, {"version": "1.77.0", "person": "Aleksei Romanov", "email_address": "aleksei.a.romanov@gmail.com", "commit_count": 1}, {"version": "1.77.0", "person": "Peter Dimov", "email_address": "pdimov@gmail.com", "commit_count": 1}, {"version": "1.76.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 19}, {"version": "1.76.0", "person": "Denis Mikhailov", "email_address": "denismikhaylov38@gmail.com", "commit_count": 3}, {"version": "1.76.0", "person": "jatin-25", "email_address": "79438656+jatin-25@users.noreply.github.com", "commit_count": 1}, {"version": "1.76.0", "person": "Edward Diener", "email_address": "eldlistmailingz@tropicsoft.com", "commit_count": 1}, {"version": "1.75.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 76}, {"version": "1.75.0", "person": "Andrzej Krzemie\u00c5\u201eski", "email_address": "akrzemi1@gmail.com", "commit_count": 2}, {"version": "1.75.0", "person": "Glen Fernandes", "email_address": "glen.fernandes@gmail.com", "commit_count": 2}, {"version": "1.75.0", "person": "ericLemanissier", "email_address": "ericLemanissier@users.noreply.github.com", "commit_count": 1}, {"version": "1.74.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 29}, {"version": "1.73.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 1}, {"version": "1.72.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 2}, {"version": "1.72.0", "person": "ofats", "email_address": "ogfatog@gmail.com", "commit_count": 2}, {"version": "1.71.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 30}, {"version": "1.70.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 14}, {"version": "1.69.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 39}, {"version": "1.69.0", "person": "Sergei Fedorov", "email_address": "sergei.a.fedorov@gmail.com", "commit_count": 8}, {"version": "1.69.0", "person": "Adam Butcher", "email_address": "adam@jessamine.co.uk", "commit_count": 6}, {"version": "1.69.0", "person": "Nikita Kniazev", "email_address": "nok.raven@gmail.com", "commit_count": 2}, {"version": "1.68.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 13}, {"version": "1.67.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 4}, {"version": "1.65.1", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 37}, {"version": "1.65.1", "person": "Chris Beck", "email_address": "beck.ct@gmail.com", "commit_count": 13}, {"version": "1.65.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 10}, {"version": "1.65.0", "person": "Santiago Castro", "email_address": "santi.1410@hotmail.com", "commit_count": 1}, {"version": "1.64.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 30}, {"version": "1.63.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 28}, {"version": "1.62.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 46}, {"version": "1.61.0", "person": "Antony Polukhin", "email_address": "antoshkka@gmail.com", "commit_count": 19}];
-        let contributorCurrentPage = 1;
-        const contributorItemsPerPage = 10;
-        let contributorSortField = 'version';
-        let contributorSortOrder = 'asc';
-        let contributorFilteredData = [...contributorData];
-        let contributorSearchTerm = '';
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-        function sortContributorData(field) {
-            if (contributorSortField === field) {
-                contributorSortOrder = contributorSortOrder === 'asc' ? 'desc' : 'asc';
-            } else {
-                contributorSortField = field;
-                contributorSortOrder = 'asc';
-            }
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
 
-            contributorFilteredData.sort((a, b) => {
-                let aVal = a[field] || '';
-                let bVal = b[field] || '';
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
 
-                // Handle numeric fields
-                if (field === 'commit_count') {
-                    aVal = Number(aVal) || 0;
-                    bVal = Number(bVal) || 0;
-                }
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
 
-                // Handle version strings
-                if (field === 'version') {
-                    aVal = aVal.toString();
-                    bVal = bVal.toString();
-                    // Simple version comparison (can be improved)
-                    const aParts = aVal.split('.').map(Number);
-                    const bParts = bVal.split('.').map(Number);
-                    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-                        const aPart = aParts[i] || 0;
-                        const bPart = bParts[i] || 0;
-                        if (aPart !== bPart) {
-                            return contributorSortOrder === 'asc' ? aPart - bPart : bPart - aPart;
-                        }
-                    }
-                    return 0;
-                }
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
 
-                // Handle string fields
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                }
-                if (typeof bVal === 'string') {
-                    bVal = bVal.toLowerCase();
-                }
+    const headersRows = [{"name": "include/boost/pfr.hpp", "count": 80}, {"name": "include/boost/pfr/core.hpp", "count": 39}, {"name": "include/boost/pfr/flat/core.hpp", "count": 18}, {"name": "include/boost/pfr/precise/core.hpp", "count": 18}, {"name": "include/boost/pfr/tuple_size.hpp", "count": 10}, {"name": "include/boost/pfr/flat/tuple_size.hpp", "count": 9}, {"name": "include/boost/pfr/precise.hpp", "count": 9}, {"name": "include/boost/pfr/precise/tuple_size.hpp", "count": 9}, {"name": "include/boost/pfr/core_name.hpp", "count": 8}, {"name": "include/boost/pfr/ops_fields.hpp", "count": 7}, {"name": "include/boost/pfr/detail/fields_count.hpp", "count": 6}, {"name": "include/boost/pfr/flat/io.hpp", "count": 3}, {"name": "include/boost/pfr/precise/io.hpp", "count": 3}, {"name": "include/boost/pfr/precise/ops.hpp", "count": 3}, {"name": "include/boost/pfr/flat/ops.hpp", "count": 3}, {"name": "include/boost/pfr/functors.hpp", "count": 2}, {"name": "include/boost/pfr/io_fields.hpp", "count": 2}, {"name": "include/boost/pfr/ops.hpp", "count": 2}, {"name": "include/boost/pfr/traits.hpp", "count": 2}, {"name": "include/boost/pfr/config.hpp", "count": 1}, {"name": "include/boost/pfr/functions_for.hpp", "count": 1}, {"name": "include/boost/pfr/io.hpp", "count": 1}, {"name": "include/boost/pfr/traits_fwd.hpp", "count": 1}, {"name": "include/boost/pfr/detail/core17_generated.hpp", "count": 1}, {"name": "include/boost/pfr/detail/for_each_field.hpp", "count": 1}];
+    const internalRows = [{"name": "mysql", "depth": 1}];
+    const externalRows = [{"name": "celtera/ahsohtoa", "stars": 81, "usage_count": 2, "created_at": "2021-11-03", "updated_at": "2022-05-27"}, {"name": "SpriteOvO/AirPodsDesktop", "stars": 2442, "usage_count": 1, "created_at": "2021-05-24", "updated_at": "2024-07-12"}, {"name": "tr3dh/ALF", "stars": 13, "usage_count": 1, "created_at": "2025-04-01", "updated_at": "2025-11-18"}, {"name": "pavelkryukov/AoAoAoTT", "stars": 25, "usage_count": 1, "created_at": "2019-02-16", "updated_at": "2022-08-12"}, {"name": "Nagisaaaaaaaaa/ARIA", "stars": 18, "usage_count": 1, "created_at": "2024-02-13", "updated_at": "2025-05-19"}, {"name": "zhllxt/asio2", "stars": 919, "usage_count": 1, "created_at": "2017-10-27", "updated_at": "2026-02-02"}, {"name": "zhllxt/asio3", "stars": 33, "usage_count": 1, "created_at": "2023-09-15", "updated_at": "2026-02-01"}, {"name": "celtera/avendish", "stars": 470, "usage_count": 10, "created_at": "2021-10-23", "updated_at": "2026-03-10"}, {"name": "dragon-dreamer/binary-valentine", "stars": 23, "usage_count": 1, "created_at": "2023-06-04", "updated_at": "2025-01-21"}, {"name": "neobrain/blobify", "stars": 277, "usage_count": 4, "created_at": "2019-07-11", "updated_at": "2023-12-11"}, {"name": "CoronaEngine/CabbageHardware", "stars": 20, "usage_count": 3, "created_at": "2025-07-01", "updated_at": "2026-03-09"}, {"name": "ChainSQL/chainsqld", "stars": 214, "usage_count": 1, "created_at": "2017-11-14", "updated_at": "2023-01-12"}, {"name": "GordonSmith/component-model-cpp", "stars": 15, "usage_count": 13, "created_at": "2024-03-14", "updated_at": "2026-01-11"}, {"name": "coschain/contentos", "stars": 14, "usage_count": 30, "created_at": "2018-06-05", "updated_at": "2018-12-27"}, {"name": "Maverobot/cpp_playground", "stars": 14, "usage_count": 1, "created_at": "2019-05-22", "updated_at": "2025-06-02"}, {"name": "cppgres/cppgres", "stars": 16, "usage_count": 1, "created_at": "2025-02-24", "updated_at": "2025-09-27"}, {"name": "MoeMod/CSMoE", "stars": 228, "usage_count": 1, "created_at": "2018-06-22", "updated_at": "2024-05-14"}, {"name": "SirusDoma/CXO2", "stars": 15, "usage_count": 1, "created_at": "2025-08-30", "updated_at": "2026-03-05"}, {"name": "dartsim/dart", "stars": 1058, "usage_count": 2, "created_at": "2011-09-19", "updated_at": "2026-03-08"}, {"name": "beached/daw_json_link", "stars": 502, "usage_count": 1, "created_at": "2017-07-03", "updated_at": "2026-02-16"}, {"name": "infinitex-tech/default-template", "stars": 25, "usage_count": 30, "created_at": "2018-05-21", "updated_at": "2018-08-02"}, {"name": "dimensionofficial/DimensionChain", "stars": 21, "usage_count": 1, "created_at": "2019-11-03", "updated_at": "2020-07-17"}, {"name": "EOSIO/eos", "stars": 11229, "usage_count": 1, "created_at": "2017-04-05", "updated_at": "2022-07-27"}, {"name": "mason0510/eosDapps", "stars": 80, "usage_count": 1, "created_at": "2023-02-20", "updated_at": "2025-06-30"}, {"name": "yinchengtsinghua/EOSIOChineseCPP", "stars": 16, "usage_count": 1, "created_at": "2019-01-23", "updated_at": "2019-01-23"}, {"name": "derceg/explorerplusplus", "stars": 3114, "usage_count": 2, "created_at": "2013-08-23", "updated_at": "2026-02-06"}, {"name": "user1095108/generic", "stars": 16, "usage_count": 1, "created_at": "2015-04-28", "updated_at": "2024-05-18"}, {"name": "XRay3D/GERBER_X3", "stars": 240, "usage_count": 3, "created_at": "2016-11-01", "updated_at": "2025-06-24"}, {"name": "fabian-jung/glpp", "stars": 21, "usage_count": 1, "created_at": "2019-11-27", "updated_at": "2024-08-22"}, {"name": "CoronaEngine/Helicon", "stars": 12, "usage_count": 3, "created_at": "2025-05-17", "updated_at": "2026-02-19"}, {"name": "iTwin/itwin-unreal-plugin", "stars": 34, "usage_count": 1, "created_at": "2024-04-09", "updated_at": "2026-03-10"}, {"name": "tucher/JsonFusion", "stars": 14, "usage_count": 3, "created_at": "2021-10-08", "updated_at": "2026-02-13"}, {"name": "kamping-site/kamping", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "liamT86/kamping", "stars": 13, "usage_count": 1, "created_at": "2025-09-08", "updated_at": "2025-09-08"}, {"name": "arximboldi/lager", "stars": 760, "usage_count": 1, "created_at": "2017-10-18", "updated_at": "2026-02-25"}, {"name": "strozfriedberg/llama", "stars": 16, "usage_count": 1, "created_at": "2024-06-26", "updated_at": "2025-10-28"}, {"name": "vector-of-bool/lmno", "stars": 11, "usage_count": 1, "created_at": "2023-01-21", "updated_at": "2023-09-01"}, {"name": "vcoda/magma", "stars": 340, "usage_count": 1, "created_at": "2018-01-10", "updated_at": "2026-01-25"}, {"name": "lowkey42/mirrage", "stars": 18, "usage_count": 1, "created_at": "2017-09-20", "updated_at": "2020-08-16"}, {"name": "Twon/Morpheus", "stars": 14, "usage_count": 2, "created_at": "2018-10-20", "updated_at": "2025-12-10"}, {"name": "adah1972/mozi", "stars": 58, "usage_count": 1, "created_at": "2023-11-25", "updated_at": "2026-02-04"}, {"name": "uber/neuropod", "stars": 940, "usage_count": 1, "created_at": "2019-01-23", "updated_at": "2024-01-03"}, {"name": "infinitex-tech/Oasis", "stars": 39, "usage_count": 30, "created_at": "2018-05-03", "updated_at": "2018-08-02"}, {"name": "tipi-build/openapipp", "stars": 21, "usage_count": 1, "created_at": "2021-10-29", "updated_at": "2022-03-24"}, {"name": "ddmitv/option", "stars": 51, "usage_count": 1, "created_at": "2023-10-30", "updated_at": "2025-03-01"}, {"name": "dragon-dreamer/pe_bliss2", "stars": 35, "usage_count": 3, "created_at": "2021-10-08", "updated_at": "2025-01-15"}, {"name": "PlatONnetwork/pWASM", "stars": 102, "usage_count": 1, "created_at": "2018-12-24", "updated_at": "2019-05-28"}, {"name": "learnforpractice/pyeos", "stars": 131, "usage_count": 1, "created_at": "2017-10-11", "updated_at": "2022-11-18"}, {"name": "EternalSaga/RGL", "stars": 14, "usage_count": 1, "created_at": "2024-07-22", "updated_at": "2025-07-12"}, {"name": "Bobini1/RhythmGame", "stars": 40, "usage_count": 3, "created_at": "2022-07-04", "updated_at": "2026-03-10"}, {"name": "nelhage/rules_boost", "stars": 298, "usage_count": 1, "created_at": "2016-08-14", "updated_at": "2026-02-19"}, {"name": "ossia/score", "stars": 1968, "usage_count": 5, "created_at": "2013-10-15", "updated_at": "2026-03-02"}, {"name": "serenedb/serenedb", "stars": 322, "usage_count": 10, "created_at": "2025-08-31", "updated_at": "2026-03-11"}, {"name": "dragon-dreamer/simple_asn1", "stars": 16, "usage_count": 1, "created_at": "2022-12-08", "updated_at": "2023-08-15"}, {"name": "SnaxFoundation/snax", "stars": 20, "usage_count": 1, "created_at": "2018-11-23", "updated_at": "2022-12-09"}, {"name": "TUMFTM/TAM__common", "stars": 17, "usage_count": 2, "created_at": "2024-09-30", "updated_at": "2026-02-23"}, {"name": "EOSIO/taurus-node", "stars": 13, "usage_count": 1, "created_at": "2023-06-16", "updated_at": "2024-03-29"}, {"name": "bot-motherlib/TGBM", "stars": 62, "usage_count": 1, "created_at": "2024-08-05", "updated_at": "2026-02-12"}, {"name": "egorpugin/tgbot", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "userver-framework/userver", "stars": 2827, "usage_count": 28, "created_at": "2021-12-16", "updated_at": "2026-03-11"}, {"name": "linuxnyasha/utempl", "stars": 11, "usage_count": 1, "created_at": "2024-02-22", "updated_at": "2024-08-29"}, {"name": "WiVRn/WiVRn", "stars": 1212, "usage_count": 7, "created_at": "2022-09-21", "updated_at": "2026-03-06"}, {"name": "rbrich/xcikit", "stars": 20, "usage_count": 1, "created_at": "2018-03-09", "updated_at": "2025-12-02"}, {"name": "ximicpp/XOffsetDatastructure", "stars": 64, "usage_count": 1, "created_at": "2024-05-24", "updated_at": "2026-03-02"}, {"name": "hyle-team/zano", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}];
+    const contribRows = [{"version": "boost-1.90.0", "person": "Antony Polukhin", "commit_count": 3}, {"version": "boost-1.90.0", "person": "Alexander Grund", "commit_count": 2}, {"version": "boost-1.89.0", "person": "Antony Polukhin", "commit_count": 16}, {"version": "boost-1.89.0", "person": "sdarwin", "commit_count": 1}, {"version": "boost-1.89.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.88.0", "person": "Antony Polukhin", "commit_count": 1}, {"version": "boost-1.87.0", "person": "Antony Polukhin", "commit_count": 9}, {"version": "boost-1.87.0", "person": "Anarthal (Rubén Pérez)", "commit_count": 2}, {"version": "boost-1.87.0", "person": "Baduit", "commit_count": 1}, {"version": "boost-1.87.0", "person": "runer112", "commit_count": 1}, {"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.85.0", "person": "Antony Polukhin", "commit_count": 7}, {"version": "boost-1.85.0", "person": "denzor200", "commit_count": 1}, {"version": "boost-1.84.0", "person": "denzor200", "commit_count": 44}, {"version": "boost-1.84.0", "person": "Antony Polukhin", "commit_count": 20}, {"version": "boost-1.84.0", "person": "asdasdasdasdasdd", "commit_count": 4}, {"version": "boost-1.84.0", "person": "alexkaratarakis", "commit_count": 1}, {"version": "boost-1.83.0", "person": "denzor200", "commit_count": 8}, {"version": "boost-1.83.0", "person": "Mohammad Nejati", "commit_count": 1}, {"version": "boost-1.82.0", "person": "denzor200", "commit_count": 16}, {"version": "boost-1.82.0", "person": "Antony Polukhin", "commit_count": 14}, {"version": "boost-1.82.0", "person": "markus-oberhumer", "commit_count": 1}, {"version": "boost-1.82.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.82.0", "person": "ZhanHao Cao", "commit_count": 1}, {"version": "boost-1.81.0", "person": "denzor200", "commit_count": 14}, {"version": "boost-1.81.0", "person": "Antony Polukhin", "commit_count": 10}, {"version": "boost-1.81.0", "person": "alexiprof", "commit_count": 2}, {"version": "boost-1.80.0", "person": "denzor200", "commit_count": 2}, {"version": "boost-1.79.0", "person": "Antony Polukhin", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Antony Polukhin", "commit_count": 7}, {"version": "boost-1.78.0", "person": "Jean-Michaël Celerier", "commit_count": 1}, {"version": "boost-1.77.0", "person": "Antony Polukhin", "commit_count": 25}, {"version": "boost-1.77.0", "person": "denzor200", "commit_count": 12}, {"version": "boost-1.77.0", "person": "alexey-romanov", "commit_count": 1}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.76.0", "person": "Antony Polukhin", "commit_count": 19}, {"version": "boost-1.76.0", "person": "denzor200", "commit_count": 3}, {"version": "boost-1.76.0", "person": "jatinkh25", "commit_count": 1}, {"version": "boost-1.76.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.75.0", "person": "Antony Polukhin", "commit_count": 76}, {"version": "boost-1.75.0", "person": "Andrzej Krzemieński", "commit_count": 2}, {"version": "boost-1.75.0", "person": "glenfe", "commit_count": 2}, {"version": "boost-1.75.0", "person": "ericLemanissier", "commit_count": 1}, {"version": "boost-1.74.0", "person": "Antony Polukhin", "commit_count": 29}, {"version": "boost-1.73.0", "person": "Antony Polukhin", "commit_count": 1}, {"version": "boost-1.72.0", "person": "ofats", "commit_count": 2}, {"version": "boost-1.72.0", "person": "Antony Polukhin", "commit_count": 2}, {"version": "boost-1.71.0", "person": "Antony Polukhin", "commit_count": 30}, {"version": "boost-1.70.0", "person": "Antony Polukhin", "commit_count": 14}, {"version": "boost-1.69.0", "person": "Antony Polukhin", "commit_count": 39}, {"version": "boost-1.69.0", "person": "Sergei Fedorov", "commit_count": 8}, {"version": "boost-1.69.0", "person": "abutcher-gh", "commit_count": 6}, {"version": "boost-1.69.0", "person": "Nikita Kniazev", "commit_count": 2}, {"version": "boost-1.68.0", "person": "Antony Polukhin", "commit_count": 13}, {"version": "boost-1.67.0", "person": "Antony Polukhin", "commit_count": 4}, {"version": "boost-1.66.0", "person": "Antony Polukhin", "commit_count": 37}, {"version": "boost-1.66.0", "person": "Chris Beck", "commit_count": 13}, {"version": "boost-1.65.0", "person": "Antony Polukhin", "commit_count": 10}, {"version": "boost-1.65.0", "person": "Santiago Castro", "commit_count": 1}, {"version": "boost-1.64.0", "person": "Antony Polukhin", "commit_count": 30}, {"version": "boost-1.63.0", "person": "Antony Polukhin", "commit_count": 28}, {"version": "boost-1.62.0", "person": "Antony Polukhin", "commit_count": 46}, {"version": "boost-1.61.0", "person": "Antony Polukhin", "commit_count": 19}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1];
+    const usageYears = ["2011", "2013", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [2, 7, 1, 4, 7, 98, 10, 1, 49, 11, 7, 22, 20, 0];
+    const byUpdated = [0, 0, 0, 0, 0, 94, 1, 3, 7, 10, 15, 11, 78, 20];
+    const repoCounts = [1, 2, 1, 2, 7, 9, 7, 0, 7, 3, 7, 9, 7, 0];
+    const commitVersions = ["boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [81, 24, 39, 8, 1, 2, 26, 33, 9, 69, 8, 0, 14, 1, 18, 5];
 
-                if (aVal < bVal) {
-                    return contributorSortOrder === 'asc' ? -1 : 1;
-                }
-                if (aVal > bVal) {
-                    return contributorSortOrder === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
 
-            updateContributorSortIndicators();
-            contributorCurrentPage = 1;
-            updateContributorTable();
-        }
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
 
-        function filterContributorData(searchTerm) {
-            contributorSearchTerm = searchTerm.toLowerCase();
-            contributorFilteredData = contributorData.filter(contrib => {
-                const version = (contrib.version || '').toLowerCase();
-                const person = (contrib.person || '').toLowerCase();
-                const email = (contrib.email_address || '').toLowerCase();
-                return version.includes(contributorSearchTerm) ||
-                       person.includes(contributorSearchTerm) ||
-                       email.includes(contributorSearchTerm);
-            });
-            contributorCurrentPage = 1;
-            sortContributorData(contributorSortField);
-        }
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
 
-        function updateContributorSortIndicators() {
-            document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === contributorSortField) {
-                    indicator.textContent = contributorSortOrder === 'asc' ? '↑' : '↓';
-                } else {
-                    indicator.textContent = '↕';
-                }
-            });
-        }
-
-        function updateContributorTable() {
-            const start = (contributorCurrentPage - 1) * contributorItemsPerPage;
-            const end = start + contributorItemsPerPage;
-            const pageData = contributorFilteredData.slice(start, end);
-
-            const tbody = document.getElementById('contributor-table-tbody');
-            if (contributorFilteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No commit data available (boost_commit table not yet populated)</td></tr>';
-            } else {
-                tbody.innerHTML = pageData.map(contrib => {
-                    const version = contrib.version || 'N/A';
-                    const person = contrib.person || contrib.email_address || 'N/A';
-                    const email = contrib.email_address || 'N/A';
-                    const commitCount = (contrib.commit_count || 0).toLocaleString();
-
-                    return `
-                        <tr>
-                            <td>${version}</td>
-                            <td>${person}</td>
-                            <td>${email}</td>
-                            <td>${commitCount}</td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-
-            updateContributorPaginationInfo();
-            updateContributorPaginationButtons();
-        }
-
-        function updateContributorPaginationInfo() {
-            const start = contributorFilteredData.length === 0 ? 0 : (contributorCurrentPage - 1) * contributorItemsPerPage + 1;
-            const end = Math.min(contributorCurrentPage * contributorItemsPerPage, contributorFilteredData.length);
-            const total = contributorFilteredData.length;
-            document.getElementById('contributor-pagination-info').textContent =
-                total === 0 ? 'No data available' : `Showing ${start}-${end} of ${total}`;
-        }
-
-        function updateContributorPaginationButtons() {
-            const prevBtn = document.getElementById('contributor-prev-btn');
-            const nextBtn = document.getElementById('contributor-next-btn');
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-
-            prevBtn.disabled = contributorCurrentPage === 1 || contributorFilteredData.length === 0;
-            nextBtn.disabled = contributorCurrentPage >= totalPages || contributorFilteredData.length === 0;
-
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
-            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
-            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
-            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
-        }
-
-        // Add click handlers for sortable headers
-        document.querySelectorAll('#contributor-table th.sortable').forEach(th => {
-            th.style.cursor = 'pointer';
-            th.addEventListener('click', () => sortContributorData(th.dataset.sort));
-        });
-
-        document.getElementById('contributor-prev-btn').addEventListener('click', () => {
-            if (contributorCurrentPage > 1) {
-                contributorCurrentPage--;
-                updateContributorTable();
-            }
-        });
-
-        document.getElementById('contributor-next-btn').addEventListener('click', () => {
-            const totalPages = Math.ceil(contributorFilteredData.length / contributorItemsPerPage);
-            if (contributorCurrentPage < totalPages) {
-                contributorCurrentPage++;
-                updateContributorTable();
-            }
-        });
-
-        // Add search input handler
-        const contributorSearchInput = document.getElementById('contributor-search');
-        if (contributorSearchInput) {
-            contributorSearchInput.addEventListener('input', (e) => {
-                filterContributorData(e.target.value);
-            });
-        }
-
-        // Initial display - wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                sortContributorData('version');
-            });
-        } else {
-            sortContributorData('version');
-        }
-    
-    </script>
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
 </body>
 </html>
