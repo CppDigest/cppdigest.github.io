@@ -1,0 +1,9 @@
+services:
+  boost-site:
+    build: .
+    container_name: boost-site
+    ports:
+      - "9102:80"
+    volumes:
+      - /opt/boost:/usr/share/nginx/html:ro
+    restart: unless-stopped
