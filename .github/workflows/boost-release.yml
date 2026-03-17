@@ -1,0 +1,74 @@
+name: Sync Boost Release
+
+on:
+  schedule:
+    # 05:00 UTC = midnight EST (UTC-5); shifts to 01:00 EDT in summer — acceptable
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect latest Boost production release
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # GitHub Tags API — most-recently-created tags first.
+          # 50 entries is more than enough: Boost ships ~4 tags/year
+          # (one beta + one production per release cycle).
+          TAGS=$(curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/boostorg/boost/tags?per_page=50")
+
+          # Keep only clean production tags: boost-X.Y.Z (no .betaN or .rcN suffix)
+          LATEST_TAG=$(echo "$TAGS" | jq -r \
+            '[.[] | select(.name | test("^boost-[0-9]+\\.[0-9]+\\.[0-9]+$"))] | .[0].name')
+
+          if [ -z "$LATEST_TAG" ] || [ "$LATEST_TAG" = "null" ]; then
+            echo "ERROR: Could not determine latest Boost production tag." >&2
+            exit 1
+          fi
+
+          echo "Latest production tag: $LATEST_TAG"
+
+          # Convert  boost-1.90.0  →  v1.90
+          # Pattern: boost-<major>.<minor>.<patch>  →  v<major>.<minor>
+          DIR=$(echo "$LATEST_TAG" | sed -E 's/^boost-([0-9]+)\.([0-9]+)\.[0-9]+$/v\1.\2/')
+
+          echo "Mapped directory name: $DIR"
+          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
+
+          if [ -d "$DIR" ]; then
+            echo "Directory '$DIR' already exists — no action needed."
+            echo "is_new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New release detected — will create '$DIR'."
+            echo "is_new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Copy develop/ to versioned directory
+        if: steps.detect.outputs.is_new == 'true'
+        run: |
+          DIR="${{ steps.detect.outputs.dir }}"
+          cp -r develop/ "$DIR/"
+          echo "Copied develop/ → $DIR/"
+
+      - name: Commit and push
+        if: steps.detect.outputs.is_new == 'true'
+        run: |
+          DIR="${{ steps.detect.outputs.dir }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$DIR/"
+          git commit -m "Add $DIR (snapshot from develop)"
+          git push
