@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>context - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
+</head>
+<body>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 context</h1>
+
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">(C++11) Context switching library.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.57.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.90.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>124</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>7.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>9</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2017</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>573</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>0.227</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>11</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>7</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>109</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
+
+  <script>
+    
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
+
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
+
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
+
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
+
+    const headersRows = [{"name": "include/boost/context/all.hpp", "count": 60}, {"name": "include/boost/context/detail/fcontext.hpp", "count": 43}, {"name": "include/boost/context/continuation.hpp", "count": 27}, {"name": "include/boost/context/stack_utils.hpp", "count": 25}, {"name": "include/boost/context/fcontext.hpp", "count": 21}, {"name": "include/boost/context/stack_context.hpp", "count": 16}, {"name": "include/boost/context/detail/config.hpp", "count": 14}, {"name": "include/boost/context/stack_allocator.hpp", "count": 12}, {"name": "include/boost/context/protected_fixedsize_stack.hpp", "count": 11}, {"name": "include/boost/context/continuation_fcontext.hpp", "count": 10}, {"name": "include/boost/context/detail/prefetch.hpp", "count": 10}, {"name": "include/boost/context/fiber.hpp", "count": 10}, {"name": "include/boost/context/stack_traits.hpp", "count": 9}, {"name": "include/boost/context/fixedsize_stack.hpp", "count": 5}, {"name": "include/boost/context/pooled_fixedsize_stack.hpp", "count": 4}, {"name": "include/boost/context/execution_context.hpp", "count": 4}, {"name": "include/boost/context/fiber_fcontext.hpp", "count": 2}, {"name": "include/boost/context/continuation_ucontext.hpp", "count": 2}, {"name": "include/boost/context/continuation_winfib.hpp", "count": 2}, {"name": "include/boost/context/flags.hpp", "count": 1}, {"name": "include/boost/context/segmented_stack.hpp", "count": 1}, {"name": "include/boost/context/posix/protected_fixedsize_stack.hpp", "count": 1}, {"name": "include/boost/context/preallocated.hpp", "count": 1}, {"name": "include/boost/context/detail/disable_overload.hpp", "count": 1}, {"name": "include/boost/context/detail/exception.hpp", "count": 1}, {"name": "include/boost/context/fiber_ucontext.hpp", "count": 1}, {"name": "include/boost/context/fiber_winfib.hpp", "count": 1}];
+    const internalRows = [{"name": "asio", "depth": 1}, {"name": "cobalt", "depth": 1}, {"name": "coroutine", "depth": 1}, {"name": "coroutine2", "depth": 1}, {"name": "fiber", "depth": 1}, {"name": "beast", "depth": 2}, {"name": "log", "depth": 2}, {"name": "mqtt5", "depth": 2}, {"name": "mysql", "depth": 2}, {"name": "process", "depth": 2}, {"name": "redis", "depth": 2}];
+    const externalRows = [{"name": "FurryR/Awacorn", "stars": 26, "usage_count": 1, "created_at": "2022-12-07", "updated_at": "2023-10-02"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 1, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "ByConity/ByConity", "stars": 2226, "usage_count": 1, "created_at": "2022-12-22", "updated_at": "2025-03-24"}, {"name": "vmilea/CppAsync", "stars": 80, "usage_count": 4, "created_at": "2015-10-16", "updated_at": "2016-10-13"}, {"name": "vmilea/CppAwait", "stars": 28, "usage_count": 2, "created_at": "2012-12-01", "updated_at": "2015-10-16"}, {"name": "GamechainSystem/GameChainBase", "stars": 19, "usage_count": 8, "created_at": "2017-11-30", "updated_at": "2018-05-18"}, {"name": "Lucretiel/Generator", "stars": 57, "usage_count": 1, "created_at": "2013-02-08", "updated_at": "2014-06-10"}, {"name": "BlockLink/HX-core", "stars": 13, "usage_count": 2, "created_at": "2017-09-11", "updated_at": "2018-07-24"}, {"name": "HcashOrg/Hcash", "stars": 54, "usage_count": 8, "created_at": "2017-06-18", "updated_at": "2018-02-06"}, {"name": "HcashOrg/HyperExchange", "stars": 39, "usage_count": 1, "created_at": "2018-06-15", "updated_at": "2021-10-26"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 12, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "eBay/IOManager", "stars": 11, "usage_count": 1, "created_at": "2022-09-21", "updated_at": "2025-12-09"}, {"name": "OpenMPDK/KVRocks", "stars": 47, "usage_count": 2, "created_at": "2019-09-20", "updated_at": "2022-06-21"}, {"name": "encryptogroup/MOTION", "stars": 92, "usage_count": 6, "created_at": "2020-09-15", "updated_at": "2023-07-20"}, {"name": "encryptogroup/MOTION2NX", "stars": 31, "usage_count": 6, "created_at": "2021-11-01", "updated_at": "2023-02-26"}, {"name": "OriginHubAI/MyScaleDB", "stars": 206, "usage_count": 2, "created_at": "2025-07-16", "updated_at": "2026-03-20"}, {"name": "rneiss/PocketTorah", "stars": 16, "usage_count": 2, "created_at": "2012-04-02", "updated_at": "2022-08-15"}, {"name": "jegonzal/PowerGraph", "stars": 362, "usage_count": 1, "created_at": "2013-07-01", "updated_at": "2022-03-30"}, {"name": "Fujitsu-UTokyo-QDD/QDD", "stars": 13, "usage_count": 1, "created_at": "2022-10-13", "updated_at": "2025-12-23"}, {"name": "JoaoBaptMG/ReboundTheGame", "stars": 52, "usage_count": 1, "created_at": "2017-01-29", "updated_at": "2019-09-29"}, {"name": "dato-code/SFrame", "stars": 901, "usage_count": 1, "created_at": "2015-09-03", "updated_at": "2018-09-30"}, {"name": "turi-code/SFrame", "stars": 901, "usage_count": 1, "created_at": "2015-09-03", "updated_at": "2018-09-30"}, {"name": "b6oy/SP2-Server", "stars": 22, "usage_count": 2, "created_at": "2017-01-24", "updated_at": "2017-01-24"}, {"name": "celerity/SimSYCL", "stars": 38, "usage_count": 1, "created_at": "2023-08-07", "updated_at": "2026-02-02"}, {"name": "synodic/Soul-Engine", "stars": 46, "usage_count": 1, "created_at": "2015-09-15", "updated_at": "2025-11-20"}, {"name": "gridem/Synca", "stars": 117, "usage_count": 1, "created_at": "2014-08-08", "updated_at": "2017-05-04"}, {"name": "tivalueproject/TiValue", "stars": 79, "usage_count": 17, "created_at": "2017-12-25", "updated_at": "2018-08-03"}, {"name": "Nailington/Yuzu", "stars": 94, "usage_count": 1, "created_at": "2024-03-05", "updated_at": "2024-03-05"}, {"name": "Gamer64ytb/Yuzu-Backup", "stars": 47, "usage_count": 1, "created_at": "2024-03-04", "updated_at": "2024-03-05"}, {"name": "google-deepmind/actionengine", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "Cocos-BCX/bcxLibrary-Cpp", "stars": 19, "usage_count": 1, "created_at": "2019-07-24", "updated_at": "2020-01-07"}, {"name": "boost-cmake/boost", "stars": 57, "usage_count": 3, "created_at": "2017-07-03", "updated_at": "2019-10-29"}, {"name": "kkodev/boost-ios", "stars": 23, "usage_count": 1, "created_at": "2013-01-09", "updated_at": "2013-04-19"}, {"name": "cppalliance/capy", "stars": 33, "usage_count": 5, "created_at": "2025-06-29", "updated_at": "2026-04-14"}, {"name": "KCreate/charly-vm", "stars": 100, "usage_count": 4, "created_at": "2017-05-24", "updated_at": "2026-01-24"}, {"name": "charmplusplus/charm", "stars": 230, "usage_count": 2, "created_at": "2019-04-22", "updated_at": "2026-03-23"}, {"name": "chdb-io/chdb", "stars": 2627, "usage_count": 2, "created_at": "2023-02-25", "updated_at": "2026-03-02"}, {"name": "XRPLF/clio", "stars": 102, "usage_count": 1, "created_at": "2020-12-19", "updated_at": "2026-04-20"}, {"name": "Cocos-BCX/cocos-mainnet", "stars": 1281, "usage_count": 1, "created_at": "2019-11-18", "updated_at": "2021-01-08"}, {"name": "matrix-construct/construct", "stars": 394, "usage_count": 1, "created_at": "2018-09-04", "updated_at": "2023-05-02"}, {"name": "coschain/contentos", "stars": 14, "usage_count": 1, "created_at": "2018-06-05", "updated_at": "2018-12-27"}, {"name": "maciekgajewski/coroutines", "stars": 34, "usage_count": 2, "created_at": "2013-09-11", "updated_at": "2013-11-14"}, {"name": "matovitch/cosche", "stars": 45, "usage_count": 1, "created_at": "2016-04-30", "updated_at": "2016-10-02"}, {"name": "rsms/coxlang", "stars": 11, "usage_count": 9, "created_at": "2016-04-11", "updated_at": "2018-01-21"}, {"name": "maciejpirog/cpp-effects", "stars": 128, "usage_count": 2, "created_at": "2022-02-09", "updated_at": "2023-10-27"}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 3, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "LEW21/cpp-yield", "stars": 14, "usage_count": 1, "created_at": "2013-12-19", "updated_at": "2015-12-17"}, {"name": "alex-friedl/crossplatform-push-notifications-example", "stars": 17, "usage_count": 1, "created_at": "2017-08-25", "updated_at": "2018-05-14"}, {"name": "opencsd/csd-filesystem", "stars": 11, "usage_count": 2, "created_at": "2021-11-04", "updated_at": "2023-12-13"}, {"name": "datablade-io/daisy", "stars": 33, "usage_count": 1, "created_at": "2021-02-18", "updated_at": "2022-02-22"}, {"name": "dashcoin/dashcoin", "stars": 31, "usage_count": 1, "created_at": "2014-06-27", "updated_at": "2018-03-28"}, {"name": "septag/deboost.context", "stars": 95, "usage_count": 1, "created_at": "2016-03-05", "updated_at": "2025-12-10"}, {"name": "eloqdata/eloqsql", "stars": 478, "usage_count": 3, "created_at": "2025-03-02", "updated_at": "2026-03-25"}, {"name": "eloqdata/eloqstore", "stars": 434, "usage_count": 4, "created_at": "2025-07-30", "updated_at": "2026-03-27"}, {"name": "citron-neo/emulator", "stars": 89, "usage_count": 1, "created_at": "2026-03-14", "updated_at": "2026-04-20"}, {"name": "bytemaster/fc", "stars": 78, "usage_count": 1, "created_at": "2012-09-08", "updated_at": "2023-10-01"}, {"name": "sumeetchhetri/ffead-cpp", "stars": 736, "usage_count": 1, "created_at": "2012-04-20", "updated_at": "2025-03-16"}, {"name": "fiberize/fiberize", "stars": 50, "usage_count": 2, "created_at": "2015-11-04", "updated_at": "2019-05-08"}, {"name": "facebook/folly", "stars": 30308, "usage_count": 1, "created_at": "2012-06-01", "updated_at": "2026-04-02"}, {"name": "pkgforge-community/git.citron-emu.org-Citron-Citron", "stars": 22, "usage_count": 1, "created_at": "2025-03-16", "updated_at": "2025-11-19"}, {"name": "ipkn/goplus", "stars": 13, "usage_count": 1, "created_at": "2016-09-01", "updated_at": "2016-09-15"}, {"name": "HFTrader/hbthreads", "stars": 52, "usage_count": 1, "created_at": "2022-10-20", "updated_at": "2026-02-02"}, {"name": "romange/helio", "stars": 534, "usage_count": 1, "created_at": "2020-08-18", "updated_at": "2026-04-17"}, {"name": "HDFGroup/hermes", "stars": 34, "usage_count": 1, "created_at": "2020-05-07", "updated_at": "2025-02-17"}, {"name": "openhive-network/hive", "stars": 376, "usage_count": 2, "created_at": "2020-03-20", "updated_at": "2026-04-06"}, {"name": "STEllAR-GROUP/hpx", "stars": 2809, "usage_count": 1, "created_at": "2012-05-26", "updated_at": "2026-03-20"}, {"name": "fungosforks/icq-desktop", "stars": 54, "usage_count": 5, "created_at": "2016-03-15", "updated_at": "2016-03-15"}, {"name": "iTwin/imodel-native", "stars": 25, "usage_count": 2, "created_at": "2022-11-02", "updated_at": "2026-04-17"}, {"name": "blinktrade/iofiber", "stars": 15, "usage_count": 1, "created_at": "2018-12-13", "updated_at": "2020-07-08"}, {"name": "twlostow/kicad-dev", "stars": 12, "usage_count": 1, "created_at": "2014-02-18", "updated_at": "2022-06-18"}, {"name": "msesia/knockoffgwas", "stars": 16, "usage_count": 1, "created_at": "2020-07-21", "updated_at": "2022-07-07"}, {"name": "zz-jason/leanstore", "stars": 48, "usage_count": 4, "created_at": "2023-06-30", "updated_at": "2026-03-10"}, {"name": "okyfirmansyah/libasyik", "stars": 37, "usage_count": 2, "created_at": "2020-05-25", "updated_at": "2026-04-15"}, {"name": "danwithgit/libcore", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "toffaletti/libten", "stars": 87, "usage_count": 2, "created_at": "2011-04-02", "updated_at": "2015-04-26"}, {"name": "taozhijiang/libto", "stars": 11, "usage_count": 2, "created_at": "2016-11-11", "updated_at": "2016-12-03"}, {"name": "lingo-db/lingo-db", "stars": 0, "usage_count": 4, "created_at": "", "updated_at": ""}, {"name": "matt-42/lithium", "stars": 1386, "usage_count": 5, "created_at": "2019-12-03", "updated_at": "2026-02-04"}, {"name": "bytemaster/mace", "stars": 18, "usage_count": 3, "created_at": "2012-05-14", "updated_at": "2012-10-21"}, {"name": "manticoresoftware/manticore", "stars": 11486, "usage_count": 2, "created_at": "2017-06-28", "updated_at": "2025-12-19"}, {"name": "manticoresoftware/manticoresearch", "stars": 11668, "usage_count": 5, "created_at": "2017-06-28", "updated_at": "2026-02-23"}, {"name": "stan-dev/math", "stars": 814, "usage_count": 2, "created_at": "2015-07-01", "updated_at": "2026-03-24"}, {"name": "mikage-emu/mikage-dev", "stars": 413, "usage_count": 1, "created_at": "2024-03-06", "updated_at": "2025-09-01"}, {"name": "eden-emulator/mirror", "stars": 46, "usage_count": 1, "created_at": "2025-10-25", "updated_at": "2026-04-17"}, {"name": "matt-42/moustique", "stars": 135, "usage_count": 1, "created_at": "2018-04-01", "updated_at": "2018-07-24"}, {"name": "prcvlabs/multiview", "stars": 14, "usage_count": 1, "created_at": "2021-08-30", "updated_at": "2021-10-03"}, {"name": "johnoneil/mupen64plus-web", "stars": 17, "usage_count": 4, "created_at": "2015-12-14", "updated_at": "2018-03-21"}, {"name": "tom--bo/mysqlredo", "stars": 14, "usage_count": 2, "created_at": "2024-01-09", "updated_at": "2024-11-04"}, {"name": "dreamanlan/myuzu", "stars": 16, "usage_count": 1, "created_at": "2024-03-23", "updated_at": "2026-04-07"}, {"name": "deeptho/neumodvb", "stars": 28, "usage_count": 5, "created_at": "2021-08-27", "updated_at": "2026-04-19"}, {"name": "N3xoX1/nxemu", "stars": 268, "usage_count": 1, "created_at": "2025-03-03", "updated_at": "2026-04-19"}, {"name": "ioriiod0/orchid", "stars": 98, "usage_count": 3, "created_at": "2012-11-19", "updated_at": "2015-12-01"}, {"name": "PowerDNS/pdns", "stars": 4312, "usage_count": 2, "created_at": "2013-04-26", "updated_at": "2026-03-21"}, {"name": "ahupowerdns/pdns", "stars": 18, "usage_count": 2, "created_at": "2013-05-07", "updated_at": "2020-11-02"}, {"name": "pika-org/pika", "stars": 85, "usage_count": 1, "created_at": "2022-01-17", "updated_at": "2026-04-15"}, {"name": "xiechenny/powerswitch", "stars": 16, "usage_count": 1, "created_at": "2013-12-05", "updated_at": "2013-12-23"}, {"name": "nongeneric/ps3emu", "stars": 21, "usage_count": 9, "created_at": "2018-08-06", "updated_at": "2021-02-27"}, {"name": "Yeolar/raster", "stars": 21, "usage_count": 2, "created_at": "2017-05-04", "updated_at": "2020-08-12"}, {"name": "ComputationalRadiationPhysics/redGrapes", "stars": 26, "usage_count": 1, "created_at": "2017-02-16", "updated_at": "2024-10-28"}, {"name": "SANS3R66/roblox-2016-source-code", "stars": 14, "usage_count": 2, "created_at": "2025-03-27", "updated_at": "2026-01-25"}, {"name": "ekmett/rts", "stars": 27, "usage_count": 1, "created_at": "2017-04-06", "updated_at": "2017-08-05"}, {"name": "nelhage/rules_boost", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "mmycly/serverTwo", "stars": 25, "usage_count": 1, "created_at": "2019-03-21", "updated_at": "2019-03-20"}, {"name": "fragcolor-xyz/shards", "stars": 83, "usage_count": 2, "created_at": "2019-10-14", "updated_at": "2026-04-16"}, {"name": "simgrid/simgrid", "stars": 189, "usage_count": 2, "created_at": "2012-02-08", "updated_at": "2026-03-24"}, {"name": "smokenetwork/smoked", "stars": 11, "usage_count": 8, "created_at": "2018-04-11", "updated_at": "2021-06-03"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 8, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "synodic/soul-engine", "stars": 47, "usage_count": 1, "created_at": "2015-09-15", "updated_at": "2025-11-20"}, {"name": "steemit/steem", "stars": 1955, "usage_count": 2, "created_at": "2016-03-23", "updated_at": "2026-01-15"}, {"name": "vstyler96/suyu", "stars": 96, "usage_count": 1, "created_at": "2024-03-07", "updated_at": "2024-03-07"}, {"name": "badgeek/svg2shenzhen", "stars": 850, "usage_count": 1, "created_at": "2018-03-29", "updated_at": "2025-03-15"}, {"name": "septag/sx", "stars": 877, "usage_count": 1, "created_at": "2018-07-19", "updated_at": "2022-07-08"}, {"name": "franktea/temp", "stars": 24, "usage_count": 5, "created_at": "2018-12-10", "updated_at": "2026-02-07"}, {"name": "topling/topling-ark", "stars": 17, "usage_count": 2, "created_at": "2024-06-23", "updated_at": "2026-04-19"}, {"name": "bytemaster/tornet", "stars": 97, "usage_count": 7, "created_at": "2012-01-23", "updated_at": "2015-10-07"}, {"name": "triSYCL/triSYCL", "stars": 455, "usage_count": 2, "created_at": "2014-04-19", "updated_at": "2024-11-02"}, {"name": "eloqdata/tx_service", "stars": 12, "usage_count": 3, "created_at": "2025-03-02", "updated_at": "2026-04-20"}, {"name": "djarek/ufiber", "stars": 11, "usage_count": 1, "created_at": "2018-11-24", "updated_at": "2020-12-23"}, {"name": "LEW21/yieldxx", "stars": 14, "usage_count": 1, "created_at": "2013-12-19", "updated_at": "2015-12-17"}, {"name": "NicolasArvani/yuzu", "stars": 21, "usage_count": 1, "created_at": "2024-03-04", "updated_at": "2024-03-03"}, {"name": "ourfavoritefruits/yuzu", "stars": 32, "usage_count": 1, "created_at": "2024-03-04", "updated_at": "2024-03-05"}, {"name": "yuzu-emu-mirror/yuzu", "stars": 117, "usage_count": 1, "created_at": "2024-03-05", "updated_at": "2024-03-05"}, {"name": "yuzu-emu-mirror/yuzu-android", "stars": 58, "usage_count": 1, "created_at": "2024-03-05", "updated_at": "2024-03-05"}, {"name": "warriorguo/zertcore5", "stars": 52, "usage_count": 1, "created_at": "2014-12-31", "updated_at": "2015-11-05"}];
+    const contribRows = [{"version": "boost-1.90.0", "person": "olk", "commit_count": 5}, {"version": "boost-1.90.0", "person": "vask2108", "commit_count": 2}, {"version": "boost-1.90.0", "person": "erikbs", "commit_count": 2}, {"version": "boost-1.90.0", "person": "FusionPow", "commit_count": 1}, {"version": "boost-1.90.0", "person": "crueter", "commit_count": 1}, {"version": "boost-1.90.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.90.0", "person": "mrmitzh", "commit_count": 1}, {"version": "boost-1.89.0", "person": "olk", "commit_count": 9}, {"version": "boost-1.89.0", "person": "striezel", "commit_count": 2}, {"version": "boost-1.89.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.89.0", "person": "tkoecker", "commit_count": 1}, {"version": "boost-1.89.0", "person": "elfprince13", "commit_count": 1}, {"version": "boost-1.89.0", "person": "carlo-bramini", "commit_count": 1}, {"version": "boost-1.89.0", "person": "Greenie0701", "commit_count": 1}, {"version": "boost-1.89.0", "person": "NaN-git", "commit_count": 1}, {"version": "boost-1.88.0", "person": "olk", "commit_count": 13}, {"version": "boost-1.88.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.88.0", "person": "Daniil", "commit_count": 2}, {"version": "boost-1.88.0", "person": "Dmitry Arkhipov", "commit_count": 1}, {"version": "boost-1.88.0", "person": "nat-goodspeed", "commit_count": 1}, {"version": "boost-1.88.0", "person": "Mohammad Nejati", "commit_count": 1}, {"version": "boost-1.88.0", "person": "iv-m", "commit_count": 1}, {"version": "boost-1.88.0", "person": "CBBBrother", "commit_count": 1}, {"version": "boost-1.88.0", "person": "Lars Kanis", "commit_count": 1}, {"version": "boost-1.88.0", "person": "Anarthal (Rubén Pérez)", "commit_count": 1}, {"version": "boost-1.88.0", "person": "MehdiChinoune", "commit_count": 1}, {"version": "boost-1.87.0", "person": "olk", "commit_count": 12}, {"version": "boost-1.87.0", "person": "vejbomar", "commit_count": 3}, {"version": "boost-1.87.0", "person": "Reimar Döffinger", "commit_count": 2}, {"version": "boost-1.87.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.87.0", "person": "Harish Subramanian", "commit_count": 2}, {"version": "boost-1.87.0", "person": "tjcw", "commit_count": 1}, {"version": "boost-1.87.0", "person": "r.nowak", "commit_count": 1}, {"version": "boost-1.87.0", "person": "petk", "commit_count": 1}, {"version": "boost-1.86.0", "person": "grafikrobot", "commit_count": 10}, {"version": "boost-1.86.0", "person": "abatyiev", "commit_count": 1}, {"version": "boost-1.86.0", "person": "arnaud-lb", "commit_count": 1}, {"version": "boost-1.86.0", "person": "Liryna", "commit_count": 1}, {"version": "boost-1.85.0", "person": "olk", "commit_count": 9}, {"version": "boost-1.85.0", "person": "cjeker", "commit_count": 4}, {"version": "boost-1.85.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.85.0", "person": "Nikita Kniazev", "commit_count": 2}, {"version": "boost-1.85.0", "person": "SoapGentoo", "commit_count": 1}, {"version": "boost-1.85.0", "person": "devnexen", "commit_count": 1}, {"version": "boost-1.84.0", "person": "olk", "commit_count": 7}, {"version": "boost-1.84.0", "person": "iv-m", "commit_count": 2}, {"version": "boost-1.84.0", "person": "Felix-El", "commit_count": 1}, {"version": "boost-1.84.0", "person": "The Moisrex", "commit_count": 1}, {"version": "boost-1.83.0", "person": "olk", "commit_count": 4}, {"version": "boost-1.83.0", "person": "ltrk2", "commit_count": 2}, {"version": "boost-1.83.0", "person": "barracuda156", "commit_count": 1}, {"version": "boost-1.82.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.82.0", "person": "ndossche", "commit_count": 2}, {"version": "boost-1.82.0", "person": "Nikita Kniazev", "commit_count": 2}, {"version": "boost-1.82.0", "person": "jschueller", "commit_count": 1}, {"version": "boost-1.82.0", "person": "evanmiller", "commit_count": 1}, {"version": "boost-1.82.0", "person": "eduardvoronkin", "commit_count": 1}, {"version": "boost-1.81.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.81.0", "person": "barracuda156", "commit_count": 4}, {"version": "boost-1.81.0", "person": "Antony Polukhin", "commit_count": 3}, {"version": "boost-1.81.0", "person": "Nikita Kniazev", "commit_count": 3}, {"version": "boost-1.81.0", "person": "PeterYang12", "commit_count": 1}, {"version": "boost-1.80.0", "person": "dixyes", "commit_count": 2}, {"version": "boost-1.80.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.80.0", "person": "PeterYang12", "commit_count": 1}, {"version": "boost-1.79.0", "person": "loongson-zn", "commit_count": 1}, {"version": "boost-1.79.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.78.0", "person": "olk", "commit_count": 13}, {"version": "boost-1.78.0", "person": "Alex", "commit_count": 2}, {"version": "boost-1.78.0", "person": "brad0", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Antony Polukhin", "commit_count": 1}, {"version": "boost-1.78.0", "person": "yhsb2k", "commit_count": 1}, {"version": "boost-1.78.0", "person": "NattyNarwhal", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Clément Chigot", "commit_count": 1}, {"version": "boost-1.77.0", "person": "olk", "commit_count": 13}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 8}, {"version": "boost-1.77.0", "person": "Sean Baxter", "commit_count": 1}, {"version": "boost-1.77.0", "person": "sdarwin", "commit_count": 1}, {"version": "boost-1.77.0", "person": "Nikita Kniazev", "commit_count": 1}, {"version": "boost-1.77.0", "person": "eschnett", "commit_count": 1}, {"version": "boost-1.77.0", "person": "k15tfu", "commit_count": 1}, {"version": "boost-1.76.0", "person": "olk", "commit_count": 12}, {"version": "boost-1.76.0", "person": "airstone42", "commit_count": 2}, {"version": "boost-1.76.0", "person": "eldiener", "commit_count": 2}, {"version": "boost-1.76.0", "person": "sdarwin", "commit_count": 2}, {"version": "boost-1.76.0", "person": "dixyes", "commit_count": 1}, {"version": "boost-1.76.0", "person": "neheb", "commit_count": 1}, {"version": "boost-1.76.0", "person": "devnexen", "commit_count": 1}, {"version": "boost-1.76.0", "person": "KochetovNicolai", "commit_count": 1}, {"version": "boost-1.76.0", "person": "viric", "commit_count": 1}, {"version": "boost-1.75.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.75.0", "person": "lowsfer", "commit_count": 1}, {"version": "boost-1.75.0", "person": "jschueller", "commit_count": 1}, {"version": "boost-1.75.0", "person": "ericastor", "commit_count": 1}, {"version": "boost-1.74.0", "person": "olk", "commit_count": 5}, {"version": "boost-1.74.0", "person": "eldiener", "commit_count": 4}, {"version": "boost-1.74.0", "person": "EGuesnet", "commit_count": 3}, {"version": "boost-1.74.0", "person": "hvdijk", "commit_count": 1}, {"version": "boost-1.73.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.73.0", "person": "wzssyqa", "commit_count": 2}, {"version": "boost-1.73.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.73.0", "person": "Romain Geissler @ Amadeus", "commit_count": 1}, {"version": "boost-1.73.0", "person": "Andreas-Krebbel", "commit_count": 1}, {"version": "boost-1.72.0", "person": "olk", "commit_count": 11}, {"version": "boost-1.72.0", "person": "eldiener", "commit_count": 4}, {"version": "boost-1.72.0", "person": "kernigh", "commit_count": 2}, {"version": "boost-1.72.0", "person": "ericastor", "commit_count": 2}, {"version": "boost-1.72.0", "person": "Michał Janiszewski", "commit_count": 1}, {"version": "boost-1.72.0", "person": "Naveenaidu", "commit_count": 1}, {"version": "boost-1.72.0", "person": "nealef", "commit_count": 1}, {"version": "boost-1.72.0", "person": "andreas-schwab", "commit_count": 1}, {"version": "boost-1.71.0", "person": "Naveenaidu", "commit_count": 6}, {"version": "boost-1.71.0", "person": "olk", "commit_count": 5}, {"version": "boost-1.71.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.71.0", "person": "shawnanastasio", "commit_count": 1}, {"version": "boost-1.70.0", "person": "olk", "commit_count": 11}, {"version": "boost-1.70.0", "person": "Damian Jarek", "commit_count": 2}, {"version": "boost-1.70.0", "person": "tux3", "commit_count": 1}, {"version": "boost-1.70.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.70.0", "person": "andreas-schwab", "commit_count": 1}, {"version": "boost-1.69.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.69.0", "person": "eldiener", "commit_count": 5}, {"version": "boost-1.69.0", "person": "FlyGoat", "commit_count": 2}, {"version": "boost-1.69.0", "person": "kuhlenough", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Daniel Glaser", "commit_count": 1}, {"version": "boost-1.69.0", "person": "web-flow", "commit_count": 1}, {"version": "boost-1.69.0", "person": "theodelrieu", "commit_count": 1}, {"version": "boost-1.68.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.68.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.67.0", "person": "olk", "commit_count": 61}, {"version": "boost-1.67.0", "person": "James Cowgill", "commit_count": 6}, {"version": "boost-1.67.0", "person": "Tom Kent", "commit_count": 1}, {"version": "boost-1.67.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.67.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.66.0", "person": "olk", "commit_count": 14}, {"version": "boost-1.66.0", "person": "z33ky", "commit_count": 1}, {"version": "boost-1.66.0", "person": "SSE4", "commit_count": 1}, {"version": "boost-1.65.0", "person": "olk", "commit_count": 73}, {"version": "boost-1.65.0", "person": "Michael Johns", "commit_count": 2}, {"version": "boost-1.65.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.65.0", "person": "DaoWen", "commit_count": 2}, {"version": "boost-1.65.0", "person": "torbjo", "commit_count": 2}, {"version": "boost-1.65.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.65.0", "person": "Oliver Kowalke", "commit_count": 1}, {"version": "boost-1.64.0", "person": "olk", "commit_count": 34}, {"version": "boost-1.64.0", "person": "Oliver Kowalke", "commit_count": 14}, {"version": "boost-1.64.0", "person": "tsandmann", "commit_count": 2}, {"version": "boost-1.64.0", "person": "DaoWen", "commit_count": 2}, {"version": "boost-1.64.0", "person": "aargor", "commit_count": 1}, {"version": "boost-1.63.0", "person": "Oliver Kowalke", "commit_count": 26}, {"version": "boost-1.63.0", "person": "olk", "commit_count": 16}, {"version": "boost-1.63.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.63.0", "person": "blastrock", "commit_count": 1}, {"version": "boost-1.62.0", "person": "olk", "commit_count": 25}, {"version": "boost-1.62.0", "person": "Oliver Kowalke", "commit_count": 1}, {"version": "boost-1.61.0", "person": "Oliver Kowalke", "commit_count": 67}, {"version": "boost-1.61.0", "person": "olk", "commit_count": 3}, {"version": "boost-1.61.0", "person": "Kohei Takahashi", "commit_count": 2}, {"version": "boost-1.61.0", "person": "Debian User", "commit_count": 1}, {"version": "boost-1.61.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.60.0", "person": "Oliver Kowalke", "commit_count": 69}, {"version": "boost-1.60.0", "person": "olk", "commit_count": 10}, {"version": "boost-1.60.0", "person": "BenWiederhake", "commit_count": 3}, {"version": "boost-1.60.0", "person": "Debian User", "commit_count": 2}, {"version": "boost-1.60.0", "person": "oliver Kowalke", "commit_count": 1}, {"version": "boost-1.59.0", "person": "Oliver Kowalke", "commit_count": 31}, {"version": "boost-1.59.0", "person": "dlunch", "commit_count": 1}, {"version": "boost-1.59.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.58.0", "person": "Oliver Kowalke", "commit_count": 53}, {"version": "boost-1.58.0", "person": "olk", "commit_count": 4}, {"version": "boost-1.58.0", "person": "Jürgen Hunold", "commit_count": 1}, {"version": "boost-1.58.0", "person": "0x1997", "commit_count": 1}, {"version": "boost-1.58.0", "person": "Evgeny Shapovalov", "commit_count": 1}, {"version": "boost-1.57.0", "person": "Oliver Kowalke", "commit_count": 3}, {"version": "boost-1.57.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.57.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.56.0", "person": "Oliver Kowalke", "commit_count": 83}, {"version": "boost-1.56.0", "person": "olk", "commit_count": 5}, {"version": "boost-1.56.0", "person": "ismirlian", "commit_count": 1}, {"version": "boost-1.55.0", "person": "olk", "commit_count": 2}, {"version": "boost-1.55.0", "person": "Stephen Kelly", "commit_count": 1}, {"version": "boost-1.54.0", "person": "olk", "commit_count": 5}, {"version": "boost-1.53.0", "person": "olk", "commit_count": 23}, {"version": "boost-1.53.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.52.0", "person": "olk", "commit_count": 16}, {"version": "boost-1.52.0", "person": "hkaiser", "commit_count": 1}, {"version": "boost-1.51.0", "person": "olk", "commit_count": 8}, {"version": "boost-1.51.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.50.0", "person": "olk", "commit_count": 92}, {"version": "boost-1.50.0", "person": "swatanabe", "commit_count": 3}, {"version": "boost-1.49.0", "person": "olk", "commit_count": 1}, {"version": "boost-1.35.0", "person": "DougGregor", "commit_count": 1}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 10, 10, 10, 10, 11, 11, 11];
+    const usageYears = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [14, 23, 12, 6, 16, 25, 58, 30, 14, 22, 15, 15, 7, 13, 24, 1];
+    const byUpdated = [0, 10, 9, 17, 12, 27, 41, 18, 26, 21, 12, 9, 13, 16, 28, 36];
+    const repoCounts = [2, 10, 9, 5, 8, 8, 15, 11, 7, 8, 5, 8, 3, 11, 9, 1];
+    const commitVersions = ["boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [5, 60, 33, 85, 74, 26, 44, 53, 83, 16, 70, 9, 20, 16, 13, 23, 8, 13, 5, 23, 26, 21, 2, 5, 19, 15, 7, 11, 19, 13, 24, 25, 18, 13];
+
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
+
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
+
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
+</body>
+</html>

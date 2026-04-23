@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>proto - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
+</head>
+<body>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 proto</h1>
+
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">Expression template library and compiler construction toolkit for domain-specific embedded languages.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.71.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.89.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>53</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>3.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>2</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2015</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>187</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-0.939</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>115</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>2</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>20</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
+
+  <script>
+    
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
+
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
+
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
+
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
+
+    const headersRows = [{"name": "include/boost/proto/core.hpp", "count": 125}, {"name": "include/boost/proto/proto_fwd.hpp", "count": 65}, {"name": "include/boost/proto/proto.hpp", "count": 59}, {"name": "include/boost/proto/traits.hpp", "count": 48}, {"name": "include/boost/proto/context.hpp", "count": 47}, {"name": "include/boost/proto/debug.hpp", "count": 44}, {"name": "include/boost/proto/transform.hpp", "count": 42}, {"name": "include/boost/proto/operators.hpp", "count": 20}, {"name": "include/boost/proto/args.hpp", "count": 16}, {"name": "include/boost/proto/transform/impl.hpp", "count": 15}, {"name": "include/boost/proto/eval.hpp", "count": 10}, {"name": "include/boost/proto/fusion.hpp", "count": 9}, {"name": "include/boost/proto/transform/arg.hpp", "count": 9}, {"name": "include/boost/proto/domain.hpp", "count": 8}, {"name": "include/boost/proto/proto_typeof.hpp", "count": 8}, {"name": "include/boost/proto/generate.hpp", "count": 7}, {"name": "include/boost/proto/transform/make.hpp", "count": 7}, {"name": "include/boost/proto/make_expr.hpp", "count": 6}, {"name": "include/boost/proto/detail/generate_by_value.hpp", "count": 6}, {"name": "include/boost/proto/detail/basic_expr.hpp", "count": 6}, {"name": "include/boost/proto/detail/expr.hpp", "count": 6}, {"name": "include/boost/proto/detail/funop.hpp", "count": 6}, {"name": "include/boost/proto/transform/fold.hpp", "count": 5}, {"name": "include/boost/proto/matches.hpp", "count": 5}, {"name": "include/boost/proto/transform/when.hpp", "count": 5}, {"name": "include/boost/proto/detail/as_lvalue.hpp", "count": 5}, {"name": "include/boost/proto/expr.hpp", "count": 4}, {"name": "include/boost/proto/detail/decltype.hpp", "count": 4}, {"name": "include/boost/proto/detail/poly_function.hpp", "count": 4}, {"name": "include/boost/proto/tags.hpp", "count": 3}, {"name": "include/boost/proto/detail/template_arity.hpp", "count": 3}, {"name": "include/boost/proto/detail/deduce_domain.hpp", "count": 3}, {"name": "include/boost/proto/transform/call.hpp", "count": 3}, {"name": "include/boost/proto/transform/detail/pack.hpp", "count": 3}, {"name": "include/boost/proto/detail/preprocessed/deduce_domain_n.hpp", "count": 3}, {"name": "include/boost/proto/transform/fold_tree.hpp", "count": 3}, {"name": "include/boost/proto/transform/detail/call.hpp", "count": 3}, {"name": "include/boost/proto/transform/lazy.hpp", "count": 3}, {"name": "include/boost/proto/context/callable.hpp", "count": 3}, {"name": "include/boost/proto/context/null.hpp", "count": 3}, {"name": "include/boost/proto/extends.hpp", "count": 2}, {"name": "include/boost/proto/transform/detail/make_gcc_workaround.hpp", "count": 2}, {"name": "include/boost/proto/detail/ignore_unused.hpp", "count": 2}, {"name": "include/boost/proto/transform/detail/construct_funop.hpp", "count": 2}, {"name": "include/boost/proto/transform/detail/construct_pod_funop.hpp", "count": 2}, {"name": "include/boost/proto/transform/detail/make.hpp", "count": 2}, {"name": "include/boost/proto/detail/poly_function_funop.hpp", "count": 2}, {"name": "include/boost/proto/detail/poly_function_traits.hpp", "count": 2}, {"name": "include/boost/proto/functional/fusion/pop_front.hpp", "count": 2}, {"name": "include/boost/proto/functional/fusion/at.hpp", "count": 2}, {"name": "include/boost/proto/detail/deduce_domain_n.hpp", "count": 2}, {"name": "include/boost/proto/detail/any.hpp", "count": 2}, {"name": "include/boost/proto/detail/static_const.hpp", "count": 2}, {"name": "include/boost/proto/detail/preprocessed/poly_function_traits.hpp", "count": 2}, {"name": "include/boost/proto/transform/default.hpp", "count": 2}, {"name": "include/boost/proto/deep_copy.hpp", "count": 1}, {"name": "include/boost/proto/functional.hpp", "count": 1}, {"name": "include/boost/proto/detail/preprocessed/basic_expr.hpp", "count": 1}, {"name": "include/boost/proto/detail/preprocessed/funop.hpp", "count": 1}, {"name": "include/boost/proto/context/detail/default_eval.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/preprocessed/default_function_impl.hpp", "count": 1}, {"name": "include/boost/proto/detail/and_n.hpp", "count": 1}, {"name": "include/boost/proto/detail/lambda_matches.hpp", "count": 1}, {"name": "include/boost/proto/detail/matches_.hpp", "count": 1}, {"name": "include/boost/proto/detail/or_n.hpp", "count": 1}, {"name": "include/boost/proto/detail/vararg_matches_impl.hpp", "count": 1}, {"name": "include/boost/proto/functional/fusion.hpp", "count": 1}, {"name": "include/boost/proto/functional/std/utility.hpp", "count": 1}, {"name": "include/boost/proto/detail/remove_typename.hpp", "count": 1}, {"name": "include/boost/proto/detail/memfun_funop.hpp", "count": 1}, {"name": "include/boost/proto/detail/preprocessed/extends_funop_const.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/default_function_impl.hpp", "count": 1}, {"name": "include/boost/proto/context/detail/null_eval.hpp", "count": 1}, {"name": "include/boost/proto/detail/extends_funop.hpp", "count": 1}, {"name": "include/boost/proto/detail/extends_funop_const.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/fold_impl.hpp", "count": 1}, {"name": "include/boost/proto/functional/fusion/pop_back.hpp", "count": 1}, {"name": "include/boost/proto/functional/fusion/push_back.hpp", "count": 1}, {"name": "include/boost/proto/functional/fusion/push_front.hpp", "count": 1}, {"name": "include/boost/proto/functional/fusion/reverse.hpp", "count": 1}, {"name": "include/boost/proto/detail/make_expr.hpp", "count": 1}, {"name": "include/boost/proto/detail/make_expr_.hpp", "count": 1}, {"name": "include/boost/proto/detail/make_expr_funop.hpp", "count": 1}, {"name": "include/boost/proto/detail/unpack_expr_.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/preprocessed/pass_through_impl.hpp", "count": 1}, {"name": "include/boost/proto/detail/deprecated.hpp", "count": 1}, {"name": "include/boost/proto/detail/preprocessed/traits.hpp", "count": 1}, {"name": "include/boost/proto/detail/args.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/lazy.hpp", "count": 1}, {"name": "include/boost/proto/detail/as_expr.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/pack_impl.hpp", "count": 1}, {"name": "include/boost/proto/detail/deep_copy.hpp", "count": 1}, {"name": "include/boost/proto/transform/detail/expand_pack.hpp", "count": 1}, {"name": "include/boost/proto/detail/is_noncopyable.hpp", "count": 1}];
+    const internalRows = [{"name": "compute", "depth": 1}, {"name": "log", "depth": 1}, {"name": "msm", "depth": 1}, {"name": "phoenix", "depth": 1}, {"name": "spirit", "depth": 1}, {"name": "xpressive", "depth": 1}, {"name": "Odeint", "depth": 2}, {"name": "convert", "depth": 2}, {"name": "dll", "depth": 2}, {"name": "graph", "depth": 2}, {"name": "mqtt5", "depth": 2}, {"name": "property_tree", "depth": 2}, {"name": "serialization", "depth": 2}, {"name": "uBLAS", "depth": 2}, {"name": "wave", "depth": 2}, {"name": "accumulators", "depth": 3}, {"name": "bimap", "depth": 3}, {"name": "date_time", "depth": 3}, {"name": "dynamic_bitset", "depth": 3}, {"name": "flyweight", "depth": 3}, {"name": "geometry", "depth": 3}, {"name": "graph_parallel", "depth": 3}, {"name": "histogram", "depth": 3}, {"name": "mpi", "depth": 3}, {"name": "multi_index", "depth": 3}, {"name": "property_map", "depth": 3}, {"name": "property_map_parallel", "depth": 3}, {"name": "ptr_container", "depth": 3}, {"name": "python", "depth": 3}, {"name": "sort", "depth": 3}, {"name": "units", "depth": 3}, {"name": "uuid", "depth": 3}, {"name": "asio", "depth": 4}, {"name": "assign", "depth": 4}, {"name": "exception", "depth": 4}, {"name": "icl", "depth": 4}, {"name": "interprocess", "depth": 4}, {"name": "math", "depth": 4}, {"name": "parameter", "depth": 4}, {"name": "parameter_python", "depth": 4}, {"name": "random", "depth": 4}, {"name": "signals2", "depth": 4}, {"name": "thread", "depth": 4}, {"name": "Numeric Conversion", "depth": 5}, {"name": "algorithm", "depth": 5}, {"name": "any", "depth": 5}, {"name": "array", "depth": 5}, {"name": "atomic", "depth": 5}, {"name": "beast", "depth": 5}, {"name": "chrono", "depth": 5}, {"name": "circular_buffer", "depth": 5}, {"name": "concept_check", "depth": 5}, {"name": "context", "depth": 5}, {"name": "contract", "depth": 5}, {"name": "conversion", "depth": 5}, {"name": "coroutine", "depth": 5}, {"name": "filesystem", "depth": 5}, {"name": "format", "depth": 5}, {"name": "function", "depth": 5}, {"name": "heap", "depth": 5}, {"name": "iostreams", "depth": 5}, {"name": "locale", "depth": 5}, {"name": "lockfree", "depth": 5}, {"name": "multiprecision", "depth": 5}, {"name": "pool", "depth": 5}, {"name": "process", "depth": 5}, {"name": "program_options", "depth": 5}, {"name": "rational", "depth": 5}, {"name": "regex", "depth": 5}, {"name": "smart_ptr", "depth": 5}, {"name": "statechart", "depth": 5}, {"name": "test", "depth": 5}, {"name": "timer", "depth": 5}, {"name": "type_erasure", "depth": 5}, {"name": "unordered", "depth": 5}, {"name": "utility", "depth": 5}, {"name": "variant", "depth": 5}, {"name": "Unknown(185)", "depth": 6}, {"name": "Tribool", "depth": 6}, {"name": "bind", "depth": 6}, {"name": "container", "depth": 6}, {"name": "coroutine2", "depth": 6}, {"name": "detail", "depth": 6}, {"name": "fiber", "depth": 6}, {"name": "foreach", "depth": 6}, {"name": "functional", "depth": 6}, {"name": "fusion", "depth": 6}, {"name": "gil", "depth": 6}, {"name": "intrusive", "depth": 6}, {"name": "iterator", "depth": 6}, {"name": "lambda", "depth": 6}, {"name": "local_function", "depth": 6}, {"name": "move", "depth": 6}, {"name": "mpl", "depth": 6}, {"name": "multi_array", "depth": 6}, {"name": "optional", "depth": 6}, {"name": "poly_collection", "depth": 6}, {"name": "polygon", "depth": 6}, {"name": "range", "depth": 6}, {"name": "ratio", "depth": 6}, {"name": "scope_exit", "depth": 6}, {"name": "system", "depth": 6}, {"name": "tokenizer", "depth": 6}, {"name": "tuple", "depth": 6}, {"name": "type_traits", "depth": 6}, {"name": "typeof", "depth": 6}, {"name": "Interval", "depth": 7}, {"name": "config", "depth": 7}, {"name": "function_types", "depth": 7}, {"name": "lexical_cast", "depth": 7}, {"name": "tti", "depth": 7}, {"name": "crc", "depth": 8}, {"name": "integer", "depth": 8}, {"name": "io", "depth": 8}, {"name": "static_assert", "depth": 8}];
+    const externalRows = [{"name": "aboria/Aboria", "stars": 109, "usage_count": 9, "created_at": "2014-01-29", "updated_at": "2019-05-19"}, {"name": "alibaba/AliSQL", "stars": 5718, "usage_count": 1, "created_at": "2016-07-27", "updated_at": "2026-02-06"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 11, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "bumptop/BumpTop", "stars": 621, "usage_count": 49, "created_at": "2014-10-25", "updated_at": "2024-01-08"}, {"name": "PacktPublishing/CPP-Reactive-Programming", "stars": 144, "usage_count": 4, "created_at": "2018-06-27", "updated_at": "2023-07-06"}, {"name": "kmalloc/CompilerFront", "stars": 13, "usage_count": 1, "created_at": "2014-04-21", "updated_at": "2016-09-18"}, {"name": "HotDB-Community/HotDB-Engine", "stars": 34, "usage_count": 1, "created_at": "2024-02-01", "updated_at": "2024-02-01"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 79, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "KratosMultiphysics/Kratos", "stars": 1237, "usage_count": 4, "created_at": "2017-02-13", "updated_at": "2026-03-22"}, {"name": "oleghnidets/OHMySQL", "stars": 241, "usage_count": 36, "created_at": "2015-08-21", "updated_at": "2025-09-18"}, {"name": "prusa3d/PrusaSlicer", "stars": 8859, "usage_count": 3, "created_at": "2016-03-01", "updated_at": "2026-02-19"}, {"name": "QIDITECH/QIDISlicer", "stars": 93, "usage_count": 3, "created_at": "2023-05-30", "updated_at": "2025-09-04"}, {"name": "RcppCore/RcppNT2", "stars": 12, "usage_count": 6, "created_at": "2016-01-26", "updated_at": "2019-11-15"}, {"name": "myiosemail/ShowTimeVideoLive", "stars": 253, "usage_count": 71, "created_at": "2016-06-22", "updated_at": "2016-07-07"}, {"name": "avplayer/avhtml", "stars": 29, "usage_count": 1, "created_at": "2015-02-10", "updated_at": "2017-08-01"}, {"name": "kkodev/boost-ios", "stars": 23, "usage_count": 26, "created_at": "2013-01-09", "updated_at": "2013-04-19"}, {"name": "mz2/boostoniphone", "stars": 44, "usage_count": 60, "created_at": "2012-02-03", "updated_at": "2015-08-26"}, {"name": "BrainlessLabs/bun", "stars": 109, "usage_count": 5, "created_at": "2016-04-30", "updated_at": "2019-11-08"}, {"name": "homer6/c_reading", "stars": 25, "usage_count": 11, "created_at": "2011-04-30", "updated_at": "2011-04-30"}, {"name": "coolfluid/coolfluid3", "stars": 78, "usage_count": 33, "created_at": "2011-08-08", "updated_at": "2020-09-20"}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 16, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "sutambe/cpptruths", "stars": 20, "usage_count": 1, "created_at": "2015-03-16", "updated_at": "2019-09-06"}, {"name": "accellera-official/crave", "stars": 19, "usage_count": 23, "created_at": "2020-08-05", "updated_at": "2023-11-23"}, {"name": "agra-uni-bremen/crave", "stars": 53, "usage_count": 8, "created_at": "2012-06-28", "updated_at": "2023-11-29"}, {"name": "fungosforks/icq-desktop", "stars": 54, "usage_count": 51, "created_at": "2016-03-15", "updated_at": "2016-03-15"}, {"name": "izenecloud/izenelib", "stars": 43, "usage_count": 1, "created_at": "2014-09-11", "updated_at": "2015-04-21"}, {"name": "msesia/knockoffgwas", "stars": 16, "usage_count": 13, "created_at": "2020-07-21", "updated_at": "2022-07-07"}, {"name": "zettadb/kunlun-storage-081809", "stars": 32, "usage_count": 1, "created_at": "2021-02-15", "updated_at": "2022-04-11"}, {"name": "jakeowner/lastbattle", "stars": 55, "usage_count": 1, "created_at": "2017-11-24", "updated_at": "2017-11-24"}, {"name": "Lind-Project/lind_project", "stars": 32, "usage_count": 1, "created_at": "2018-03-28", "updated_at": "2025-07-03"}, {"name": "agra-uni-bremen/metaSMT", "stars": 52, "usage_count": 48, "created_at": "2012-06-28", "updated_at": "2016-03-26"}, {"name": "johnoneil/mupen64plus-web", "stars": 17, "usage_count": 4, "created_at": "2015-12-14", "updated_at": "2018-03-21"}, {"name": "topling/mytopling", "stars": 24, "usage_count": 1, "created_at": "2022-10-12", "updated_at": "2026-04-11"}, {"name": "jtlap/nt2", "stars": 42, "usage_count": 10, "created_at": "2010-11-02", "updated_at": "2015-11-13"}, {"name": "percona/percona-server", "stars": 1255, "usage_count": 1, "created_at": "2015-02-13", "updated_at": "2026-03-15"}, {"name": "percona/percona-xtrabackup", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "percona/percona-xtradb-cluster", "stars": 378, "usage_count": 1, "created_at": "2015-02-13", "updated_at": "2026-03-26"}, {"name": "polardb/polardbx-engine", "stars": 561, "usage_count": 1, "created_at": "2021-10-16", "updated_at": "2026-03-24"}, {"name": "oozebot/preFlight", "stars": 0, "usage_count": 3, "created_at": "", "updated_at": ""}, {"name": "precice/precice", "stars": 909, "usage_count": 1, "created_at": "2015-05-22", "updated_at": "2026-03-19"}, {"name": "eddelbuettel/rcppstreams", "stars": 17, "usage_count": 4, "created_at": "2014-08-05", "updated_at": "2026-01-28"}, {"name": "SANS3R66/roblox-2016-source-code", "stars": 14, "usage_count": 6, "created_at": "2025-03-27", "updated_at": "2026-01-25"}, {"name": "ARCCN/runos", "stars": 56, "usage_count": 1, "created_at": "2014-10-27", "updated_at": "2025-04-09"}, {"name": "ossia/score", "stars": 1987, "usage_count": 1, "created_at": "2013-10-15", "updated_at": "2026-03-23"}, {"name": "bastosmichael/semantic-web-crawler", "stars": 13, "usage_count": 7, "created_at": "2012-03-19", "updated_at": "2012-06-02"}, {"name": "mmycly/serverTwo", "stars": 25, "usage_count": 15, "created_at": "2019-03-21", "updated_at": "2019-03-20"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 3, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "iritkatriel/streamulus", "stars": 80, "usage_count": 4, "created_at": "2012-04-10", "updated_at": "2022-05-18"}, {"name": "TRIQS/triqs_0.x", "stars": 11, "usage_count": 12, "created_at": "2011-10-20", "updated_at": "2014-02-06"}, {"name": "sm-1z/unitree_mpc", "stars": 13, "usage_count": 2, "created_at": "2025-04-06", "updated_at": "2025-05-22"}, {"name": "ddemidov/vexcl", "stars": 718, "usage_count": 4, "created_at": "2012-05-29", "updated_at": "2025-07-19"}, {"name": "manumerous/wb_humanoid_mpc", "stars": 292, "usage_count": 2, "created_at": "2024-12-24", "updated_at": "2025-12-27"}, {"name": "andre-bergner/zignal", "stars": 57, "usage_count": 41, "created_at": "2015-11-02", "updated_at": "2017-12-04"}];
+    const contribRows = [{"version": "boost-1.89.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.89.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.86.0", "person": "grafikrobot", "commit_count": 4}, {"version": "boost-1.85.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.76.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.74.0", "person": "Eric Niebler", "commit_count": 4}, {"version": "boost-1.74.0", "person": "Nikita Kniazev", "commit_count": 2}, {"version": "boost-1.73.0", "person": "Nikita Kniazev", "commit_count": 1}, {"version": "boost-1.72.0", "person": "Eric Niebler", "commit_count": 1}, {"version": "boost-1.71.0", "person": "Peter Dimov", "commit_count": 4}, {"version": "boost-1.71.0", "person": "Eric Niebler", "commit_count": 2}, {"version": "boost-1.71.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.70.0", "person": "Nikita Kniazev", "commit_count": 2}, {"version": "boost-1.70.0", "person": "Eric Niebler", "commit_count": 1}, {"version": "boost-1.69.0", "person": "Eric Niebler", "commit_count": 4}, {"version": "boost-1.69.0", "person": "Burgos", "commit_count": 3}, {"version": "boost-1.67.0", "person": "Kohei Takahashi", "commit_count": 1}, {"version": "boost-1.67.0", "person": "Nikita Kniazev", "commit_count": 1}, {"version": "boost-1.63.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.60.0", "person": "dodheim", "commit_count": 1}, {"version": "boost-1.58.0", "person": "Eric Niebler", "commit_count": 2}, {"version": "boost-1.57.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.57.0", "person": "Eric Niebler", "commit_count": 1}, {"version": "boost-1.56.0", "person": "Eric Niebler", "commit_count": 5}, {"version": "boost-1.56.0", "person": "Eric Niebler", "commit_count": 3}, {"version": "boost-1.55.0", "person": "Eric Niebler", "commit_count": 4}, {"version": "boost-1.55.0", "person": "Stephen Kelly", "commit_count": 2}, {"version": "boost-1.55.0", "person": "jhunold", "commit_count": 1}, {"version": "boost-1.54.0", "person": "Eric Niebler", "commit_count": 2}, {"version": "boost-1.53.0", "person": "mclow", "commit_count": 2}, {"version": "boost-1.53.0", "person": "Eric Niebler", "commit_count": 1}, {"version": "boost-1.52.0", "person": "Eric Niebler", "commit_count": 22}, {"version": "boost-1.51.0", "person": "Eric Niebler", "commit_count": 18}, {"version": "boost-1.50.0", "person": "Eric Niebler", "commit_count": 14}, {"version": "boost-1.49.0", "person": "Eric Niebler", "commit_count": 15}, {"version": "boost-1.48.0", "person": "Eric Niebler", "commit_count": 25}, {"version": "boost-1.47.0", "person": "Eric Niebler", "commit_count": 31}, {"version": "boost-1.46.0", "person": "Eric Niebler", "commit_count": 40}, {"version": "boost-1.46.0", "person": "Bryce Adelstein Lelbach aka wash", "commit_count": 1}, {"version": "boost-1.46.0", "person": "swatanabe", "commit_count": 1}, {"version": "boost-1.46.0", "person": "hkaiser", "commit_count": 1}, {"version": "boost-1.45.0", "person": "Eric Niebler", "commit_count": 15}, {"version": "boost-1.45.0", "person": "Bryce Adelstein Lelbach aka wash", "commit_count": 1}, {"version": "boost-1.44.0", "person": "Eric Niebler", "commit_count": 43}, {"version": "boost-1.44.0", "person": "danieljames", "commit_count": 2}, {"version": "boost-1.43.0", "person": "Eric Niebler", "commit_count": 29}, {"version": "boost-1.42.0", "person": "Eric Niebler", "commit_count": 14}, {"version": "boost-1.41.0", "person": "Eric Niebler", "commit_count": 13}, {"version": "boost-1.41.0", "person": "straszheim", "commit_count": 2}, {"version": "boost-1.40.0", "person": "Eric Niebler", "commit_count": 30}, {"version": "boost-1.40.0", "person": "straszheim", "commit_count": 3}, {"version": "boost-1.39.0", "person": "Eric Niebler", "commit_count": 9}, {"version": "boost-1.39.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.39.0", "person": "straszheim", "commit_count": 1}, {"version": "boost-1.38.0", "person": "Eric Niebler", "commit_count": 36}, {"version": "boost-1.38.0", "person": "imikejackson", "commit_count": 2}, {"version": "boost-1.38.0", "person": "straszheim", "commit_count": 1}, {"version": "boost-1.38.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.37.0", "person": "Eric Niebler", "commit_count": 31}, {"version": "boost-1.37.0", "person": "imikejackson", "commit_count": 1}, {"version": "boost-1.36.0", "person": "Eric Niebler", "commit_count": 61}, {"version": "boost-1.35.0", "person": "DougGregor", "commit_count": 1}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76, 77, 77, 78, 79, 79, 81, 81, 82, 86, 89, 90, 91, 92, 92, 97, 100, 100, 40, 37, 39, 41, 42, 44, 45, 45, 47, 48, 49, 50, 53, 50, 54, 53, 50, 46, 29, 29, 29, 28, 28, 28, 28, 28, 22, 22, 22, 22, 22, 22, 22, 22, 21];
+    const usageYears = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [10, 135, 131, 27, 65, 87, 153, 16, 5, 15, 39, 2, 1, 3, 3, 8, 3];
+    const byUpdated = [0, 14, 180, 46, 96, 36, 158, 21, 23, 22, 32, 38, 10, 2, 5, 15, 5];
+    const repoCounts = [1, 4, 6, 2, 6, 8, 7, 3, 2, 1, 3, 2, 1, 1, 2, 2, 0];
+    const commitVersions = ["boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [7, 1, 1, 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 1, 0, 2, 0];
+
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
+
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
+
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
+</body>
+</html>

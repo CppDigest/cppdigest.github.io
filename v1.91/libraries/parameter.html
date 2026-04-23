@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>parameter - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
+</head>
+<body>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 parameter</h1>
+
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">Boost.Parameter Library - Write functions that accept arguments by name.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.58.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.90.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>51</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>2.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>1</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2014</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>185</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-1.011</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>103</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>2</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>34</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
+
+  <script>
+    
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
+
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
+
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
+
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
+
+    const headersRows = [{"name": "include/boost/parameter/aux_/pp_impl/argument_pack.hpp", "count": 160}, {"name": "include/boost/parameter.hpp", "count": 66}, {"name": "include/boost/parameter/keyword.hpp", "count": 57}, {"name": "include/boost/parameter/preprocessor.hpp", "count": 37}, {"name": "include/boost/parameter/name.hpp", "count": 20}, {"name": "include/boost/parameter/aux_/void.hpp", "count": 15}, {"name": "include/boost/parameter/binding.hpp", "count": 14}, {"name": "include/boost/parameter/parameters.hpp", "count": 10}, {"name": "include/boost/parameter/aux_/tag.hpp", "count": 7}, {"name": "include/boost/parameter/python.hpp", "count": 7}, {"name": "include/boost/parameter/macros.hpp", "count": 6}, {"name": "test/timer.hpp", "count": 5}, {"name": "include/boost/parameter/compose.hpp", "count": 4}, {"name": "include/boost/parameter/match.hpp", "count": 3}, {"name": "include/boost/parameter/aux_/unwrap_cv_reference.hpp", "count": 2}, {"name": "include/boost/parameter/value_type.hpp", "count": 2}, {"name": "include/boost/parameter/aux_/maybe.hpp", "count": 2}, {"name": "include/boost/parameter/aux_/pack/tag_keyword_arg.hpp", "count": 2}, {"name": "include/boost/parameter/aux_/is_maybe.hpp", "count": 2}, {"name": "include/boost/parameter/aux_/default.hpp", "count": 1}, {"name": "include/boost/parameter/aux_/yesno.hpp", "count": 1}, {"name": "include/boost/parameter/config.hpp", "count": 1}, {"name": "include/boost/parameter/aux_/preprocessor/nullptr.hpp", "count": 1}];
+    const internalRows = [{"name": "accumulators", "depth": 1}, {"name": "concept_check", "depth": 1}, {"name": "convert", "depth": 1}, {"name": "flyweight", "depth": 1}, {"name": "graph", "depth": 1}, {"name": "heap", "depth": 1}, {"name": "lockfree", "depth": 1}, {"name": "log", "depth": 1}, {"name": "msm", "depth": 1}, {"name": "parameter_python", "depth": 1}, {"name": "signals2", "depth": 1}, {"name": "algorithm", "depth": 2}, {"name": "bimap", "depth": 2}, {"name": "circular_buffer", "depth": 2}, {"name": "geometry", "depth": 2}, {"name": "gil", "depth": 2}, {"name": "graph_parallel", "depth": 2}, {"name": "icl", "depth": 2}, {"name": "iterator", "depth": 2}, {"name": "math", "depth": 2}, {"name": "mpi", "depth": 2}, {"name": "multi_array", "depth": 2}, {"name": "property_map", "depth": 2}, {"name": "python", "depth": 2}, {"name": "range", "depth": 2}, {"name": "regex", "depth": 2}, {"name": "spirit", "depth": 2}, {"name": "thread", "depth": 2}, {"name": "uBLAS", "depth": 2}, {"name": "wave", "depth": 2}, {"name": "Unknown(185)", "depth": 3}, {"name": "Odeint", "depth": 3}, {"name": "asio", "depth": 3}, {"name": "assign", "depth": 3}, {"name": "atomic", "depth": 3}, {"name": "chrono", "depth": 3}, {"name": "conversion", "depth": 3}, {"name": "coroutine", "depth": 3}, {"name": "date_time", "depth": 3}, {"name": "detail", "depth": 3}, {"name": "filesystem", "depth": 3}, {"name": "foreach", "depth": 3}, {"name": "functional", "depth": 3}, {"name": "interprocess", "depth": 3}, {"name": "iostreams", "depth": 3}, {"name": "locale", "depth": 3}, {"name": "multi_index", "depth": 3}, {"name": "multiprecision", "depth": 3}, {"name": "phoenix", "depth": 3}, {"name": "pool", "depth": 3}, {"name": "program_options", "depth": 3}, {"name": "property_map_parallel", "depth": 3}, {"name": "property_tree", "depth": 3}, {"name": "proto", "depth": 3}, {"name": "ptr_container", "depth": 3}, {"name": "random", "depth": 3}, {"name": "rational", "depth": 3}, {"name": "serialization", "depth": 3}, {"name": "statechart", "depth": 3}, {"name": "test", "depth": 3}, {"name": "tokenizer", "depth": 3}, {"name": "type_erasure", "depth": 3}, {"name": "units", "depth": 3}, {"name": "unordered", "depth": 3}, {"name": "utility", "depth": 3}, {"name": "uuid", "depth": 3}, {"name": "variant", "depth": 3}, {"name": "xpressive", "depth": 3}, {"name": "Interval", "depth": 4}, {"name": "Numeric Conversion", "depth": 4}, {"name": "Tribool", "depth": 4}, {"name": "any", "depth": 4}, {"name": "array", "depth": 4}, {"name": "bind", "depth": 4}, {"name": "config", "depth": 4}, {"name": "container", "depth": 4}, {"name": "context", "depth": 4}, {"name": "dynamic_bitset", "depth": 4}, {"name": "exception", "depth": 4}, {"name": "format", "depth": 4}, {"name": "function", "depth": 4}, {"name": "function_types", "depth": 4}, {"name": "fusion", "depth": 4}, {"name": "intrusive", "depth": 4}, {"name": "lambda", "depth": 4}, {"name": "local_function", "depth": 4}, {"name": "move", "depth": 4}, {"name": "mpl", "depth": 4}, {"name": "optional", "depth": 4}, {"name": "polygon", "depth": 4}, {"name": "ratio", "depth": 4}, {"name": "scope_exit", "depth": 4}, {"name": "smart_ptr", "depth": 4}, {"name": "system", "depth": 4}, {"name": "timer", "depth": 4}, {"name": "tuple", "depth": 4}, {"name": "type_traits", "depth": 4}, {"name": "typeof", "depth": 4}, {"name": "crc", "depth": 5}, {"name": "integer", "depth": 5}, {"name": "io", "depth": 5}, {"name": "static_assert", "depth": 5}, {"name": "tti", "depth": 5}];
+    const externalRows = [{"name": "tudelft3d/3D_Urban_Mesh_Annotator", "stars": 53, "usage_count": 2, "created_at": "2021-03-01", "updated_at": "2021-10-04"}, {"name": "ALPSim/ALPS", "stars": 21, "usage_count": 6, "created_at": "2024-08-30", "updated_at": "2026-04-17"}, {"name": "ALPSCore/ALPSCore", "stars": 112, "usage_count": 1, "created_at": "2014-05-12", "updated_at": "2025-11-03"}, {"name": "JinxinXiong/Baruch_Cplusplus_Financial_Engineering", "stars": 52, "usage_count": 3, "created_at": "2019-04-10", "updated_at": "2019-02-09"}, {"name": "kekyo/BoostForArduino", "stars": 11, "usage_count": 2, "created_at": "2017-12-31", "updated_at": "2021-03-27"}, {"name": "bumptop/BumpTop", "stars": 621, "usage_count": 18, "created_at": "2014-10-25", "updated_at": "2024-01-08"}, {"name": "ccf19881030/Cplus_libs_wrapper", "stars": 38, "usage_count": 4, "created_at": "2019-03-31", "updated_at": "2024-01-23"}, {"name": "daviddoria/Examples", "stars": 232, "usage_count": 1, "created_at": "2011-06-26", "updated_at": "2017-01-09"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 37, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "INMOST-DEV/INMOST", "stars": 29, "usage_count": 1, "created_at": "2014-03-18", "updated_at": "2025-12-04"}, {"name": "cloudera/Impala", "stars": 34, "usage_count": 1, "created_at": "2012-10-18", "updated_at": "2022-12-27"}, {"name": "NadineAB/MPC-Meshing_Point_Clouds", "stars": 24, "usage_count": 2, "created_at": "2015-12-18", "updated_at": "2021-12-26"}, {"name": "rwollman/NUPACK", "stars": 13, "usage_count": 159, "created_at": "2021-07-08", "updated_at": "2021-04-01"}, {"name": "RcppCore/RcppNT2", "stars": 12, "usage_count": 3, "created_at": "2016-01-26", "updated_at": "2019-11-15"}, {"name": "Shiyu-Xing/RegHEC", "stars": 26, "usage_count": 5, "created_at": "2023-04-02", "updated_at": "2025-10-23"}, {"name": "myiosemail/ShowTimeVideoLive", "stars": 253, "usage_count": 12, "created_at": "2016-06-22", "updated_at": "2016-07-07"}, {"name": "utkabobr/SliceBeam", "stars": 95, "usage_count": 8, "created_at": "2024-11-01", "updated_at": "2025-04-14"}, {"name": "armabon/UE4_CGAL", "stars": 32, "usage_count": 4, "created_at": "2016-11-22", "updated_at": "2018-10-05"}, {"name": "BlairArchibald/YewPar", "stars": 23, "usage_count": 1, "created_at": "2017-05-10", "updated_at": "2025-12-05"}, {"name": "sschaetz/aura", "stars": 56, "usage_count": 1, "created_at": "2013-04-04", "updated_at": "2018-05-23"}, {"name": "kkodev/boost-ios", "stars": 23, "usage_count": 5, "created_at": "2013-01-09", "updated_at": "2013-04-19"}, {"name": "mz2/boostoniphone", "stars": 44, "usage_count": 4, "created_at": "2012-02-03", "updated_at": "2015-08-26"}, {"name": "cppalliance/corosio", "stars": 0, "usage_count": 5, "created_at": "", "updated_at": ""}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 4, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "derceg/explorerplusplus", "stars": 3114, "usage_count": 2, "created_at": "2013-08-23", "updated_at": "2026-02-06"}, {"name": "feelpp/feelpp", "stars": 325, "usage_count": 29, "created_at": "2012-05-21", "updated_at": "2026-01-15"}, {"name": "Flusspferd/flusspferd", "stars": 22, "usage_count": 5, "created_at": "2010-07-01", "updated_at": "2010-08-31"}, {"name": "STEllAR-GROUP/hpx", "stars": 2809, "usage_count": 2, "created_at": "2012-05-26", "updated_at": "2026-03-20"}, {"name": "fungosforks/icq-desktop", "stars": 54, "usage_count": 8, "created_at": "2016-03-15", "updated_at": "2016-03-15"}, {"name": "jbmouret/limbo", "stars": 258, "usage_count": 5, "created_at": "2014-07-21", "updated_at": "2023-10-18"}, {"name": "resibots/limbo", "stars": 261, "usage_count": 5, "created_at": "2014-07-21", "updated_at": "2023-10-18"}, {"name": "bytemaster/mace", "stars": 18, "usage_count": 1, "created_at": "2012-05-14", "updated_at": "2012-10-21"}, {"name": "stan-dev/math", "stars": 814, "usage_count": 1, "created_at": "2015-07-01", "updated_at": "2026-03-24"}, {"name": "mbsim-env/mbsim", "stars": 51, "usage_count": 3, "created_at": "2015-04-24", "updated_at": "2026-03-25"}, {"name": "benelot/minemonics", "stars": 33, "usage_count": 3, "created_at": "2014-11-04", "updated_at": "2022-06-10"}, {"name": "mongodb/mongo", "stars": 28242, "usage_count": 1, "created_at": "2009-01-15", "updated_at": "2026-04-18"}, {"name": "BlackZork/mqmgateway", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "simunova/mtl4", "stars": 32, "usage_count": 29, "created_at": "2019-03-26", "updated_at": "2021-03-05"}, {"name": "nextfoam/nextfoam-cfd", "stars": 12, "usage_count": 1, "created_at": "2025-10-11", "updated_at": "2026-01-31"}, {"name": "yusuketomoto/ofxCGAL", "stars": 31, "usage_count": 2, "created_at": "2013-11-20", "updated_at": "2015-01-22"}, {"name": "dickoa/prepr", "stars": 12, "usage_count": 12, "created_at": "2020-05-10", "updated_at": "2022-11-09"}, {"name": "qcscine/qcmaquis", "stars": 46, "usage_count": 1, "created_at": "2020-10-12", "updated_at": "2025-09-11"}, {"name": "ajtack/riak-cpp", "stars": 14, "usage_count": 2, "created_at": "2011-10-09", "updated_at": "2014-11-25"}, {"name": "mmycly/serverTwo", "stars": 25, "usage_count": 3, "created_at": "2019-03-21", "updated_at": "2019-03-20"}, {"name": "sxs-collaboration/spectre", "stars": 184, "usage_count": 1, "created_at": "2017-04-07", "updated_at": "2026-03-16"}, {"name": "BorisSchaeling/theboostcpplibraries", "stars": 99, "usage_count": 4, "created_at": "2018-01-04", "updated_at": "2022-06-29"}, {"name": "yuwenyong/tinycore", "stars": 14, "usage_count": 1, "created_at": "2017-03-06", "updated_at": "2017-09-07"}, {"name": "bytemaster/tornet", "stars": 97, "usage_count": 1, "created_at": "2012-01-23", "updated_at": "2015-10-07"}, {"name": "wallscavesurvey/walls", "stars": 23, "usage_count": 8, "created_at": "2017-02-18", "updated_at": "2025-09-13"}, {"name": "mortany/xray", "stars": 16, "usage_count": 4, "created_at": "2020-08-19", "updated_at": "2021-07-04"}, {"name": "yandex/yamail", "stars": 13, "usage_count": 1, "created_at": "2014-02-24", "updated_at": "2015-11-23"}];
+    const contribRows = [{"version": "boost-1.90.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.90.0", "person": "Alexander Grund", "commit_count": 1}, {"version": "boost-1.89.0", "person": "Lastique", "commit_count": 10}, {"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.87.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.86.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.85.0", "person": "Lastique", "commit_count": 6}, {"version": "boost-1.85.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.84.0", "person": "Lastique", "commit_count": 2}, {"version": "boost-1.83.0", "person": "Lastique", "commit_count": 3}, {"version": "boost-1.81.0", "person": "Lastique", "commit_count": 5}, {"version": "boost-1.80.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.79.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.78.0", "person": "Lastique", "commit_count": 8}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 3}, {"version": "boost-1.76.0", "person": "Lastique", "commit_count": 10}, {"version": "boost-1.76.0", "person": "eldiener", "commit_count": 2}, {"version": "boost-1.76.0", "person": "OBorce", "commit_count": 1}, {"version": "boost-1.75.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.75.0", "person": "glenfe", "commit_count": 1}, {"version": "boost-1.73.0", "person": "glenfe", "commit_count": 3}, {"version": "boost-1.73.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.73.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.72.0", "person": "CromwellEnage", "commit_count": 4}, {"version": "boost-1.71.0", "person": "CromwellEnage", "commit_count": 27}, {"version": "boost-1.71.0", "person": "Mike-Devel", "commit_count": 4}, {"version": "boost-1.70.0", "person": "CromwellEnage", "commit_count": 44}, {"version": "boost-1.70.0", "person": "eldiener", "commit_count": 25}, {"version": "boost-1.69.0", "person": "CromwellEnage", "commit_count": 63}, {"version": "boost-1.69.0", "person": "eldiener", "commit_count": 24}, {"version": "boost-1.69.0", "person": "Peter Dimov", "commit_count": 8}, {"version": "boost-1.69.0", "person": "Edward Diener", "commit_count": 1}, {"version": "boost-1.66.0", "person": "eldiener", "commit_count": 5}, {"version": "boost-1.65.0", "person": "eldiener", "commit_count": 1}, {"version": "boost-1.64.0", "person": "eldiener", "commit_count": 2}, {"version": "boost-1.63.0", "person": "eldiener", "commit_count": 2}, {"version": "boost-1.63.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.63.0", "person": "Hsiang-Cheng Yang", "commit_count": 1}, {"version": "boost-1.60.0", "person": "Edward Diener", "commit_count": 1}, {"version": "boost-1.59.0", "person": "eldiener", "commit_count": 4}, {"version": "boost-1.59.0", "person": "sloriot", "commit_count": 2}, {"version": "boost-1.58.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.57.0", "person": "danieljames", "commit_count": 2}, {"version": "boost-1.56.0", "person": "morinmorin", "commit_count": 1}, {"version": "boost-1.55.0", "person": "Stephen Kelly", "commit_count": 8}, {"version": "boost-1.55.0", "person": "Beman Dawes", "commit_count": 2}, {"version": "boost-1.55.0", "person": "vprus", "commit_count": 2}, {"version": "boost-1.55.0", "person": "morinmorin", "commit_count": 1}, {"version": "boost-1.54.0", "person": "Vicente J. Botet Escriba", "commit_count": 2}, {"version": "boost-1.50.0", "person": "lcaminiti", "commit_count": 1}, {"version": "boost-1.49.0", "person": "Tim Blechmann", "commit_count": 4}, {"version": "boost-1.48.0", "person": "Daniel Wallin", "commit_count": 2}, {"version": "boost-1.47.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.46.0", "person": "mclow", "commit_count": 2}, {"version": "boost-1.44.0", "person": "Lastique", "commit_count": 3}, {"version": "boost-1.44.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.43.0", "person": "Lastique", "commit_count": 1}, {"version": "boost-1.41.0", "person": "straszheim", "commit_count": 3}, {"version": "boost-1.41.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.40.0", "person": "straszheim", "commit_count": 2}, {"version": "boost-1.40.0", "person": "Daniel Wallin", "commit_count": 2}, {"version": "boost-1.40.0", "person": "jewillco", "commit_count": 1}, {"version": "boost-1.38.0", "person": "dabrahams", "commit_count": 2}, {"version": "boost-1.38.0", "person": "DaveDeakins", "commit_count": 2}, {"version": "boost-1.38.0", "person": "Daniel Wallin", "commit_count": 2}, {"version": "boost-1.38.0", "person": "straszheim", "commit_count": 1}, {"version": "boost-1.38.0", "person": "imikejackson", "commit_count": 1}, {"version": "boost-1.37.0", "person": "imikejackson", "commit_count": 1}, {"version": "boost-1.36.0", "person": "dabrahams", "commit_count": 2}, {"version": "boost-1.36.0", "person": "Daniel Wallin", "commit_count": 1}, {"version": "boost-1.36.0", "person": "Eric Niebler", "commit_count": 1}, {"version": "boost-1.35.0", "person": "Beman Dawes", "commit_count": 3}, {"version": "boost-1.35.0", "person": "nmusatti", "commit_count": 2}, {"version": "boost-1.35.0", "person": "danieljames", "commit_count": 2}, {"version": "boost-1.35.0", "person": "Markus Schöpflin", "commit_count": 1}, {"version": "boost-1.35.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.35.0", "person": "vprus", "commit_count": 1}, {"version": "boost-1.35.0", "person": "Daniel Wallin", "commit_count": 1}, {"version": "boost-1.34.0", "person": "Daniel Wallin", "commit_count": 117}, {"version": "boost-1.34.0", "person": "dabrahams", "commit_count": 80}, {"version": "boost-1.34.0", "person": "nobody", "commit_count": 9}, {"version": "boost-1.34.0", "person": "grafikrobot", "commit_count": 5}, {"version": "boost-1.34.0", "person": "vprus", "commit_count": 2}, {"version": "boost-1.34.0", "person": "Markus Schöpflin", "commit_count": 2}, {"version": "boost-1.34.0", "person": "gennaroprota", "commit_count": 1}, {"version": "boost-1.34.0", "person": "jzmaddock", "commit_count": 1}, {"version": "boost-1.33.0", "person": "dabrahams", "commit_count": 56}, {"version": "boost-1.33.0", "person": "Daniel Wallin", "commit_count": 29}, {"version": "boost-1.33.0", "person": "Markus Schöpflin", "commit_count": 1}, {"version": "boost-1.33.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.33.0", "person": "DougGregor", "commit_count": 1}, {"version": "boost-1.33.0", "person": "vprus", "commit_count": 1}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 9, 9, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 73, 74, 76, 77, 77, 78, 79, 79, 81, 81, 82, 86, 89, 90, 91, 92, 92, 97, 100, 100, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16];
+    const usageYears = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [1, 5, 40, 38, 10, 34, 6, 31, 13, 4, 40, 17, 161, 0, 5, 14, 1, 5];
+    const byUpdated = [0, 5, 0, 25, 7, 40, 2, 35, 4, 30, 37, 6, 159, 29, 7, 10, 21, 8];
+    const repoCounts = [1, 1, 3, 6, 4, 7, 3, 5, 5, 1, 4, 3, 2, 0, 1, 2, 1, 0];
+    const commitVersions = ["boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [1, 6, 1, 0, 0, 5, 2, 1, 5, 0, 0, 96, 69, 31, 4, 5, 0, 2, 13, 3, 8, 1, 1, 5, 0, 3, 2, 7, 2, 2, 0, 10, 2];
+
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
+
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
+
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
+</body>
+</html>

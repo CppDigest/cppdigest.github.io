@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>scope_exit - Boost Library Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  max-width: 1600px; margin: 0 auto; padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+h1 { text-align: center; color: #fff; font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.panel { background: #fff; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+.panel h2 { margin-top: 0; margin-bottom: 20px; color: #1a202c; font-size: 1.6em; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+.panel-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+.chart-container { margin: 25px 0; height: 450px; position: relative; background: #fafafa; border-radius: 8px; padding: 15px; border: 1px solid #e2e8f0; }
+canvas { width: 100% !important; height: 100% !important; display: block; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: #f0f0f0; font-weight: 600; }
+a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underline; }
+.sortable { cursor: pointer; user-select: none; }
+.sort-indicator { margin-left: 5px; color: #666; }
+.table-controls { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.table-controls input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 260px; }
+.pagination { display: flex; gap: 8px; align-items: center; }
+.pagination button { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; background: #fff; cursor: pointer; }
+.pagination button:disabled { opacity: .5; cursor: not-allowed; }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.library-item { padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; background: #f7fafc; text-align: center; }
+.tab-button { padding: 10px 20px; margin-right: 5px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px 4px 0 0; background: #fff; font-weight: 600; }
+.tab-button.active { background: #f5f5f5; }
+.back-link a { color: rgba(255,255,255,0.95); font-weight: 500; padding: 8px 16px; background: rgba(255,255,255,0.15); border-radius: 6px; }
+</style>
+</head>
+<body>
+  <div class="back-link"><a href="../index.html">← Back to Dashboard</a></div>
+  <h1>📚 scope_exit</h1>
+
+  <div class="panel">
+    <h2>Overview</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start;">
+      <div>
+        <p style="color:#666;">Execute arbitrary code at scope exit.</p>
+        <table><tbody>
+          <tr><td><strong>Created Version:</strong></td><td>boost-1.58.0</td></tr>
+          <tr><td><strong>Most Recent Modified Version:</strong></td><td>boost-1.89.0</td></tr>
+          <tr><td><strong>Total Repositories:</strong></td><td>249</td></tr>
+          <tr><td><strong>Average New Repositories Per Year:</strong></td><td>13.00</td></tr>
+          <tr><td><strong>Most Recent Year Repository Count:</strong></td><td>1</td></tr>
+          <tr><td><strong>Most Used Year:</strong></td><td>2015</td></tr>
+          <tr><td><strong>Average Stars:</strong></td><td>515</td></tr>
+          <tr><td><strong>Activity Score:</strong></td><td>-1.114</td></tr>
+          <tr><td><strong>Internal Consumers:</strong></td><td>1</td></tr>
+          <tr><td><strong>Contributors in Most Recent Version:</strong></td><td>2</td></tr>
+          <tr><td><strong>Total Contributors:</strong></td><td>12</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        
+<h3>Used Headers</h3>
+<div class="table-controls">
+  <div><label for="search-headers">Search:</label> <input id="search-headers" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-headers">Showing 0-0 of 0</span>
+    <button id="prev-headers">Previous</button>
+    <button id="next-headers">Next</button>
+  </div>
+</div>
+<table id="table-headers"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Header'>Header <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='count' aria-label='Sort by Times Included'>Times Included <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Internal Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Consumer Libraries</h3>
+<div class="table-controls">
+  <div><label for="search-internal">Search:</label> <input id="search-internal" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-internal">Showing 0-0 of 0</span>
+    <button id="prev-internal">Previous</button>
+    <button id="next-internal">Next</button>
+  </div>
+</div>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>External Consumers</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>External Repositories</h3>
+<div class="table-controls">
+  <div><label for="search-external">Search:</label> <input id="search-external" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-external">Showing 0-0 of 0</span>
+    <button id="prev-external">Previous</button>
+    <button id="next-external">Next</button>
+  </div>
+</div>
+<table id="table-external"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Repository'>Repository <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='stars' aria-label='Sort by Stars'>Stars <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='usage_count' aria-label='Sort by Header Includes'>Header Includes <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='created_at' aria-label='Sort by Created'>Created <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='updated_at' aria-label='Sort by Updated'>Updated <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="usageChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Contribution</h2>
+    <div class="panel-row">
+      <div>
+        
+<h3>Contributors</h3>
+<div class="table-controls">
+  <div><label for="search-contrib">Search:</label> <input id="search-contrib" type="text" placeholder="Filter rows..."></div>
+  <div class="pagination">
+    <span id="info-contrib">Showing 0-0 of 0</span>
+    <button id="prev-contrib">Previous</button>
+    <button id="next-contrib">Next</button>
+  </div>
+</div>
+<table id="table-contrib"><thead><tr><th><button type='button' class='sortable' data-key='version' aria-label='Sort by Version'>Version <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='person' aria-label='Sort by Contributor'>Contributor <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='commit_count' aria-label='Sort by Commit Count'>Commit Count <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+
+      </div>
+      <div class="chart-container"><canvas id="commitChart"></canvas></div>
+    </div>
+  </div>
+
+  <script>
+    
+function toNumber(v){ if (v === null || v === undefined || v === '') return 0; const n = Number(v); return Number.isFinite(n) ? n : 0; }
+function toText(v){ return (v ?? '').toString().toLowerCase(); }
+function toDate(v){ if(!v) return 0; const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+function esc(s){ if (s == null || s === undefined) return ''; const t = String(s); return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function initDataTable(cfg){
+  const pageSize = 10;
+  const data = [...cfg.data];
+  let filtered = [...data];
+  let page = 1;
+  let sortKey = cfg.defaultSortKey || cfg.columns[0].key;
+  let sortAsc = cfg.defaultSortAsc ?? false;
+
+  const table = document.getElementById(cfg.tableId);
+  const tbody = table.querySelector('tbody');
+  const info = document.getElementById(cfg.infoId);
+  const prev = document.getElementById(cfg.prevId);
+  const next = document.getElementById(cfg.nextId);
+  const search = document.getElementById(cfg.searchId);
+
+  function sortValue(row, col){
+    const v = row[col.key];
+    if(col.type === 'number') return toNumber(v);
+    if(col.type === 'date') return toDate(v);
+    return toText(v);
+  }
+  function applyFilter(){
+    const term = toText(search?.value || '');
+    if(!term){ filtered = [...data]; return; }
+    filtered = data.filter(row => cfg.columns.some(c => toText(row[c.key]).includes(term)));
+  }
+  function applySort(){
+    const col = cfg.columns.find(c => c.key === sortKey) || cfg.columns[0];
+    filtered.sort((a,b) => {
+      const av = sortValue(a,col), bv = sortValue(b,col);
+      if(av < bv) return sortAsc ? -1 : 1;
+      if(av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  function updateIndicators(){
+    table.querySelectorAll('.sortable').forEach(th => {
+      const indicator = th.querySelector('.sort-indicator');
+      if(!indicator) return;
+      if(th.dataset.key === sortKey) indicator.textContent = sortAsc ? '↑' : '↓';
+      else indicator.textContent = '↕';
+    });
+  }
+  function render(){
+    applyFilter();
+    applySort();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, total);
+    tbody.innerHTML = filtered.slice(start, end).map(cfg.rowHtml).join('');
+    info.textContent = total ? `Showing ${start + 1}-${end} of ${total}` : 'No data available';
+    prev.disabled = page <= 1;
+    next.disabled = page >= totalPages;
+    updateIndicators();
+  }
+
+  table.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      page = 1; render();
+    });
+  });
+  if(search) search.addEventListener('input', () => { page = 1; render(); });
+  prev.addEventListener('click', () => { if(page > 1){ page -= 1; render(); } });
+  next.addEventListener('click', () => { page += 1; render(); });
+  render();
+}
+
+    const headersRows = [{"name": "include/boost/scope_exit.hpp", "count": 781}];
+    const internalRows = [{"name": "local_function", "depth": 1}];
+    const externalRows = [{"name": "forknote/-", "stars": 19, "usage_count": 2, "created_at": "2015-09-15", "updated_at": "2017-10-18"}, {"name": "APEPEPOW/APEPEPOW", "stars": 11, "usage_count": 4, "created_at": "2023-06-08", "updated_at": "2023-12-09"}, {"name": "TypesettingTools/Aegisub", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "CalexCore/AmityCoin-DO-NOT-USE", "stars": 11, "usage_count": 2, "created_at": "2018-11-05", "updated_at": "2019-03-26"}, {"name": "AppleByteMe/AppleByte", "stars": 11, "usage_count": 1, "created_at": "2014-03-27", "updated_at": "2020-12-03"}, {"name": "arx/ArxLibertatis", "stars": 1036, "usage_count": 3, "created_at": "2011-01-17", "updated_at": "2024-08-22"}, {"name": "RipcordSoftware/AvanceDB", "stars": 163, "usage_count": 1, "created_at": "2015-02-20", "updated_at": "2018-10-10"}, {"name": "joel-ho/BES", "stars": 22, "usage_count": 7, "created_at": "2018-04-21", "updated_at": "2018-04-23"}, {"name": "BitcoinUnlimited/BitcoinUnlimited", "stars": 497, "usage_count": 3, "created_at": "2014-04-09", "updated_at": "2024-11-01"}, {"name": "apolukhin/Boost-Cookbook", "stars": 429, "usage_count": 1, "created_at": "2014-03-01", "updated_at": "2025-01-14"}, {"name": "PacktPublishing/Boost-Cpp-Application-Development-Cookbook-Second-Edition", "stars": 43, "usage_count": 1, "created_at": "2017-08-28", "updated_at": "2021-01-14"}, {"name": "microsoft/CNTK", "stars": 17611, "usage_count": 2, "created_at": "2015-11-26", "updated_at": "2023-03-11"}, {"name": "wx-chevalier/CPP-Notes", "stars": 97, "usage_count": 1, "created_at": "2019-08-14", "updated_at": "2026-04-20"}, {"name": "carthurs/CRIMSONGUI", "stars": 21, "usage_count": 1, "created_at": "2019-12-13", "updated_at": "2021-05-12"}, {"name": "sweeterthancandy/CandyPoker", "stars": 13, "usage_count": 1, "created_at": "2017-04-05", "updated_at": "2022-03-20"}, {"name": "clementine-player/Clementine", "stars": 4171, "usage_count": 3, "created_at": "2013-12-06", "updated_at": "2026-02-18"}, {"name": "ccf19881030/Cplus_libs_wrapper", "stars": 38, "usage_count": 2, "created_at": "2019-03-31", "updated_at": "2024-01-23"}, {"name": "ErdemOzgen/Cpp-Learning-Archive", "stars": 92, "usage_count": 1, "created_at": "2019-04-08", "updated_at": "2022-12-27"}, {"name": "croatproject/Croat", "stars": 16, "usage_count": 2, "created_at": "2017-08-15", "updated_at": "2024-04-27"}, {"name": "cryptoluka/CryptoLuKa", "stars": 37, "usage_count": 2, "created_at": "2018-01-31", "updated_at": "2020-01-31"}, {"name": "6ziv/CustomUAC", "stars": 11, "usage_count": 6, "created_at": "2021-11-12", "updated_at": "2023-10-25"}, {"name": "rhysd/Dachs", "stars": 92, "usage_count": 1, "created_at": "2014-03-18", "updated_at": "2019-09-14"}, {"name": "dynexcoin/Dynex", "stars": 160, "usage_count": 2, "created_at": "2022-09-14", "updated_at": "2024-04-02"}, {"name": "yxl/Fire-IE", "stars": 53, "usage_count": 1, "created_at": "2012-02-04", "updated_at": "2016-11-06"}, {"name": "FreeCAD/FreeCAD", "stars": 30315, "usage_count": 1, "created_at": "2012-09-09", "updated_at": "2026-04-15"}, {"name": "BlockLink/HX-core", "stars": 13, "usage_count": 2, "created_at": "2017-09-11", "updated_at": "2018-07-24"}, {"name": "MisterTea/HyperNEAT", "stars": 98, "usage_count": 25, "created_at": "2011-08-23", "updated_at": "2017-09-12"}, {"name": "IfcOpenShell/IfcOpenShell", "stars": 2382, "usage_count": 1, "created_at": "2015-08-10", "updated_at": "2026-03-01"}, {"name": "sandialabs/InterSpec", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "OpenMPDK/KVCeph", "stars": 58, "usage_count": 29, "created_at": "2019-04-19", "updated_at": "2022-12-26"}, {"name": "LingmoOS/LingmoOS", "stars": 117, "usage_count": 3, "created_at": "2024-07-29", "updated_at": "2026-02-08"}, {"name": "sandakalum/Mobile-Manipulator-Planning", "stars": 80, "usage_count": 1, "created_at": "2022-01-21", "updated_at": "2023-01-16"}, {"name": "DannyWhiteFix/NexaWallet", "stars": 20, "usage_count": 3, "created_at": "2026-03-13", "updated_at": "2026-03-20"}, {"name": "ATNoG/ODTONE", "stars": 12, "usage_count": 2, "created_at": "2012-09-06", "updated_at": "2019-04-30"}, {"name": "DigitalNoteXDN/OLD-digitalnote", "stars": 11, "usage_count": 2, "created_at": "2018-04-15", "updated_at": "2019-04-23"}, {"name": "myd7349/Ongoing-Study", "stars": 22, "usage_count": 1, "created_at": "2014-10-10", "updated_at": "2023-09-12"}, {"name": "OpFlow-dev/OpFlow", "stars": 87, "usage_count": 11, "created_at": "2021-07-05", "updated_at": "2026-02-25"}, {"name": "SAMPProjects/Open-SAMP-API", "stars": 64, "usage_count": 1, "created_at": "2014-11-29", "updated_at": "2018-09-24"}, {"name": "Piraxus/OrbiterSkyboltClient", "stars": 14, "usage_count": 3, "created_at": "2021-07-31", "updated_at": "2024-06-26"}, {"name": "OreStudio/OreStudio", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "Xilinx/PYNQ", "stars": 2245, "usage_count": 1, "created_at": "2016-01-20", "updated_at": "2025-12-03"}, {"name": "pluracoin/PluraCoin", "stars": 11, "usage_count": 1, "created_at": "2018-03-02", "updated_at": "2023-06-12"}, {"name": "PopcornTimeTV/PopcornTorrent", "stars": 47, "usage_count": 1, "created_at": "2016-08-07", "updated_at": "2020-02-08"}, {"name": "sychaichangkun/ROS----ros_comm", "stars": 18, "usage_count": 1, "created_at": "2017-09-26", "updated_at": "2017-09-29"}, {"name": "vmcraft/RemotePrinter", "stars": 16, "usage_count": 1, "created_at": "2015-07-29", "updated_at": "2015-08-03"}, {"name": "agrippa1994/SA-MP-WebSockets", "stars": 15, "usage_count": 1, "created_at": "2014-11-10", "updated_at": "2022-12-28"}, {"name": "b6oy/SP2-Server", "stars": 22, "usage_count": 1, "created_at": "2017-01-24", "updated_at": "2017-01-24"}, {"name": "scala-network/Scala", "stars": 14, "usage_count": 4, "created_at": "2022-03-25", "updated_at": "2025-05-05"}, {"name": "faithandbrave/Shand", "stars": 25, "usage_count": 1, "created_at": "2010-04-09", "updated_at": "2017-03-31"}, {"name": "Prograda/Skybolt", "stars": 646, "usage_count": 3, "created_at": "2020-11-11", "updated_at": "2026-02-11"}, {"name": "Snowball2012/SnowEngine", "stars": 26, "usage_count": 1, "created_at": "2018-02-11", "updated_at": "2024-06-25"}, {"name": "Tencent/TenDBCluster-TenDB", "stars": 86, "usage_count": 1, "created_at": "2020-08-11", "updated_at": "2025-10-10"}, {"name": "mkim48/TensorDB", "stars": 21, "usage_count": 2, "created_at": "2014-06-24", "updated_at": "2014-07-25"}, {"name": "rzvc/ThermalView", "stars": 11, "usage_count": 1, "created_at": "2015-06-20", "updated_at": "2015-07-20"}, {"name": "simonferquel/Tidal-Unofficial-Win10", "stars": 27, "usage_count": 1, "created_at": "2016-02-08", "updated_at": "2016-12-21"}, {"name": "lochinasc1017/UR5_easyhandeye_D435i_Calibration", "stars": 19, "usage_count": 1, "created_at": "2020-04-09", "updated_at": "2020-04-09"}, {"name": "okcoin-com/V3-Open-API-SDK", "stars": 23, "usage_count": 1, "created_at": "2019-12-05", "updated_at": "2024-07-25"}, {"name": "mr-MOD/YaSlicer", "stars": 26, "usage_count": 1, "created_at": "2017-07-03", "updated_at": "2018-04-13"}, {"name": "AnthonyTechhh/ZephyrWallet", "stars": 47, "usage_count": 4, "created_at": "2026-03-25", "updated_at": "2026-03-25"}, {"name": "tgoyne/aegisub", "stars": 21, "usage_count": 3, "created_at": "2010-09-20", "updated_at": "2022-11-24"}, {"name": "aliyun/aliyun-apsaradb-hbase-demo", "stars": 150, "usage_count": 1, "created_at": "2018-11-27", "updated_at": "2025-06-12"}, {"name": "ddemidov/amgcl", "stars": 837, "usage_count": 11, "created_at": "2012-12-03", "updated_at": "2025-08-27"}, {"name": "ApolloAuto/apollo-platform", "stars": 743, "usage_count": 1, "created_at": "2017-06-30", "updated_at": "2019-07-03"}, {"name": "arqma/arqma", "stars": 49, "usage_count": 2, "created_at": "2018-07-01", "updated_at": "2026-02-08"}, {"name": "gabrielcuvillier/arxwasm", "stars": 39, "usage_count": 2, "created_at": "2018-11-26", "updated_at": "2019-12-03"}, {"name": "Mobsya/aseba", "stars": 18, "usage_count": 4, "created_at": "2018-04-17", "updated_at": "2023-02-21"}, {"name": "athena-network/athena", "stars": 13, "usage_count": 2, "created_at": "2018-07-13", "updated_at": "2018-09-03"}, {"name": "autowarefoundation/autoware_core", "stars": 161, "usage_count": 1, "created_at": "2021-11-19", "updated_at": "2026-04-20"}, {"name": "autowarefoundation/autoware_universe", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "avplayer/avbot", "stars": 223, "usage_count": 2, "created_at": "2013-07-19", "updated_at": "2015-10-25"}, {"name": "avplayer/avplayer", "stars": 122, "usage_count": 1, "created_at": "2013-01-09", "updated_at": "2015-08-23"}, {"name": "Cocos-BCX/bcxLibrary-Cpp", "stars": 19, "usage_count": 1, "created_at": "2019-07-24", "updated_at": "2020-01-07"}, {"name": "BeamMW/beam", "stars": 723, "usage_count": 1, "created_at": "2018-03-15", "updated_at": "2026-03-24"}, {"name": "condy0919/bipolar", "stars": 24, "usage_count": 3, "created_at": "2019-08-13", "updated_at": "2020-05-28"}, {"name": "btcz/bitcoinz", "stars": 128, "usage_count": 1, "created_at": "2017-09-09", "updated_at": "2026-02-20"}, {"name": "bitshares/bitshares", "stars": 221, "usage_count": 1, "created_at": "2014-03-11", "updated_at": "2018-03-19"}, {"name": "bitshares/bitshares-0.x", "stars": 221, "usage_count": 1, "created_at": "2014-03-11", "updated_at": "2018-03-19"}, {"name": "bitshares/bitshares-2", "stars": 1185, "usage_count": 1, "created_at": "2015-10-12", "updated_at": "2025-05-25"}, {"name": "bitshares/bitshares-core", "stars": 1188, "usage_count": 1, "created_at": "2015-10-12", "updated_at": "2025-05-25"}, {"name": "madmongo1/boost_channels", "stars": 24, "usage_count": 1, "created_at": "2021-05-28", "updated_at": "2021-06-03"}, {"name": "quarnster/boxeebox-xbmc", "stars": 117, "usage_count": 2, "created_at": "2013-08-22", "updated_at": "2015-05-24"}, {"name": "quasar1/boxeebox-xbmc", "stars": 48, "usage_count": 2, "created_at": "2014-05-03", "updated_at": "2022-02-08"}, {"name": "homer6/c_reading", "stars": 25, "usage_count": 1, "created_at": "2011-04-30", "updated_at": "2011-04-30"}, {"name": "ceph/ceph", "stars": 16362, "usage_count": 4, "created_at": "2011-09-01", "updated_at": "2026-03-21"}, {"name": "lidaohang/ceph_study", "stars": 462, "usage_count": 26, "created_at": "2018-04-11", "updated_at": "2020-09-27"}, {"name": "alanbriolat/clementine-subsonic", "stars": 12, "usage_count": 1, "created_at": "2011-12-05", "updated_at": "2013-02-05"}, {"name": "Cocos-BCX/cocos-mainnet", "stars": 1281, "usage_count": 1, "created_at": "2019-11-18", "updated_at": "2021-01-08"}, {"name": "ConcealNetwork/conceal-core", "stars": 99, "usage_count": 2, "created_at": "2018-04-29", "updated_at": "2025-08-28"}, {"name": "coschain/contentos", "stars": 14, "usage_count": 1, "created_at": "2018-06-05", "updated_at": "2018-12-27"}, {"name": "mujin/controllerclientcpp", "stars": 11, "usage_count": 1, "created_at": "2012-12-19", "updated_at": "2025-10-08"}, {"name": "hexhex/core", "stars": 25, "usage_count": 2, "created_at": "2012-08-09", "updated_at": "2019-06-13"}, {"name": "clustertech/cpfs-os", "stars": 12, "usage_count": 7, "created_at": "2017-05-16", "updated_at": "2018-05-18"}, {"name": "shelllet/cpp-example", "stars": 26, "usage_count": 2, "created_at": "2019-05-26", "updated_at": "2022-08-07"}, {"name": "bitsuperlab/cpp-play", "stars": 14, "usage_count": 1, "created_at": "2014-08-02", "updated_at": "2016-08-09"}, {"name": "watson-intu/cpp-sdk", "stars": 17, "usage_count": 3, "created_at": "2016-11-09", "updated_at": "2018-04-16"}, {"name": "microsoft/cpprestsdk", "stars": 8260, "usage_count": 1, "created_at": "2014-08-21", "updated_at": "2025-06-12"}, {"name": "opencsd/csd-filesystem", "stars": 11, "usage_count": 33, "created_at": "2021-11-04", "updated_at": "2023-12-13"}, {"name": "dacsunlimited/dac_play", "stars": 11, "usage_count": 1, "created_at": "2015-03-24", "updated_at": "2016-11-10"}, {"name": "techsolutions-ltd/dascoin-blockchain", "stars": 39, "usage_count": 1, "created_at": "2018-03-31", "updated_at": "2019-03-11"}, {"name": "forknote/dashcoin", "stars": 19, "usage_count": 2, "created_at": "2015-09-15", "updated_at": "2017-10-18"}, {"name": "bitshares/devshares", "stars": 21, "usage_count": 1, "created_at": "2015-01-07", "updated_at": "2015-06-18"}, {"name": "DFIR-ORC/dfir-orc", "stars": 0, "usage_count": 33, "created_at": "", "updated_at": ""}, {"name": "mariusherzog/dicom", "stars": 16, "usage_count": 1, "created_at": "2015-04-25", "updated_at": "2018-12-28"}, {"name": "adrianmichel/differential-evolution", "stars": 24, "usage_count": 2, "created_at": "2017-09-23", "updated_at": "2020-07-31"}, {"name": "xdn-project/digitalnote", "stars": 56, "usage_count": 2, "created_at": "2015-06-06", "updated_at": "2018-05-15"}, {"name": "MASD-Project/dogen", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "saleyn/eixx", "stars": 140, "usage_count": 1, "created_at": "2010-11-19", "updated_at": "2022-10-26"}, {"name": "electroneum/electroneum", "stars": 386, "usage_count": 4, "created_at": "2017-10-31", "updated_at": "2026-02-25"}, {"name": "infinit/elle", "stars": 475, "usage_count": 1, "created_at": "2016-02-14", "updated_at": "2023-05-22"}, {"name": "derceg/explorerplusplus", "stars": 3114, "usage_count": 1, "created_at": "2013-08-23", "updated_at": "2026-02-06"}, {"name": "xdn-project/fantomcoin", "stars": 13, "usage_count": 2, "created_at": "2016-10-28", "updated_at": "2017-08-18"}, {"name": "fastbird/fastbirdEngine", "stars": 23, "usage_count": 2, "created_at": "2014-07-29", "updated_at": "2017-06-17"}, {"name": "izenecloud/fiberproxy", "stars": 11, "usage_count": 2, "created_at": "2015-01-26", "updated_at": "2015-01-27"}, {"name": "firoorg/firo", "stars": 781, "usage_count": 1, "created_at": "2016-09-09", "updated_at": "2026-03-25"}, {"name": "FlexCoreLib/flexcore", "stars": 54, "usage_count": 1, "created_at": "2016-09-15", "updated_at": "2020-04-01"}, {"name": "Flusspferd/flusspferd", "stars": 22, "usage_count": 1, "created_at": "2010-07-01", "updated_at": "2010-08-31"}, {"name": "pavel-pimenov/flylinkdc-r5xx", "stars": 58, "usage_count": 1, "created_at": "2013-10-05", "updated_at": "2022-09-24"}, {"name": "forknote/forknote", "stars": 76, "usage_count": 2, "created_at": "2015-05-15", "updated_at": "2020-10-03"}, {"name": "arcaneframework/framework", "stars": 46, "usage_count": 11, "created_at": "2021-04-14", "updated_at": "2026-04-20"}, {"name": "mdamiani/fuurin", "stars": 16, "usage_count": 6, "created_at": "2017-07-10", "updated_at": "2024-04-02"}, {"name": "fuzzuf/fuzzuf", "stars": 383, "usage_count": 62, "created_at": "2021-12-27", "updated_at": "2025-01-29"}, {"name": "Fadis/gct", "stars": 33, "usage_count": 1, "created_at": "2021-11-19", "updated_at": "2026-04-06"}, {"name": "adah1972/geek_time_cpp", "stars": 315, "usage_count": 1, "created_at": "2020-02-08", "updated_at": "2026-02-10"}, {"name": "glycerine/goq", "stars": 93, "usage_count": 1, "created_at": "2014-05-13", "updated_at": "2025-10-14"}, {"name": "sakhnik/gpwsafe", "stars": 11, "usage_count": 3, "created_at": "2012-01-10", "updated_at": "2018-09-11"}, {"name": "haven-protocol-org/haven-main", "stars": 42, "usage_count": 4, "created_at": "2021-06-23", "updated_at": "2024-12-11"}, {"name": "ROCm/hipFFT", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "openhive-network/hive", "stars": 376, "usage_count": 5, "created_at": "2020-03-20", "updated_at": "2026-04-06"}, {"name": "mailru/icqdesktop.deprecated", "stars": 467, "usage_count": 1, "created_at": "2016-03-16", "updated_at": "2019-09-18"}, {"name": "mail-ru-im/im-desktop", "stars": 163, "usage_count": 1, "created_at": "2019-09-18", "updated_at": "2022-07-14"}, {"name": "Judecoin/judecoin", "stars": 89, "usage_count": 2, "created_at": "2021-03-03", "updated_at": "2026-04-15"}, {"name": "juno-cash/junocash", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "flipcoder/kit", "stars": 23, "usage_count": 2, "created_at": "2013-12-18", "updated_at": "2020-12-29"}, {"name": "msesia/knockoffgwas", "stars": 16, "usage_count": 1, "created_at": "2020-07-21", "updated_at": "2022-07-07"}, {"name": "cisco-open-source/kodi", "stars": 25, "usage_count": 2, "created_at": "2014-11-18", "updated_at": "2015-06-04"}, {"name": "notspiff/kodi-cmake", "stars": 24, "usage_count": 2, "created_at": "2013-11-03", "updated_at": "2024-06-30"}, {"name": "kryptokrona/kryptokrona", "stars": 62, "usage_count": 2, "created_at": "2019-04-14", "updated_at": "2025-03-31"}, {"name": "zettadb/kunlun-storage-081809", "stars": 32, "usage_count": 6, "created_at": "2021-02-15", "updated_at": "2022-04-11"}, {"name": "lbryio/lbrycrd", "stars": 2542, "usage_count": 2, "created_at": "2015-08-20", "updated_at": "2021-11-26"}, {"name": "leviarcoin/leviarcoin-src", "stars": 13, "usage_count": 1, "created_at": "2017-04-16", "updated_at": "2018-10-25"}, {"name": "rime/librime", "stars": 4251, "usage_count": 3, "created_at": "2012-03-20", "updated_at": "2026-03-09"}, {"name": "up9cloud/line-api-server", "stars": 11, "usage_count": 1, "created_at": "2014-08-13", "updated_at": "2014-08-26"}, {"name": "mdbal-lunule/lunule", "stars": 11, "usage_count": 2, "created_at": "2021-06-05", "updated_at": "2021-08-09"}, {"name": "mantidproject/mantid", "stars": 235, "usage_count": 1, "created_at": "2011-10-17", "updated_at": "2026-03-22"}, {"name": "mbsim-env/mbsim", "stars": 51, "usage_count": 3, "created_at": "2015-04-24", "updated_at": "2026-03-25"}, {"name": "ruslanch/memhook", "stars": 18, "usage_count": 1, "created_at": "2015-01-14", "updated_at": "2019-02-21"}, {"name": "tdv/mif", "stars": 48, "usage_count": 1, "created_at": "2016-08-17", "updated_at": "2024-04-25"}, {"name": "mikage-emu/mikage-dev", "stars": 413, "usage_count": 4, "created_at": "2024-03-06", "updated_at": "2025-09-01"}, {"name": "nhatao/mo_tracker", "stars": 11, "usage_count": 1, "created_at": "2014-10-04", "updated_at": "2015-07-09"}, {"name": "category-labs/monad", "stars": 1192, "usage_count": 2, "created_at": "2022-12-14", "updated_at": "2026-04-20"}, {"name": "monero-project/monero", "stars": 0, "usage_count": 4, "created_at": "", "updated_at": ""}, {"name": "condy0919/moros", "stars": 14, "usage_count": 1, "created_at": "2018-12-01", "updated_at": "2019-01-27"}, {"name": "MrMC/mrmc", "stars": 188, "usage_count": 2, "created_at": "2015-09-04", "updated_at": "2020-04-05"}, {"name": "muntorg/munt-official", "stars": 134, "usage_count": 3, "created_at": "2015-08-13", "updated_at": "2023-09-01"}, {"name": "johnoneil/mupen64plus-web", "stars": 17, "usage_count": 1, "created_at": "2015-12-14", "updated_at": "2018-03-21"}, {"name": "mworks/mworks", "stars": 20, "usage_count": 10, "created_at": "2011-09-09", "updated_at": "2026-03-25"}, {"name": "topling/mytopling", "stars": 24, "usage_count": 1, "created_at": "2022-10-12", "updated_at": "2026-04-11"}, {"name": "r-lib/nanoparquet", "stars": 82, "usage_count": 1, "created_at": "2024-03-30", "updated_at": "2026-04-20"}, {"name": "4th-ndn-hackathon/ndnSIM-Mobile-Simulation-Package", "stars": 17, "usage_count": 1, "created_at": "2017-03-22", "updated_at": "2017-03-26"}, {"name": "NeblioTeam/neblio", "stars": 121, "usage_count": 5, "created_at": "2017-07-25", "updated_at": "2023-04-19"}, {"name": "yuwenyong/net4cxx", "stars": 11, "usage_count": 1, "created_at": "2017-09-12", "updated_at": "2019-02-10"}, {"name": "neutroncoin/neutron", "stars": 35, "usage_count": 1, "created_at": "2017-09-06", "updated_at": "2022-10-19"}, {"name": "facebookexperimental/object-introspection", "stars": 181, "usage_count": 6, "created_at": "2022-12-19", "updated_at": "2025-08-04"}, {"name": "jane-cloud/okex-open-api", "stars": 43, "usage_count": 1, "created_at": "2019-12-05", "updated_at": "2022-12-10"}, {"name": "alexey-malov/ood", "stars": 33, "usage_count": 1, "created_at": "2016-03-03", "updated_at": "2026-01-17"}, {"name": "opendaylight/opflex", "stars": 16, "usage_count": 1, "created_at": "2014-06-10", "updated_at": "2024-03-13"}, {"name": "personalrobotics/or_ompl", "stars": 28, "usage_count": 2, "created_at": "2014-05-13", "updated_at": "2018-04-24"}, {"name": "guangzhuwu/p2engine", "stars": 28, "usage_count": 1, "created_at": "2013-09-11", "updated_at": "2023-12-06"}, {"name": "ParsiCoin/parsicoin", "stars": 11, "usage_count": 2, "created_at": "2018-02-18", "updated_at": "2020-06-17"}, {"name": "percona/percona-server", "stars": 1255, "usage_count": 3, "created_at": "2015-02-13", "updated_at": "2026-03-15"}, {"name": "gaopengcarl/percona-server-locks-detail-5.7.22", "stars": 31, "usage_count": 4, "created_at": "2019-01-18", "updated_at": "2022-10-19"}, {"name": "percona/percona-xtradb-cluster", "stars": 378, "usage_count": 3, "created_at": "2015-02-13", "updated_at": "2026-03-26"}, {"name": "xoreos/phaethon", "stars": 24, "usage_count": 8, "created_at": "2014-09-02", "updated_at": "2025-01-14"}, {"name": "pichi-router/pichi", "stars": 179, "usage_count": 1, "created_at": "2018-09-07", "updated_at": "2026-04-06"}, {"name": "plenteum/plenteum", "stars": 13, "usage_count": 2, "created_at": "2018-08-01", "updated_at": "2020-05-18"}, {"name": "OpenVZ/prl-disp-service", "stars": 11, "usage_count": 4, "created_at": "2015-06-02", "updated_at": "2024-04-29"}, {"name": "chronolaw/professional_boost", "stars": 60, "usage_count": 1, "created_at": "2016-01-08", "updated_at": "2020-03-25"}, {"name": "learnforpractice/pyeos", "stars": 131, "usage_count": 1, "created_at": "2017-10-11", "updated_at": "2022-11-18"}, {"name": "flipcoder/qor", "stars": 82, "usage_count": 3, "created_at": "2013-12-18", "updated_at": "2021-05-19"}, {"name": "d1vanov/quentier", "stars": 139, "usage_count": 1, "created_at": "2017-12-07", "updated_at": "2026-01-12"}, {"name": "qwertycoin-org/qwertycoin", "stars": 35, "usage_count": 2, "created_at": "2018-02-07", "updated_at": "2023-02-17"}, {"name": "radrbiz/radard", "stars": 60, "usage_count": 1, "created_at": "2015-01-19", "updated_at": "2023-12-08"}, {"name": "weary/reass", "stars": 28, "usage_count": 1, "created_at": "2011-09-24", "updated_at": "2022-02-15"}, {"name": "facebook/redex", "stars": 6281, "usage_count": 1, "created_at": "2016-03-24", "updated_at": "2026-03-20"}, {"name": "jgaa/restc-cpp", "stars": 641, "usage_count": 1, "created_at": "2016-03-22", "updated_at": "2025-10-03"}, {"name": "hare1039/reverse-tunnel-cpp", "stars": 12, "usage_count": 1, "created_at": "2018-11-19", "updated_at": "2019-10-22"}, {"name": "TouchPal/revolver", "stars": 16, "usage_count": 1, "created_at": "2015-09-30", "updated_at": "2015-10-07"}, {"name": "Revolution-Populi/revpop-core", "stars": 57, "usage_count": 1, "created_at": "2020-08-07", "updated_at": "2024-01-06"}, {"name": "lotem/rimeime", "stars": 51, "usage_count": 2, "created_at": "2015-03-04", "updated_at": "2015-03-04"}, {"name": "robotraconteur/robotraconteur", "stars": 76, "usage_count": 4, "created_at": "2018-09-13", "updated_at": "2026-04-20"}, {"name": "ROCm/rocFFT", "stars": 199, "usage_count": 2, "created_at": "2016-03-03", "updated_at": "2025-12-09"}, {"name": "ROCmSoftwarePlatform/rocFFT", "stars": 198, "usage_count": 2, "created_at": "2016-03-03", "updated_at": "2025-12-12"}, {"name": "fiveai/ros_comm", "stars": 12, "usage_count": 1, "created_at": "2021-07-15", "updated_at": "2021-08-18"}, {"name": "rabienrose/ros_ios_chamo", "stars": 15, "usage_count": 1, "created_at": "2018-03-18", "updated_at": "2019-05-06"}, {"name": "superxiaobai-1/ros_protobuf_msg", "stars": 121, "usage_count": 1, "created_at": "2023-12-16", "updated_at": "2025-06-19"}, {"name": "ros/rosbag_snapshot", "stars": 90, "usage_count": 1, "created_at": "2020-04-01", "updated_at": "2025-05-14"}, {"name": "iamrajee/roskinetic_catkin_ws", "stars": 20, "usage_count": 1, "created_at": "2019-03-12", "updated_at": "2022-03-04"}, {"name": "nelhage/rules_boost", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "second-state/runw", "stars": 18, "usage_count": 1, "created_at": "2021-01-17", "updated_at": "2021-07-20"}, {"name": "salvium/salvium", "stars": 37, "usage_count": 4, "created_at": "2023-07-12", "updated_at": "2026-04-13"}, {"name": "scala-network/scala-v7", "stars": 81, "usage_count": 4, "created_at": "2018-01-22", "updated_at": "2021-11-09"}, {"name": "sandialabs/sceptre-bennu", "stars": 13, "usage_count": 1, "created_at": "2023-06-29", "updated_at": "2026-01-28"}, {"name": "igd-geo/schwarzwald", "stars": 45, "usage_count": 7, "created_at": "2020-10-26", "updated_at": "2025-02-28"}, {"name": "scorum/scorum", "stars": 59, "usage_count": 1, "created_at": "2017-10-13", "updated_at": "2024-05-27"}, {"name": "TankerHQ/sdk-native", "stars": 19, "usage_count": 1, "created_at": "2018-12-03", "updated_at": "2025-06-04"}, {"name": "Minoic-Intelligence/shrike", "stars": 16, "usage_count": 1, "created_at": "2025-04-08", "updated_at": "2025-06-27"}, {"name": "uccross/skyhookdm-ceph", "stars": 29, "usage_count": 26, "created_at": "2017-03-09", "updated_at": "2020-07-29"}, {"name": "rapyuta-robotics/smac_planner", "stars": 14, "usage_count": 1, "created_at": "2024-05-15", "updated_at": "2026-02-24"}, {"name": "smokenetwork/smoked", "stars": 11, "usage_count": 1, "created_at": "2018-04-11", "updated_at": "2021-06-03"}, {"name": "wells-wei-wei/smplify-x_in_docker", "stars": 22, "usage_count": 2, "created_at": "2020-04-24", "updated_at": "2021-03-29"}, {"name": "advancedtelematic/sota_client_cpp", "stars": 147, "usage_count": 1, "created_at": "2016-11-25", "updated_at": "2024-03-18"}, {"name": "evgeny-panasyuk/stack_unwinding", "stars": 87, "usage_count": 2, "created_at": "2012-09-27", "updated_at": "2015-10-22"}, {"name": "steemit/steem", "stars": 1955, "usage_count": 2, "created_at": "2016-03-23", "updated_at": "2026-01-15"}, {"name": "jonaski/strawberry", "stars": 3370, "usage_count": 2, "created_at": "2014-12-29", "updated_at": "2025-12-17"}, {"name": "ASMlover/study", "stars": 21, "usage_count": 1, "created_at": "2013-01-09", "updated_at": "2026-03-01"}, {"name": "sumoprojects/sumokoin", "stars": 128, "usage_count": 2, "created_at": "2017-04-26", "updated_at": "2024-12-25"}, {"name": "svgpp/svgpp", "stars": 595, "usage_count": 1, "created_at": "2014-02-18", "updated_at": "2024-02-29"}, {"name": "hongzhongx/taiyi", "stars": 63, "usage_count": 2, "created_at": "2024-10-26", "updated_at": "2026-01-21"}, {"name": "krareT/terichdb", "stars": 371, "usage_count": 4, "created_at": "2016-02-28", "updated_at": "2017-09-21"}, {"name": "BorisSchaeling/theboostcpplibraries", "stars": 99, "usage_count": 2, "created_at": "2018-01-04", "updated_at": "2022-06-29"}, {"name": "aws/thinkbox-library", "stars": 19, "usage_count": 5, "created_at": "2022-11-14", "updated_at": "2022-12-16"}, {"name": "aws/thinkbox-magma", "stars": 13, "usage_count": 4, "created_at": "2022-11-14", "updated_at": "2022-12-16"}, {"name": "apache/thrift", "stars": 10908, "usage_count": 1, "created_at": "2009-09-18", "updated_at": "2026-03-22"}, {"name": "terminalcloud/thrift", "stars": 20, "usage_count": 1, "created_at": "2015-06-23", "updated_at": "2016-10-20"}, {"name": "yuwenyong/tinycore", "stars": 14, "usage_count": 1, "created_at": "2017-03-06", "updated_at": "2017-09-07"}, {"name": "rburkholder/trade-frame", "stars": 0, "usage_count": 2, "created_at": "", "updated_at": ""}, {"name": "adrianmichel/tradery", "stars": 50, "usage_count": 1, "created_at": "2020-04-25", "updated_at": "2020-06-28"}, {"name": "fredpy/trex2-agent", "stars": 15, "usage_count": 3, "created_at": "2015-03-18", "updated_at": "2021-10-26"}, {"name": "range3/tsdivider", "stars": 15, "usage_count": 1, "created_at": "2016-01-27", "updated_at": "2018-05-28"}, {"name": "xaizek/uncov", "stars": 15, "usage_count": 4, "created_at": "2017-01-09", "updated_at": "2025-11-26"}, {"name": "uPlexa/uplexa", "stars": 48, "usage_count": 4, "created_at": "2018-10-23", "updated_at": "2022-09-09"}, {"name": "portgasray/ur5_realsense_calibration", "stars": 49, "usage_count": 1, "created_at": "2019-07-18", "updated_at": "2020-03-19"}, {"name": "saleyn/utxx", "stars": 32, "usage_count": 1, "created_at": "2013-01-13", "updated_at": "2026-01-07"}, {"name": "openvstorage/volumedriver", "stars": 38, "usage_count": 38, "created_at": "2015-09-29", "updated_at": "2018-03-05"}, {"name": "wesnoth/wesnoth", "stars": 6499, "usage_count": 2, "created_at": "2013-04-14", "updated_at": "2026-03-23"}, {"name": "germandiagogomez/words-counter-benchmarks-game", "stars": 17, "usage_count": 1, "created_at": "2023-12-13", "updated_at": "2025-10-05"}, {"name": "worktips/worktipscoin", "stars": 12, "usage_count": 2, "created_at": "2018-07-05", "updated_at": "2019-04-23"}, {"name": "wrkzcoin/wrkzcoin", "stars": 23, "usage_count": 2, "created_at": "2018-10-31", "updated_at": "2026-03-25"}, {"name": "wolfgar/xbmc", "stars": 12, "usage_count": 2, "created_at": "2013-04-22", "updated_at": "2015-10-02"}, {"name": "garbear/xbmc-retroplayer", "stars": 16, "usage_count": 2, "created_at": "2015-02-15", "updated_at": "2017-11-27"}, {"name": "xoreos/xoreos", "stars": 1138, "usage_count": 12, "created_at": "2010-08-10", "updated_at": "2025-04-11"}, {"name": "xoreos/xoreos-tools", "stars": 73, "usage_count": 6, "created_at": "2014-10-20", "updated_at": "2025-03-15"}, {"name": "robotology/yarp", "stars": 0, "usage_count": 1, "created_at": "", "updated_at": ""}, {"name": "zcash/zcash", "stars": 5370, "usage_count": 1, "created_at": "2014-11-22", "updated_at": "2026-02-20"}, {"name": "zcoinofficial/zcoin", "stars": 774, "usage_count": 2, "created_at": "2016-09-09", "updated_at": "2025-12-19"}, {"name": "ZephyrProtocol/zephyr", "stars": 148, "usage_count": 4, "created_at": "2023-05-25", "updated_at": "2025-06-11"}, {"name": "zidootech/zidoo-kodi-14.2", "stars": 16, "usage_count": 2, "created_at": "2015-09-17", "updated_at": "2015-09-18"}, {"name": "zidootech/zidoo-kodi-15.1", "stars": 15, "usage_count": 2, "created_at": "2015-09-16", "updated_at": "2016-02-19"}, {"name": "xaizek/zograscope", "stars": 55, "usage_count": 3, "created_at": "2017-11-23", "updated_at": "2026-03-21"}];
+    const contribRows = [{"version": "boost-1.89.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.89.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.87.0", "person": "grafikrobot", "commit_count": 1}, {"version": "boost-1.86.0", "person": "grafikrobot", "commit_count": 7}, {"version": "boost-1.85.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.77.0", "person": "Peter Dimov", "commit_count": 1}, {"version": "boost-1.69.0", "person": "glenfe", "commit_count": 5}, {"version": "boost-1.66.0", "person": "Peter Dimov", "commit_count": 5}, {"version": "boost-1.65.0", "person": "Daniela Engert", "commit_count": 1}, {"version": "boost-1.63.0", "person": "grafikrobot", "commit_count": 2}, {"version": "boost-1.61.0", "person": "akumta", "commit_count": 1}, {"version": "boost-1.60.0", "person": "lcaminiti", "commit_count": 1}, {"version": "boost-1.58.0", "person": "Peter Dimov", "commit_count": 2}, {"version": "boost-1.57.0", "person": "lcaminiti", "commit_count": 2}, {"version": "boost-1.57.0", "person": "danieljames", "commit_count": 1}, {"version": "boost-1.55.0", "person": "Stephen Kelly", "commit_count": 1}, {"version": "boost-1.53.0", "person": "mclow", "commit_count": 2}, {"version": "boost-1.51.0", "person": "lcaminiti", "commit_count": 2}, {"version": "boost-1.50.0", "person": "lcaminiti", "commit_count": 43}, {"version": "boost-1.49.0", "person": "lcaminiti", "commit_count": 11}, {"version": "boost-1.49.0", "person": "alnsn", "commit_count": 2}, {"version": "boost-1.44.0", "person": "danieljames", "commit_count": 4}, {"version": "boost-1.41.0", "person": "alnsn", "commit_count": 2}, {"version": "boost-1.40.0", "person": "alnsn", "commit_count": 1}, {"version": "boost-1.39.0", "person": "jzmaddock", "commit_count": 2}, {"version": "boost-1.38.0", "person": "alnsn", "commit_count": 10}, {"version": "boost-1.38.0", "person": "danieljames", "commit_count": 3}, {"version": "boost-1.35.0", "person": "DougGregor", "commit_count": 1}];
+    const depVersions = ["boost-1.17.0", "boost-1.18.0", "boost-1.19.0", "boost-1.20.0", "boost-1.21.0", "boost-1.22.0", "boost-1.23.0", "boost-1.24.0", "boost-1.25.0", "boost-1.26.0", "boost-1.27.0", "boost-1.28.0", "boost-1.29.0", "boost-1.30.0", "boost-1.31.0", "boost-1.32.0", "boost-1.33.0", "boost-1.34.0", "boost-1.35.0", "boost-1.36.0", "boost-1.37.0", "boost-1.38.0", "boost-1.39.0", "boost-1.40.0", "boost-1.41.0", "boost-1.42.0", "boost-1.43.0", "boost-1.44.0", "boost-1.45.0", "boost-1.46.0", "boost-1.47.0", "boost-1.48.0", "boost-1.49.0", "boost-1.50.0", "boost-1.51.0", "boost-1.52.0", "boost-1.53.0", "boost-1.54.0", "boost-1.55.0", "boost-1.56.0", "boost-1.57.0", "boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const depFirst = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    const depAll = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    const usageYears = ["2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    const byCreated = [1, 18, 46, 27, 25, 49, 95, 34, 78, 91, 85, 25, 146, 25, 15, 12, 2, 7];
+    const byUpdated = [0, 1, 1, 5, 5, 49, 26, 36, 73, 78, 66, 60, 43, 66, 114, 48, 77, 33];
+    const repoCounts = [1, 5, 8, 9, 14, 25, 33, 21, 26, 31, 16, 11, 15, 8, 6, 5, 1, 2];
+    const commitVersions = ["boost-1.58.0", "boost-1.59.0", "boost-1.60.0", "boost-1.61.0", "boost-1.62.0", "boost-1.63.0", "boost-1.64.0", "boost-1.65.0", "boost-1.66.0", "boost-1.67.0", "boost-1.68.0", "boost-1.69.0", "boost-1.70.0", "boost-1.71.0", "boost-1.72.0", "boost-1.73.0", "boost-1.74.0", "boost-1.75.0", "boost-1.76.0", "boost-1.77.0", "boost-1.78.0", "boost-1.79.0", "boost-1.80.0", "boost-1.81.0", "boost-1.82.0", "boost-1.83.0", "boost-1.84.0", "boost-1.85.0", "boost-1.86.0", "boost-1.87.0", "boost-1.88.0", "boost-1.89.0", "boost-1.90.0"];
+    const commitCounts = [2, 0, 1, 1, 0, 2, 0, 1, 5, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 7, 1, 0, 2, 0];
+
+    initDataTable({
+      data: headersRows, tableId:'table-headers', searchId:'search-headers',
+      infoId:'info-headers', prevId:'prev-headers', nextId:'next-headers',
+      defaultSortKey:'count', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.name || '')}</td><td>${toNumber(r.count).toLocaleString()}</td></tr>`
+    });
+    initDataTable({
+      data: internalRows, tableId:'table-internal', searchId:'search-internal',
+      infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
+      defaultSortKey:'depth', defaultSortAsc:true,
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+    });
+    initDataTable({
+      data: externalRows, tableId:'table-external', searchId:'search-external',
+      infoId:'info-external', prevId:'prev-external', nextId:'next-external',
+      defaultSortKey:'stars', defaultSortAsc:false,
+      columns:[{key:'name',type:'text'},{key:'stars',type:'number'},{key:'usage_count',type:'number'},{key:'created_at',type:'date'},{key:'updated_at',type:'date'}],
+      rowHtml:(r)=>`<tr><td><a href="https://github.com/${esc(r.name || '')}" target="_blank">${esc(r.name || '')}</a></td><td>${toNumber(r.stars).toLocaleString()}</td><td>${toNumber(r.usage_count).toLocaleString()}</td><td>${esc((r.created_at || '').toString().slice(0,10) || 'N/A')}</td><td>${esc((r.updated_at || '').toString().slice(0,10) || 'N/A')}</td></tr>`
+    });
+    initDataTable({
+      data: contribRows, tableId:'table-contrib', searchId:'search-contrib',
+      infoId:'info-contrib', prevId:'prev-contrib', nextId:'next-contrib',
+      defaultSortKey:'commit_count', defaultSortAsc:false,
+      columns:[{key:'version',type:'text'},{key:'person',type:'text'},{key:'commit_count',type:'number'}],
+      rowHtml:(r)=>`<tr><td>${esc(r.version || '')}</td><td>${esc(r.person || '')}</td><td>${toNumber(r.commit_count).toLocaleString()}</td></tr>`
+    });
+
+    new Chart(document.getElementById('dependentsChart'), {
+      type:'bar',
+      data: { labels: depVersions, datasets:[
+        {label:'Primary Consumers', data: depFirst, backgroundColor:'rgba(59,130,246,0.7)'},
+        {label:'Transitive Consumers', data: depAll, backgroundColor:'rgba(16,185,129,0.7)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+
+    new Chart(document.getElementById('usageChart'), {
+      type:'bar',
+      data: { labels: usageYears, datasets:[
+        {type:'line', label:'Created Repositories', data: repoCounts, borderColor:'rgba(255,99,132,0.8)', fill:false, yAxisID:'y1'},
+        {label:'Header Includes (New Repos)', data: byCreated, backgroundColor:'rgba(54,162,235,0.6)'},
+        {label:'Header Includes (Updated Repos)', data: byUpdated, backgroundColor:'rgba(75,192,192,0.6)'}
+      ] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true }, y1: { beginAtZero:true, position:'right', grid: { drawOnChartArea:false } } } }
+    });
+
+    new Chart(document.getElementById('commitChart'), {
+      type:'bar',
+      data: { labels: commitVersions, datasets:[{ label:'Commit Count', data: commitCounts, backgroundColor:'rgba(255,99,132,0.6)' }] },
+      options: { responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero:true } } }
+    });
+  </script>
+</body>
+</html>
