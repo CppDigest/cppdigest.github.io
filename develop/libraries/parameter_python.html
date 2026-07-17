@@ -91,7 +91,7 @@ a { color: #0066cc; text-decoration: none; } a:hover { text-decoration: underlin
     <button id="next-internal">Next</button>
   </div>
 </div>
-<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
+<table id="table-internal"><thead><tr><th><button type='button' class='sortable' data-key='name' aria-label='Sort by Library'>Library <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='depth' aria-label='Sort by Depth'>Depth <span class='sort-indicator'>↕</span></button></th><th><button type='button' class='sortable' data-key='last_version' aria-label='Sort by Last Version'>Last Version <span class='sort-indicator'>↕</span></button></th></tr></thead><tbody></tbody></table>
 
       </div>
       <div class="chart-container"><canvas id="dependentsChart"></canvas></div>
@@ -244,8 +244,8 @@ function initDataTable(cfg){
       data: internalRows, tableId:'table-internal', searchId:'search-internal',
       infoId:'info-internal', prevId:'prev-internal', nextId:'next-internal',
       defaultSortKey:'depth', defaultSortAsc:true,
-      columns:[{key:'name',type:'text'},{key:'depth',type:'number'}],
-      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td></tr>`
+      columns:[{key:'name',type:'text'},{key:'depth',type:'number'},{key:'last_version',type:'text'}],
+      rowHtml:(r)=>`<tr><td><a href="${esc((r.name || '').replace(/[^\w\-.]/g,'_'))}.html">${esc(r.name || '')}</a></td><td>${toNumber(r.depth)}</td><td>${esc(r.last_version || '')}</td></tr>`
     });
     initDataTable({
       data: externalRows, tableId:'table-external', searchId:'search-external',
